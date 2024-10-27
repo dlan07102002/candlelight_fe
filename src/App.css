@@ -117,3 +117,14 @@
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important;
 }
+
+/* Ẩn dropdown menu mặc định */
+.custom-nav-item.custom-dropdown .custom-dropdown-menu {
+  display: none;
+}
+
+/* Hiển thị menu khi hover vào .custom-nav-item.custom-dropdown */
+.custom-nav-item.custom-dropdown:hover .custom-dropdown-menu {
+  display: block;
+  position: absolute;
+}

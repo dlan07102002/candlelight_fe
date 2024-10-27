@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ProductItem from "./components/ProductItem";
 import ProductModel from "../../models/ProductModel";
-import { getAllProducts } from "../../services/ProductAPI";
+import { getAllProducts, filterProduct } from "../../services/ProductAPI";
 import Pagination from "../../utils/Pagination";
 
-const ProductList: React.FC = () => {
+interface ProductListInterface {
+    keyword: string;
+    categoryId: number;
+}
+
+const ProductList: React.FC<ProductListInterface> = ({
+    keyword,
+    categoryId,
+}) => {
     const [products, setProducts] = useState<ProductModel[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,8 +20,8 @@ const ProductList: React.FC = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     // get data from be
-    useEffect(
-        () => {
+    useEffect(() => {
+        if (keyword === "" && categoryId == 0) {
             getAllProducts(currentPage - 1)
                 .then((response) => {
                     setProducts(response.res);
@@ -25,9 +33,20 @@ const ProductList: React.FC = () => {
 
                     setError(error.message);
                 });
-        },
-        [currentPage] //get data at the first one
-    );
+        } else {
+            filterProduct(keyword, categoryId)
+                .then((response) => {
+                    setProducts(response.res);
+                    setTotalPages(response.totalPages);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+
+                    setError(error.message);
+                });
+        }
+    }, [currentPage, keyword]);
 
     const paging = (page: number) => {
         setCurrentPage(page);
@@ -47,6 +66,13 @@ const ProductList: React.FC = () => {
         );
     }
 
+    if (products.length == 0) {
+        return (
+            <div className="container">
+                <h1>NOT FOUND</h1>
+            </div>
+        );
+    }
     return (
         <div className="container">
             <div className="row mt-4">
