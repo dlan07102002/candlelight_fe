@@ -37,7 +37,7 @@ const Pagination: React.FC<PaginationInterface> = (props) => {
         }
     }
     return (
-        <nav aria-label="...">
+        <nav aria-label="..." className="mt-4">
             <ul className="pagination">
                 <li className="page-item" onClick={() => props.paging(1)}>
                     <button className="page-link">First Page</button>

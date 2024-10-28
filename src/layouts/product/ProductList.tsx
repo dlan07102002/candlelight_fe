@@ -14,11 +14,10 @@ const ProductList: React.FC<ProductListInterface> = ({
     categoryId,
 }) => {
     const [products, setProducts] = useState<ProductModel[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-
     // get data from be
     useEffect(() => {
         if (keyword === "" && categoryId == 0) {
@@ -26,10 +25,10 @@ const ProductList: React.FC<ProductListInterface> = ({
                 .then((response) => {
                     setProducts(response.res);
                     setTotalPages(response.totalPages);
-                    setLoading(false);
+                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setLoading(false);
+                    setIsLoading(false);
 
                     setError(error.message);
                 });
@@ -38,20 +37,20 @@ const ProductList: React.FC<ProductListInterface> = ({
                 .then((response) => {
                     setProducts(response.res);
                     setTotalPages(response.totalPages);
-                    setLoading(false);
+                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setLoading(false);
+                    setIsLoading(false);
 
                     setError(error.message);
                 });
         }
-    }, [currentPage, keyword]);
+    }, [currentPage, keyword, categoryId]);
 
     const paging = (page: number) => {
         setCurrentPage(page);
     };
-    if (loading) {
+    if (isLoading) {
         return (
             <div>
                 <h1>Loading</h1>

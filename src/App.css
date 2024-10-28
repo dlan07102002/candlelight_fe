@@ -93,6 +93,12 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.dropdown-header {
+  font-weight: bold;
+  color: #495057; /* Darker color for the title */
+  padding: 10px 15px; /* Consistent padding */
+}
+
 .btn-bd-primary {
   --bd-violet-bg: #712cf9;
   --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
@@ -127,4 +133,69 @@
 .custom-nav-item.custom-dropdown:hover .custom-dropdown-menu {
   display: block;
   position: absolute;
+}
+
+/* Product Image */
+.image-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.image-thumbnail:hover {
+  border: 2px solid #dc3545; /* Viền màu xanh khi hover */
+}
+
+/* Product Review */
+.review-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+.review-profile img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+.star-rating i {
+  color: #FFD700;
+}
+.review-comment {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+/* Product Payment Form */
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  height: 100%;
+}
+.seller-info, .rating, .price, .quantity, .action-buttons {
+  padding: 10px 15px;
+}
+.seller-info img, .rating img {
+  border-radius: 40%;
+  width: 50px;
+  height: 50px;
+  background-color: black;
+}
+.rating span {
+  font-size: 1.2em;
+  margin-right: 5px;
+}
+.quantity input {
+  width: 60px;
+  text-align: center;
+}
+.price div {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #d9534f;
 }

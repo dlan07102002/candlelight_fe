@@ -24,3 +24,20 @@ export function getAllCategories(): Promise<CategoryInterface> {
     const endpoint: string = `http://localhost:8080/categories`;
     return getCategories(endpoint);
 }
+
+export async function getCategoriesByProductId(productId: number): Promise<{
+    res: CategoryModel[] | null;
+} | null> {
+    const productEndpoint = `http://localhost:8080/products/${productId}`;
+    const endpoint = `${productEndpoint}/categoryList`;
+
+    try {
+        const categories = (await requestBE(endpoint))._embedded.categories;
+
+        // If productResponse is null, return both responses
+        return { res: categories };
+    } catch (error) {
+        console.error("Error fetching product or category:", error);
+        return null;
+    }
+}

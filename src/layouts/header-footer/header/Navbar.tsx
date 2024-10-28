@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import CategoryModel from "../../models/CategoryModel";
-import { getAllCategories } from "../../services/CategoryAPI";
-import { Link } from "react-router-dom";
+import CategoryModel from "../../../models/CategoryModel";
+import { getAllCategories } from "../../../services/CategoryAPI";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 interface NavbarInterface {
     // keyword: string;
     setKeyWord: React.Dispatch<string>;
 }
-const Navbar: React.FC<NavbarInterface> = (props) => {
+const Navbar: React.FC<NavbarInterface> = ({ setKeyWord }) => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [inputValue, setInputValue] = useState("");
 
@@ -23,19 +23,18 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
         }
         // Xử lý logic submit ở đây
     };
+    const navigate = useNavigate();
     const handleSearch = () => {
-        props.setKeyWord(inputValue);
+        setKeyWord(inputValue);
+        navigate("/");
         setInputValue("");
     };
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">
-                    <img
-                        src="./src/assets/images/logo.svg"
-                        alt="Candle light"
-                    />
+                <a className="navbar-brand" href="/">
+                    <img src="/src/assets/images/logo.svg" alt="Candle light" />
                 </a>
                 <button
                     className="navbar-toggler"
@@ -55,31 +54,27 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 >
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <Link
+                            <NavLink
                                 className="nav-link active"
                                 aria-current="page"
                                 to="/"
                             >
                                 Home
-                            </Link>
+                            </NavLink>
                         </li>
 
                         <li className=" nav-item dropdown custom-nav-item custom-dropdown">
-                            <a
+                            <NavLink
                                 className="nav-link dropdown-toggle custom-nav-link custom-dropdown-toggle"
-                                href="#"
+                                to="#"
                                 aria-expanded="false"
                             >
                                 Products
-                            </a>
+                            </NavLink>
                             <ul className=" dropdown-menu custom-dropdown-menu">
+                                <li className="dropdown-header">Category</li>
                                 <li>
-                                    <a
-                                        className="custom-dropdown-item dropdown-item"
-                                        href="#"
-                                    >
-                                        Category
-                                    </a>
+                                    <hr className="dropdown-divider" />
                                 </li>
                                 {categories.map((category) => (
                                     <li key={category.categoryId}>
@@ -94,39 +89,39 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                             </ul>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
+                            <NavLink className="nav-link" to="/about">
                                 About Us
-                            </a>
+                            </NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
+                            <NavLink className="nav-link" to="#">
                                 Contact
-                            </a>
+                            </NavLink>
                         </li>
                         <li className="nav-item dropdown">
-                            <a
+                            <NavLink
                                 className="nav-link dropdown-toggle"
-                                href="#"
+                                to="#"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
                                 Promotions
-                            </a>
+                            </NavLink>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <NavLink className="dropdown-item" to="#">
                                         Discounts
-                                    </a>
+                                    </NavLink>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <NavLink className="dropdown-item" to="#">
                                         New Arrivals
-                                    </a>
+                                    </NavLink>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <NavLink className="dropdown-item" to="#">
                                         Best Sellers
-                                    </a>
+                                    </NavLink>
                                 </li>
                             </ul>
                         </li>
@@ -144,29 +139,29 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     <button
-                        className="btn btn-outline-success"
+                        className="btn btn-outline-secondary"
                         type="button"
                         onClick={handleSearch}
                     >
-                        Search
+                        <i className="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </form>
 
                 {/* Shopping Cart Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <NavLink className="nav-link" to="#">
                             <i className="fas fa-shopping-cart"></i>
-                        </a>
+                        </NavLink>
                     </li>
                 </ul>
 
                 {/* Login Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <NavLink className="nav-link" to="#">
                             <i className="fas fa-user"></i>
-                        </a>
+                        </NavLink>
                     </li>
                 </ul>
             </div>

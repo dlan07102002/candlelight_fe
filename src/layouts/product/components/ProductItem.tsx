@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import ProductModel from "../../../models/ProductModel";
 import ImageModel from "../../../models/ImageModel";
 import { getImagesByProductId } from "../../../services/ImageAPI";
+import { Link } from "react-router-dom";
+import ratingStarRender from "../../../utils/ratingStar";
 interface ProductItemInterface {
     product: ProductModel;
 }
-const ProductItem: React.FC<ProductItemInterface> = (props) => {
-    const productId: number = props.product.productId;
+const ProductItem: React.FC<ProductItemInterface> = ({ product }) => {
+    const productId: number = product.productId;
 
     const [images, setImages] = useState<ImageModel[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // get data from be
@@ -18,17 +20,17 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
             getImagesByProductId(productId)
                 .then((response) => {
                     setImages(response);
-                    setLoading(false);
+                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setLoading(false);
+                    setIsLoading(false);
                     setError(error.message);
                 });
         },
         [] //get data at the first one
     );
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div>
                 <h1>Loading</h1>
@@ -49,31 +51,39 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
     }
 
     let listPrice: string = "";
-    if (props.product.listPrice != null) {
-        listPrice = props.product.listPrice.toFixed(2);
+    if (product.listPrice != null) {
+        listPrice = product.listPrice.toFixed(2);
     }
 
     let sellPrice: string = "";
-    if (props.product.sellPrice != null) {
-        sellPrice = props.product.sellPrice.toFixed(2);
+    if (product.sellPrice != null) {
+        sellPrice = product.sellPrice.toFixed(2);
     }
     return (
-        <div className="col-md-3 mt-2" style={{ height: "450px" }}>
+        <div className="col-md-3 col-sm-6 mt-2" style={{ height: "450px" }}>
             <div className="card" style={{ height: "100%" }}>
                 <div style={{ height: "250px" }}>
-                    <img
-                        src={dataImg}
-                        className="card-img-top"
-                        alt={props.product.description}
-                        style={{ height: "100%" }}
-                    />
+                    <Link to={`/products/${product.productId}`}>
+                        <img
+                            src={dataImg}
+                            className="card-img-top"
+                            alt={product.description}
+                            style={{ height: "200px" }}
+                        />
+                    </Link>
                 </div>
 
                 <div className="card-body">
-                    <h5 className="card-title">{props.product.productName}</h5>
+                    <Link
+                        to={`/products/${product.productId}`}
+                        style={{ textDecoration: "none", color: "black" }}
+                    >
+                        <h5 className="card-title">{product.productName}</h5>
+                    </Link>
                     <p className="card-text" style={{ height: "48px" }}>
-                        {props.product.description}
+                        {product.description}
                     </p>
+
                     <div className="price ms-4">
                         <span
                             className="original-price "
@@ -86,21 +96,23 @@ const ProductItem: React.FC<ProductItemInterface> = (props) => {
                         </span>
                     </div>
 
-                    <div className="row mt-2" role="group">
-                        <div className="col-8">
-                            <button className="btn btn-success btn-block">
-                                <i className="fas fa-shopping-cart"></i>
-                                <span className="ms-4">Add to cart</span>
-                            </button>
+                    <div className="row mt-2 " role="group">
+                        <div className="col-6">
+                            <p>
+                                {ratingStarRender(
+                                    product.rateAverage
+                                        ? product.rateAverage
+                                        : 0
+                                )}
+                            </p>
                         </div>
-                        <div className="col-4">
-                            <a
-                                href="#"
-                                className="btn btn-danger btn-block"
-                                style={{ float: "right" }}
-                            >
+                        <div className="col-6 ">
+                            <button className="btn btn-success btn-block float-end">
+                                <i className="fas fa-shopping-cart"></i>
+                            </button>
+                            <button className="btn btn-danger btn-block  me-2  float-end">
                                 <i className="fas fa-heart"></i>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

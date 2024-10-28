@@ -1,0 +1,71 @@
+import React, { useEffect, useState } from "react";
+import ProductModel from "../../../models/ProductModel";
+import { getImagesByProductId } from "../../../services/ImageAPI";
+import ImageModel from "../../../models/ImageModel";
+
+const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
+    const [images, setImages] = useState<ImageModel[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [active, setActive] = useState<string | undefined>("");
+    useEffect(
+        () => {
+            getImagesByProductId(productId)
+                .then((response) => {
+                    setImages(response);
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    setError(error.message);
+                });
+        },
+        [] //get data at the first one
+    );
+
+    useEffect(() => {
+        if (images[0] && images[0].imageData) {
+            setActive(images[0].imageData);
+        }
+    }, [images]); // Chạy lại mỗi khi images thay đổi
+
+    if (isLoading) {
+        return (
+            <div>
+                <h1>Loading</h1>
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div>
+                <h1>Get error: {error}</h1>
+            </div>
+        );
+    }
+
+    return (
+        <div className="col-md-4 mb-4">
+            <div className="product-image mb-4">
+                <img
+                    src={active}
+                    alt="Nến Tinh Dầu Thơm Quế NEOP"
+                    className="img-fluid rounded"
+                />
+            </div>
+            <div className="additional-images d-flex justify-content-start gap-2">
+                {images.map((img) => (
+                    <img
+                        key={img.imageId}
+                        src={img.imageData}
+                        alt={img.imageId + ""}
+                        className="img-thumbnail image-thumbnail" // Thêm class mới
+                        onClick={() => setActive(img.imageData)}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default ProductImage;

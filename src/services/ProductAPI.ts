@@ -1,6 +1,8 @@
 import React from "react";
 import ProductModel from "../models/ProductModel";
 import requestBE from "./Request";
+import CategoryModel from "../models/CategoryModel";
+import ReviewModel from "../models/ReviewModel";
 
 interface ProductResponseInterface {
     res: ProductModel[];
@@ -61,3 +63,22 @@ export async function filterProduct(
 
     return getProducts(endpoint);
 }
+
+// Product Detail Data
+export async function getProductByProductId(productId: number): Promise<{
+    res: ProductModel | null;
+} | null> {
+    const endpoint = `http://localhost:8080/products/${productId}`;
+
+    try {
+        const product = await requestBE(endpoint);
+
+        // If productResponse is null, return both responses
+        return { res: product };
+    } catch (error) {
+        console.error("Error fetching product or categories:", error);
+        return null;
+    }
+}
+// Await here mean the response of getProduct will be the input to get res[0]
+// http://localhost:8080/products/1/categoryList
