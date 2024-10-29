@@ -7,7 +7,7 @@ import ProductImage from "./components/ProductImage";
 import ProductReview from "./components/ProductReview";
 import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import ProductPaymentForm from "./components/ProductPaymentForm";
-import ratingStarRender from "../../utils/ratingStar";
+import ratingStarRender from "../utils/ratingStar";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL

@@ -3,7 +3,7 @@ import ProductModel from "../../../models/ProductModel";
 import ImageModel from "../../../models/ImageModel";
 import { getImagesByProductId } from "../../../services/ImageAPI";
 import { Link } from "react-router-dom";
-import ratingStarRender from "../../../utils/ratingStar";
+import ratingStarRender from "../../utils/ratingStar";
 interface ProductItemInterface {
     product: ProductModel;
 }

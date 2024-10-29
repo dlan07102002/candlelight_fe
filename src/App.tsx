@@ -2,13 +2,13 @@ import "./App.css";
 import Navbar from "./layouts/header-footer/header/Navbar";
 import Footer from "./layouts/header-footer/Footer";
 import HomePage from "./layouts/homepage/HomePage";
-import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./layouts/abouts/About";
 import ProductDetail from "./layouts/product/ProductDetail";
+import Register from "./layouts/user/RegisterForm";
 function App() {
     const [keyword, setKeyWord] = useState("");
-    console.log("keyword: ", keyword);
 
     return (
         <div className="App">
@@ -27,6 +27,7 @@ function App() {
                     />
 
                     <Route path="/about" element={<About />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>

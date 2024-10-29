@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductItem from "./components/ProductItem";
 import ProductModel from "../../models/ProductModel";
 import { getAllProducts, filterProduct } from "../../services/ProductAPI";
-import Pagination from "../../utils/Pagination";
+import Pagination from "../utils/Pagination";
 
 interface ProductListInterface {
     keyword: string;

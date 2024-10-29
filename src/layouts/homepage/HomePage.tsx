@@ -20,8 +20,6 @@ const HomePage: React.FC<HomePageInterface> = (props) => {
         categoryIdNum = 0;
     }
 
-    // console.log("keyword: ", props.keyword);
-
     return (
         <div>
             <Banner />

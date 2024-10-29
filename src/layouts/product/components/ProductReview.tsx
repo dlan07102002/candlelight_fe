@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReviewModel from "../../../models/ReviewModel";
 import { getReviewsByProductId } from "../../../services/ReviewAPI";
-import ratingStarRender from "../../../utils/ratingStar";
+import ratingStarRender from "../../utils/ratingStar";
 
 const ProductReview: React.FC<{
     productId: number;
