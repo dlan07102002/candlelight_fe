@@ -10,11 +10,11 @@ class ProductModel {
     constructor(
         productId: number,
         productName: string,
-        description: string,
-        listPrice: number,
-        sellPrice: number,
-        quantity: number,
-        rateAverage: number
+        description?: string,
+        listPrice?: number,
+        sellPrice?: number,
+        quantity?: number,
+        rateAverage?: number
     ) {
         this._productId = productId;
         this._productName = productName;

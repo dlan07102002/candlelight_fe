@@ -10,6 +10,7 @@ import Register from "./layouts/user/Register";
 import AccountActivate from "./layouts/user/AccountActivate";
 import Login from "./layouts/user/Login";
 import Test from "./layouts/user/Test";
+import ProductForm from "./layouts/admin/ProductForm";
 function App() {
     const [keyword, setKeyWord] = useState("");
 
@@ -36,6 +37,11 @@ function App() {
                     <Route
                         path="/activate/:email/:activateCode"
                         element={<AccountActivate />}
+                    />
+
+                    <Route
+                        path="/admin/product-form"
+                        element={<ProductForm />}
                     />
                     <Route path="/test" element={<Test />} />
                 </Routes>
