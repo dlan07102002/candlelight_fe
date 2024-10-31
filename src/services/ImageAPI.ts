@@ -7,8 +7,6 @@ async function getImage(
     endpoint: string
 ): Promise<ImageModel[]> {
     const res: ImageModel[] = [];
-    // endpoint: localhost:8080/images
-    // const endpoint: string = `http://localhost:8080/products/${productId}/images`;
     const response = await requestBE(endpoint);
     const ImageList = response._embedded.images;
 

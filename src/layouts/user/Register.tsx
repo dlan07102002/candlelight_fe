@@ -28,17 +28,6 @@ function RegisterForm() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // Handle form submission
-        console.log({
-            username,
-            email,
-            firstName,
-            lastName,
-            phoneNumber,
-            password,
-            confirmPassword,
-            gender,
-        });
-
         if (
             usernameError === "" &&
             emailError === "" &&

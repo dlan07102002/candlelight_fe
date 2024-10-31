@@ -6,7 +6,10 @@ import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./layouts/abouts/About";
 import ProductDetail from "./layouts/product/ProductDetail";
-import Register from "./layouts/user/RegisterForm";
+import Register from "./layouts/user/Register";
+import AccountActivate from "./layouts/user/AccountActivate";
+import Login from "./layouts/user/Login";
+import Test from "./layouts/user/Test";
 function App() {
     const [keyword, setKeyWord] = useState("");
 
@@ -28,6 +31,13 @@ function App() {
 
                     <Route path="/about" element={<About />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+
+                    <Route
+                        path="/activate/:email/:activateCode"
+                        element={<AccountActivate />}
+                    />
+                    <Route path="/test" element={<Test />} />
                 </Routes>
                 <Footer />
             </BrowserRouter>

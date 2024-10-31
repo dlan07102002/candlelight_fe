@@ -62,6 +62,8 @@ export async function register(user: UserModel): Promise<boolean> {
                 gender: user.gender,
                 orderAddress: user.orderAddress,
                 deliveryAddress: user.deliveryAddress,
+                isActive: false,
+                activeId: "",
             }),
         });
         if (response.ok) {
@@ -72,5 +74,37 @@ export async function register(user: UserModel): Promise<boolean> {
     } catch (error) {
         console.log(error);
         return false;
+    }
+}
+
+export async function login(username: string, password: string) {
+    const endpoint = `http://localhost:8080/account/login`;
+    try {
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Access-Control-Allow-Methods": "POST, GET, PUT",
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Invalid username or password");
+                }
+            })
+            .then((data) => {
+                // Successfully Login
+                const { jwt } = data;
+                // Store jwt token into localStorage
+                localStorage.setItem("token", jwt);
+            });
+    } catch (error) {
+        throw new Error("Invalid username or password");
     }
 }

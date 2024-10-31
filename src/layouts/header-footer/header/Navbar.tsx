@@ -159,7 +159,7 @@ const Navbar: React.FC<NavbarInterface> = ({ setKeyWord }) => {
                 {/* Login Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="#">
+                        <NavLink className="nav-link" to="/register">
                             <i className="fas fa-user"></i>
                         </NavLink>
                     </li>
