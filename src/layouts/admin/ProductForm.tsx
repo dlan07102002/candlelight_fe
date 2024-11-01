@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import RequiredAdmin from "./RequiredAdmin";
 
 const ProductForm = () => {
-    const [productId, setProductId] = useState(0);
+    const productId = 0;
     const [productName, setProductName] = useState("");
     const [description, setDescription] = useState("");
     const [listPrice, setListPrice] = useState("");
     const [sellPrice, setSellPrice] = useState("");
     const [quantity, setQuantity] = useState("");
+    const [image, setImage] = useState<File | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -15,7 +16,7 @@ const ProductForm = () => {
         // Handle data submission to the server or process logic here
         const token = localStorage.getItem("token");
         token &&
-            (await fetch("http://localhost:8080/products", {
+            (await fetch("http://localhost:8080/admin/products", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -30,18 +31,72 @@ const ProductForm = () => {
                     quantity: parseInt(quantity),
                     rateAverage: 0,
                 }),
-            }).then((response) => {
-                if (response.ok) {
-                    alert("Product added successfully");
-                    setProductName("");
-                    setDescription("");
-                    setQuantity("");
-                    setSellPrice("");
-                    setListPrice("");
-                } else {
-                    alert("Product added failed");
-                }
-            }));
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("Product added successfully");
+
+                        setProductName("");
+                        setDescription("");
+                        setQuantity("");
+                        setSellPrice("");
+                        setListPrice("");
+                    } else {
+                        alert("Product added failed");
+                    }
+                    return response.text();
+                })
+                .then(async (data) => {
+                    console.log("product id", data);
+                    // If admin add images
+
+                    if (image) {
+                        const imageBase64 = await getBase64(image);
+
+                        fetch("http://localhost:8080/admin/products/images", {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                            // icon,image_data,image_name,link,product_id
+                            body: JSON.stringify({
+                                icon: false,
+                                imageData: imageBase64,
+                                imageName: productName,
+                                link: "",
+                                productId: parseInt(data),
+                            }),
+                        });
+                    }
+                })
+
+                .catch((err) => {
+                    console.log(err);
+                }));
+    };
+
+    // Convert file to Base64
+    const getBase64 = (file: File): Promise<string | null> => {
+        return new Promise((resolve, reject) => {
+            // FileReader in ReactJs
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () =>
+                resolve(
+                    reader.result
+                        ? (reader.result as string).split(",")[1]
+                        : null
+                );
+            reader.onerror = (err) => reject(err);
+        });
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setImage(file);
+        }
     };
 
     return (
@@ -134,7 +189,8 @@ const ProductForm = () => {
                                 type="file"
                                 className="form-control"
                                 id="file_img"
-                                accept=".jpg, .png"
+                                accept=".jpg, .png, image/*"
+                                onChange={handleImageChange}
                             />
                         </div>
 
@@ -151,28 +207,6 @@ const ProductForm = () => {
                                 id="file_archive"
                                 accept=".zip, .rar"
                             />
-                        </div>
-
-                        <div>
-                            <label
-                                htmlFor="technologist"
-                                className="form-label"
-                            >
-                                Technologist
-                            </label>
-                            <select
-                                className="form-select"
-                                id="technologist"
-                                required
-                            >
-                                <option value="">Select</option>
-                                <option value="technologist2">
-                                    Technologist 2
-                                </option>
-                                <option value="technologist3">
-                                    Technologist 3
-                                </option>
-                            </select>
                         </div>
 
                         <div className="col-md-12 text-end mt-3">
