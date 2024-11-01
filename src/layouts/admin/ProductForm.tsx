@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ProductModel from "../../models/ProductModel";
+import RequiredAdmin from "./RequiredAdmin";
 
 const ProductForm = () => {
     const [productId, setProductId] = useState(0);
@@ -186,5 +186,5 @@ const ProductForm = () => {
         </div>
     );
 };
-
-export default ProductForm;
+const RequiredAdmin_ProductForm: React.FC = RequiredAdmin(ProductForm);
+export default RequiredAdmin_ProductForm;

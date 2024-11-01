@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { login } from "../../services/UserAPI";
 import { useNavigate } from "react-router-dom";
-
-const Login: React.FC = () => {
+interface LoginInterface {
+    isLogin: boolean;
+    setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [notification, setNotification] = useState("");
     const navigate = useNavigate();
+    if (isLogin) {
+        navigate("/");
+        return;
+    }
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
         e: React.FormEvent<HTMLFormElement>
     ) => {
@@ -16,8 +23,9 @@ const Login: React.FC = () => {
             const response = await login(username, password)
                 .then((res) => {
                     setNotification("");
-                    navigate("/test");
-                    console.log(res);
+                    setLogin(true);
+                    // forward to homepage
+                    navigate("/");
                 })
                 .catch((err) => {
                     console.log(err);

@@ -2,13 +2,26 @@ import React, { useEffect, useState } from "react";
 import CategoryModel from "../../../models/CategoryModel";
 import { getAllCategories } from "../../../services/CategoryAPI";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 interface NavbarInterface {
     // keyword: string;
     setKeyWord: React.Dispatch<string>;
+    isLogin: boolean;
+    setLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Navbar: React.FC<NavbarInterface> = ({ setKeyWord }) => {
+const Navbar: React.FC<NavbarInterface> = ({
+    setKeyWord,
+    isLogin,
+    setLogin,
+}) => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [inputValue, setInputValue] = useState("");
+    // const [isLogin, setLogin] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(isLogin);
+    }, [isLogin]);
 
     useEffect(() => {
         getAllCategories()
@@ -23,11 +36,15 @@ const Navbar: React.FC<NavbarInterface> = ({ setKeyWord }) => {
         }
         // Xử lý logic submit ở đây
     };
-    const navigate = useNavigate();
     const handleSearch = () => {
         setKeyWord(inputValue);
         navigate("/");
         setInputValue("");
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setLogin(false);
     };
 
     return (
@@ -157,13 +174,29 @@ const Navbar: React.FC<NavbarInterface> = ({ setKeyWord }) => {
                 </ul>
 
                 {/* Login Icon */}
-                <ul className="navbar-nav me-1">
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/register">
-                            <i className="fas fa-user"></i>
-                        </NavLink>
-                    </li>
-                </ul>
+                {isLogin ? (
+                    <ul className="navbar-nav me-1">
+                        <li className="nav-item">
+                            <button
+                                className="btn"
+                                onClick={handleLogout}
+                                style={{ color: "white" }}
+                            >
+                                <i className="fa-solid fa-right-from-bracket"></i>
+                            </button>
+                        </li>
+                    </ul>
+                ) : (
+                    <ul className="navbar-nav me-1">
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/register">
+                                <i className="fas fa-user"></i>
+                            </NavLink>
+                        </li>
+                    </ul>
+                )}
+
+                {/* <i class="fa-solid fa-right-from-bracket"></i> */}
             </div>
         </nav>
     );
