@@ -1,5 +1,3 @@
-import React from "react";
-
 function Banner() {
     return (
         <div className="p-2 mb-2 bg-dark">

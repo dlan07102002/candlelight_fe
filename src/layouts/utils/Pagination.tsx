@@ -50,7 +50,7 @@ const Pagination: React.FC<PaginationInterface> = (props) => {
                     >
                         <button
                             className={
-                                "page-link " +
+                                "page-link   " +
                                 (props.currentPage === page ? "active" : "")
                             }
                         >

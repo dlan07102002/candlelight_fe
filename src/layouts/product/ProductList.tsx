@@ -4,15 +4,12 @@ import ProductModel from "../../models/ProductModel";
 import { getAllProducts, filterProduct } from "../../services/ProductAPI";
 import Pagination from "../utils/Pagination";
 
-interface ProductListInterface {
+interface IProductList {
     keyword: string;
     categoryId: number;
 }
 
-const ProductList: React.FC<ProductListInterface> = ({
-    keyword,
-    categoryId,
-}) => {
+const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
     const [products, setProducts] = useState<ProductModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);

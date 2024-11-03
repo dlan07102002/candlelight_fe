@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import CategoryModel from "../../../models/CategoryModel";
 import { getAllCategories } from "../../../services/CategoryAPI";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 interface NavbarInterface {
     // keyword: string;
     setKeyWord: React.Dispatch<string>;
@@ -167,7 +166,7 @@ const Navbar: React.FC<NavbarInterface> = ({
                 {/* Shopping Cart Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="#">
+                        <NavLink className="nav-link" to="/cart">
                             <i className="fas fa-shopping-cart"></i>
                         </NavLink>
                     </li>

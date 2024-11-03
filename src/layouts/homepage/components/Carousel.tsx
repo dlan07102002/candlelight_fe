@@ -67,7 +67,7 @@ const Carousel: React.FC = () => {
                     <span className="visually-hidden">Previous</span>
                 </button>
                 <button
-                    className="carousel-control-next"
+                    className="carousel-control-next "
                     type="button"
                     data-bs-target="#carouselExampleDark"
                     data-bs-slide="next"

@@ -4,10 +4,10 @@ import ImageModel from "../../../models/ImageModel";
 import { getImagesByProductId } from "../../../services/ImageAPI";
 import { Link } from "react-router-dom";
 import ratingStarRender from "../../utils/ratingStar";
-interface ProductItemInterface {
+interface IProductItem {
     product: ProductModel;
 }
-const ProductItem: React.FC<ProductItemInterface> = ({ product }) => {
+const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const productId: number = product.productId;
 
     const [images, setImages] = useState<ImageModel[]>([]);

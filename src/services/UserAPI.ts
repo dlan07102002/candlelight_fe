@@ -62,7 +62,7 @@ export async function register(user: UserModel): Promise<boolean> {
                 gender: user.gender,
                 orderAddress: user.orderAddress,
                 deliveryAddress: user.deliveryAddress,
-                isActive: false,
+                isActivate: false,
                 activeId: "",
             }),
         });

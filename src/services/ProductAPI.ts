@@ -1,18 +1,13 @@
-import React from "react";
 import ProductModel from "../models/ProductModel";
 import requestBE from "./Request";
-import CategoryModel from "../models/CategoryModel";
-import ReviewModel from "../models/ReviewModel";
 
-interface ProductResponseInterface {
+interface IProductResponse {
     res: ProductModel[];
     totalPages: number;
     totalElements: number;
 }
 
-async function getProducts(
-    endpoint: string
-): Promise<ProductResponseInterface> {
+async function getProducts(endpoint: string): Promise<IProductResponse> {
     const res: ProductModel[] = [];
     // endpoint: localhost:8080/products
 
@@ -23,24 +18,20 @@ async function getProducts(
     const totalPages: number = response.page.totalPages;
     const totalElements: number = response.page.totalElements;
     for (const key in productList) {
-        const element: ProductModel = productList[key];
-
-        res.push(element);
+        res.push(productList[key]);
     }
 
     return { res: res, totalElements: totalElements, totalPages: totalPages };
 }
 
-export async function getAllProducts(
-    page: number
-): Promise<ProductResponseInterface> {
+export async function getAllProducts(page: number): Promise<IProductResponse> {
     // endpoint: localhost:8080/products
     const endpoint: string = `http://localhost:8080/products?size=4&page=${page}`;
 
     return getProducts(endpoint);
 }
 
-export async function getTopRateProducts(): Promise<ProductResponseInterface> {
+export async function getTopRateProducts(): Promise<IProductResponse> {
     // endpoint: localhost:8080/products
     const endpoint: string =
         "http://localhost:8080/products?sort=rateAverage,desc&page=0&size=3";
@@ -50,7 +41,7 @@ export async function getTopRateProducts(): Promise<ProductResponseInterface> {
 export async function filterProduct(
     keyword: string,
     categoryId: number
-): Promise<ProductResponseInterface> {
+): Promise<IProductResponse> {
     // endpoint: localhost:8080/productss
     let endpoint: string = `http://localhost:8080/products?size=4&page=0`;
     if (keyword !== "" && categoryId == 0) {

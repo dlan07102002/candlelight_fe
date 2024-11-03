@@ -3,10 +3,10 @@ import Banner from "./components/Banner";
 import Carousel from "./components/Carousel";
 import ProductList from "../product/ProductList";
 import { useParams } from "react-router-dom";
-interface HomePageInterface {
+interface IHomePage {
     keyword: string;
 }
-const HomePage: React.FC<HomePageInterface> = (props) => {
+const HomePage: React.FC<IHomePage> = (props) => {
     const { categoryId } = useParams();
     let categoryIdNum = 0;
     try {

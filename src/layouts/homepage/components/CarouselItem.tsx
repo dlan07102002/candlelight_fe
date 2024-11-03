@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import ImageModel from "../../../models/ImageModel";
 import { getImageByProductId } from "../../../services/ImageAPI";
 import ProductModel from "../../../models/ProductModel";
-interface CarouselItemInterface {
+interface ICarouselItem {
     firstChild: boolean;
     product: ProductModel;
 }
-const CarouselItem: React.FC<CarouselItemInterface> = (props) => {
+const CarouselItem: React.FC<ICarouselItem> = (props) => {
     const productId: number = props.product.productId;
 
     const [image, setImage] = useState<ImageModel[]>([]);
