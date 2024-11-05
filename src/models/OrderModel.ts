@@ -5,7 +5,7 @@ class OrderModel {
     private _deliveryAddress: string;
     private _paymentCost: number;
     private _deliveryCost: number;
-    private _totalProductPrice: number;
+    private _totalPrice: number;
     private _deliveryStatus: string;
     private _paymentStatus: string;
 
@@ -23,7 +23,7 @@ class OrderModel {
         this._deliveryAddress = deliveryAddress;
         this._paymentCost = paymentCost;
         this._deliveryCost = deliveryCost;
-        this._totalProductPrice = totalProductPrice;
+        this._totalPrice = totalProductPrice;
         this._deliveryStatus = "Pending";
         this._paymentStatus = "Pending";
     }
@@ -54,7 +54,7 @@ class OrderModel {
     }
 
     public get totalProductPrice(): number {
-        return this._totalProductPrice;
+        return this._totalPrice;
     }
 
     public get deliveryStatus(): string {

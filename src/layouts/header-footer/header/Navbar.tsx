@@ -19,10 +19,6 @@ const Navbar: React.FC<NavbarInterface> = ({
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(isLogin);
-    }, [isLogin]);
-
-    useEffect(() => {
         getAllCategories()
             .then((response) => setCategories(response.res))
             .catch((err) => console.log(err));
@@ -188,7 +184,7 @@ const Navbar: React.FC<NavbarInterface> = ({
                 ) : (
                     <ul className="navbar-nav me-1">
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/register">
+                            <NavLink className="nav-link" to="/login">
                                 <i className="fas fa-user"></i>
                             </NavLink>
                         </li>

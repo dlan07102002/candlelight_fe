@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../../services/UserAPI";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 interface LoginInterface {
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,6 +88,13 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                 <button type="submit" className="btn btn-primary btn-lg">
                     Login
                 </button>
+            </div>
+
+            <div className="text-center mt-3">
+                <p>
+                    Don't have an account?{" "}
+                    <Link to="/register">Sign up here</Link>
+                </p>
             </div>
         </form>
     );

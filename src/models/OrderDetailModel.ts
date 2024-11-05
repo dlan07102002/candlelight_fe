@@ -1,4 +1,4 @@
-class OrderDetail {
+class OrderDetailModel {
     private _orderDetailId: number;
     private _quantity: number;
     private _sellPrice: number;
@@ -57,4 +57,4 @@ class OrderDetail {
     }
 }
 
-export default OrderDetail;
+export default OrderDetailModel;

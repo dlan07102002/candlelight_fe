@@ -32,6 +32,7 @@ const App: React.FC = () => {
             const exp = decodedToken.exp ? decodedToken.exp * 1000 : 0;
             if (decodedToken.exp && Date.now() > exp) {
                 console.log("Expired");
+                setUserId(0);
                 // localStorage.removeItem("token");
             } else {
                 setLogin(true);

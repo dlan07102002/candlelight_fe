@@ -40,7 +40,8 @@ export async function getLatestOrderAndOrderDetailByUserId(
     const order = response._embedded.orders[0];
     const odHref = order._links.orderDetailList.href;
     const orderDetailResponse = await requestBE(odHref);
-    const orderDetailList = orderDetailResponse._embedded.orderDetails;
+    const orderDetailList = orderDetailResponse._embedded
+        .orderDetails as OrderDetail[];
 
     return { order: order, orderDetailList: orderDetailList };
 }

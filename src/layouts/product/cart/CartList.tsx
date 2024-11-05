@@ -1,62 +1,71 @@
 import React, { useEffect, useState } from "react";
-import {
-    getLatestOrderAndOrderDetailByUserId,
-    getOrdersByUserId,
-} from "../../../services/OrderAPI";
+import { getLatestOrderAndOrderDetailByUserId } from "../../../services/OrderAPI";
+import OrderDetailModel from "../../../models/OrderDetailModel";
+import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
+import ProductModel from "../../../models/ProductModel";
+import CartItem from "./CartItem";
 
 const CartList: React.FC<{ userId: number }> = ({ userId }) => {
-    // Danh sách các sản phẩm trong giỏ hàng, có thể cập nhật danh sách này từ API hoặc Context
     const [orders, setOrders] = useState([]);
-    const [orderDetails, setOrderDetails] = useState([]);
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: "Scented Candle - Vanilla",
-            price: 100000,
-            quantity: 2,
-        },
-        {
-            id: 2,
-            name: "Scented Candle - Lavender",
-            price: 120000,
-            quantity: 1,
-        },
-    ]);
-    console.log(userId);
+    const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    const [products, setProducts] = useState<ProductModel[]>([]);
+    const [cartItems, setCartItems] = useState<any>([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
         if (userId > 0) {
-            getLatestOrderAndOrderDetailByUserId(userId).then((response) => {
-                console.log(response.orderDetailList);
-            });
+            getLatestOrderAndOrderDetailByUserId(userId)
+                .then((response) => {
+                    setOrderDetails(response.orderDetailList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }, [userId]);
 
-    // Hàm cập nhật số lượng sản phẩm trong giỏ hàng
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const newCartItems: any = [];
+
+            for (const od of orderDetails) {
+                const product = await getProductByOrderDetailId(
+                    od.orderDetailId
+                );
+                if (product) {
+                    newCartItems.push({ ...product, ...od });
+                }
+            }
+
+            setCartItems(newCartItems); // Avoid appending, just set once
+        };
+
+        fetchProducts();
+    }, [orderDetails]);
+
     const updateQuantity = (id: number, quantity: number) => {
-        setCartItems(
-            cartItems.map((item) =>
-                item.id === id ? { ...item, quantity: quantity } : item
+        setCartItems((prevCartItems: any) =>
+            prevCartItems.map((item: any) =>
+                item.productId === id ? { ...item, quantity } : item
             )
         );
     };
 
-    // Hàm xóa sản phẩm khỏi giỏ hàng
-    const removeItem = (id: number) => {
-        setCartItems(cartItems.filter((item) => item.id !== id));
-    };
-
-    // Tính tổng giá
-    const calculateTotal = () => {
-        return cartItems.reduce(
-            (total, item) => total + item.price * item.quantity,
+    const calculateTotalPrice = () => {
+        const total = cartItems.reduce(
+            (sum: number, item: any) => sum + item.sellPrice * item.quantity,
             0
         );
+        setTotalPrice(total);
     };
 
+    // Recalculate total price whenever cart items change
+    useEffect(() => {
+        calculateTotalPrice();
+    }, [cartItems]);
     return (
-        <div className="container row">
-            <div className=" py-5">
+        <div className="row">
+            <div className="py-5 col-8">
                 <h2 className="text-center mb-5">Shopping Cart</h2>
                 <div className="table-responsive">
                     <table className="table table-hover align-middle text-center">
@@ -70,61 +79,23 @@ const CartList: React.FC<{ userId: number }> = ({ userId }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {cartItems.map((item) => (
-                                <tr key={item.id} className="align-middle">
-                                    <td className="text-start">
-                                        <strong>{item.name}</strong>
-                                    </td>
-                                    <td>
-                                        {item.price.toLocaleString("vi-VN", {
-                                            style: "currency",
-                                            currency: "VND",
-                                        })}
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="number"
-                                            className="form-control text-center"
-                                            value={item.quantity}
-                                            onChange={(e) =>
-                                                updateQuantity(
-                                                    item.id,
-                                                    parseInt(e.target.value)
-                                                )
-                                            }
-                                            min="1"
-                                            style={{ width: "60px" }}
-                                        />
-                                    </td>
-                                    <td>
-                                        {(
-                                            item.price * item.quantity
-                                        ).toLocaleString("vi-VN", {
-                                            style: "currency",
-                                            currency: "VND",
-                                        })}
-                                    </td>
-                                    <td>
-                                        <button
-                                            className="btn btn-sm btn-outline-danger"
-                                            onClick={() => removeItem(item.id)}
-                                        >
-                                            <i className="bi bi-trash"></i>{" "}
-                                            Remove
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            {cartItems.map(
+                                (
+                                    item: any,
+                                    index: React.Key | null | undefined
+                                ) => (
+                                    <CartItem
+                                        key={index}
+                                        item={item}
+                                        updateQuantity={updateQuantity}
+                                    />
+                                )
+                            )}
                             <tr className="fw-bold">
                                 <td colSpan={3} className="text-end">
                                     Total
                                 </td>
-                                <td colSpan={2}>
-                                    {calculateTotal().toLocaleString("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    })}
-                                </td>
+                                <td colSpan={2}>{totalPrice.toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -135,7 +106,6 @@ const CartList: React.FC<{ userId: number }> = ({ userId }) => {
                     </button>
                 </div>
             </div>
-            <div>{/* <CartPayment /> */}</div>
         </div>
     );
 };
