@@ -110,7 +110,7 @@ const Navbar: React.FC<NavbarInterface> = ({
                                 Contact
                             </NavLink>
                         </li>
-                        <li className="nav-item dropdown">
+                        {/* <li className="nav-item dropdown">
                             <NavLink
                                 className="nav-link dropdown-toggle"
                                 to="#"
@@ -136,7 +136,7 @@ const Navbar: React.FC<NavbarInterface> = ({
                                     </NavLink>
                                 </li>
                             </ul>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
 

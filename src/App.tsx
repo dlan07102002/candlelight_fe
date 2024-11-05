@@ -2,8 +2,8 @@ import "./App.css";
 import Navbar from "./layouts/header-footer/header/Navbar";
 import Footer from "./layouts/header-footer/Footer";
 import HomePage from "./layouts/homepage/HomePage";
-import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { createContext, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./layouts/about/About";
 import ProductDetail from "./layouts/product/ProductDetail";
 import Register from "./layouts/user/Register";
@@ -13,14 +13,34 @@ import Test from "./layouts/user/Test";
 import ProductForm from "./layouts/admin/ProductForm";
 import { jwtDecode } from "jwt-decode";
 import CartList from "./layouts/product/cart/CartList";
+import { getLatestOrderAndOrderDetailByUserId } from "./services/OrderAPI";
+import OrderDetailModel from "./models/OrderDetailModel";
+import OrderModel from "./models/OrderModel";
+import ProductList from "./layouts/product/ProductList";
 interface JwtPayload {
     uid: number;
     exp: number;
 }
+// Tạo Context
+interface MyContextType {
+    userId: number;
+    order: OrderModel | undefined;
+    orderDetails: OrderDetailModel[];
+}
+export const MyContext = createContext<MyContextType>({
+    userId: 0,
+    order: undefined,
+    orderDetails: [],
+});
 const App: React.FC = () => {
     const [keyword, setKeyWord] = useState("");
     const [isLogin, setLogin] = useState(false);
     const [userId, setUserId] = useState(0);
+    const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    const [latestOrder, setLatestOrder] = useState<OrderModel | undefined>(
+        undefined
+    );
+
     useEffect(() => {
         const token = localStorage.getItem("token");
 
@@ -40,8 +60,35 @@ const App: React.FC = () => {
         }
     }, [isLogin]);
 
+    // get order and order details by userId
+    useEffect(() => {
+        if (userId > 0) {
+            getLatestOrderAndOrderDetailByUserId(userId)
+                .then((response) => {
+                    setOrderDetails(response.orderDetailList);
+                    setLatestOrder(response.order);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [userId]);
+
+    const contextValue: {
+        userId: number;
+        order: OrderModel | undefined;
+        orderDetails: OrderDetailModel[];
+    } = {
+        userId: userId,
+        order: latestOrder, // hoặc giá trị kiểu OrderModel
+        orderDetails: orderDetails,
+    };
+
     return (
         <div className="App">
+            {/* <MyContext.Provider value={contextValue}>
+                <ProductList />
+            </MyContext.Provider> */}
             <BrowserRouter>
                 <Navbar
                     setKeyWord={setKeyWord}
@@ -76,7 +123,7 @@ const App: React.FC = () => {
 
                     <Route
                         path="/cart"
-                        element={<CartList userId={userId} />}
+                        element={<CartList orderDetails={orderDetails} />}
                     />
 
                     <Route

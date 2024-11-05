@@ -30,6 +30,8 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         [] //get data at the first one
     );
 
+    const addToCart = async () => {};
+
     if (isLoading) {
         return (
             <div>
@@ -107,7 +109,10 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                             </p>
                         </div>
                         <div className="col-6 ">
-                            <button className="btn btn-success btn-block float-end">
+                            <button
+                                className="btn btn-success btn-block float-end"
+                                onClick={() => addToCart()}
+                            >
                                 <i className="fas fa-shopping-cart"></i>
                             </button>
                             <button className="btn btn-danger btn-block  me-2  float-end">

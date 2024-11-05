@@ -5,24 +5,27 @@ import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
 import ProductModel from "../../../models/ProductModel";
 import CartItem from "./CartItem";
 
-const CartList: React.FC<{ userId: number }> = ({ userId }) => {
-    const [orders, setOrders] = useState([]);
-    const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
-    const [products, setProducts] = useState<ProductModel[]>([]);
+const CartList: React.FC<{
+    orderDetails: OrderDetailModel[];
+}> = ({ orderDetails }) => {
+    // const [orders, setOrders] = useState([]);
+    // const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    // const [products, setProducts] = useState<ProductModel[]>([]);
     const [cartItems, setCartItems] = useState<any>([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
-    useEffect(() => {
-        if (userId > 0) {
-            getLatestOrderAndOrderDetailByUserId(userId)
-                .then((response) => {
-                    setOrderDetails(response.orderDetailList);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-    }, [userId]);
+    // useEffect(() => {
+    //     if (userId > 0) {
+    //         getLatestOrderAndOrderDetailByUserId(userId)
+    //             .then((response) => {
+    //                 console.log(response.order);
+    //                 setOrderDetails(response.orderDetailList);
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err);
+    //             });
+    //     }
+    // }, [userId]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -51,12 +54,19 @@ const CartList: React.FC<{ userId: number }> = ({ userId }) => {
         );
     };
 
+    const removeItem = (oId: number) => {
+        setCartItems((prevCartItems: any) =>
+            prevCartItems.filter((item: any) => item.orderDetailId !== oId)
+        );
+    };
+
     const calculateTotalPrice = () => {
         const total = cartItems.reduce(
             (sum: number, item: any) => sum + item.sellPrice * item.quantity,
             0
         );
-        setTotalPrice(total);
+
+        isNaN(total) ? setTotalPrice(0) : setTotalPrice(total);
     };
 
     // Recalculate total price whenever cart items change
@@ -87,6 +97,7 @@ const CartList: React.FC<{ userId: number }> = ({ userId }) => {
                                     <CartItem
                                         key={index}
                                         item={item}
+                                        removeItemFE={removeItem}
                                         updateQuantity={updateQuantity}
                                     />
                                 )
@@ -95,7 +106,7 @@ const CartList: React.FC<{ userId: number }> = ({ userId }) => {
                                 <td colSpan={3} className="text-end">
                                     Total
                                 </td>
-                                <td colSpan={2}>{totalPrice.toFixed(2)}</td>
+                                <td colSpan={2}>${totalPrice.toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -1,10 +1,21 @@
 class OrderDetailModel {
     private _orderDetailId: number;
+    private _productId: number;
     private _quantity: number;
     private _sellPrice: number;
+    private _orderId: number;
 
-    constructor(orderDetailId: number, quantity: number, sellPrice: number) {
+    constructor(
+        orderDetailId: number,
+        productId: number,
+        quantity: number,
+        sellPrice: number,
+        orderId: number
+    ) {
         this._orderDetailId = orderDetailId;
+        this._productId = productId;
+        this._orderId = orderId;
+
         this._quantity = quantity;
         this._sellPrice = sellPrice;
     }
@@ -16,6 +27,24 @@ class OrderDetailModel {
 
     set orderDetailId(value: number) {
         this._orderDetailId = value;
+    }
+
+    // Getter and Setter for productId
+    get productId(): number {
+        return this._productId;
+    }
+
+    set productId(value: number) {
+        this._productId = value;
+    }
+
+    // Getter and Setter for orderId
+    get orderId(): number {
+        return this._orderId;
+    }
+
+    set orderId(value: number) {
+        this._orderId = value;
     }
 
     // Getter and Setter for quantity

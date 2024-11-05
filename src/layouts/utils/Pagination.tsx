@@ -5,64 +5,72 @@ interface PaginationInterface {
     total: number;
     paging: any;
 }
-const Pagination: React.FC<PaginationInterface> = (props) => {
+const Pagination: React.FC<PaginationInterface> = ({
+    currentPage,
+    total,
+    paging,
+}) => {
     const pageList = [];
 
-    if (props.currentPage === 1) {
-        pageList.push(props.currentPage);
-        if (props.total >= props.currentPage + 1) {
-            pageList.push(props.currentPage + 1);
+    if (currentPage === 1) {
+        pageList.push(currentPage);
+        if (total >= currentPage + 1) {
+            pageList.push(currentPage + 1);
         }
-        if (props.total >= props.currentPage + 2) {
-            pageList.push(props.currentPage + 2);
+        if (total >= currentPage + 2) {
+            pageList.push(currentPage + 2);
         }
-    } else if (props.currentPage > 1) {
+    } else if (currentPage > 1) {
         // previous 2 page
-        if (props.currentPage >= 3) {
-            pageList.push(props.currentPage - 2);
+        if (currentPage >= 3) {
+            pageList.push(currentPage - 2);
         }
         // previous page
-        if (props.currentPage >= 2) {
-            pageList.push(props.currentPage - 1);
+        if (currentPage >= 2) {
+            pageList.push(currentPage - 1);
         }
         // current page
-        pageList.push(props.currentPage);
+        pageList.push(currentPage);
         // next page
-        if (props.total >= props.currentPage + 1) {
-            pageList.push(props.currentPage + 1);
+        if (total >= currentPage + 1) {
+            pageList.push(currentPage + 1);
         }
         // next 2 page
-        if (props.total >= props.currentPage + 2) {
-            pageList.push(props.currentPage + 2);
+        if (total >= currentPage + 2) {
+            pageList.push(currentPage + 2);
         }
     }
     return (
-        <nav aria-label="..." className="mt-4">
-            <ul className="pagination">
-                <li className="page-item" onClick={() => props.paging(1)}>
+        <nav aria-label="Page navigation" className="mt-4">
+            <ul className="pagination justify-content-center">
+                <li
+                    className={`page-item ${
+                        currentPage === 1 ? "disabled" : ""
+                    }`}
+                    onClick={() => paging(1)}
+                >
                     <button className="page-link">First Page</button>
                 </li>
+
                 {pageList.map((page) => (
                     <li
-                        className="page-item"
+                        className={`page-item ${
+                            currentPage === page ? "active" : ""
+                        }`}
                         key={page}
-                        onClick={() => props.paging(page)}
+                        onClick={() => paging(page)}
                     >
-                        <button
-                            className={
-                                "page-link   " +
-                                (props.currentPage === page ? "active" : "")
-                            }
-                        >
-                            {page}
-                        </button>
+                        <button className="page-link">{page}</button>
                     </li>
                 ))}
+
                 <li
-                    className="page-item"
-                    onClick={() => props.paging(props.total)}
+                    className={`page-item ${
+                        currentPage === total ? "disabled" : ""
+                    }`}
+                    onClick={() => paging(total)}
                 >
-                    <button className="page-link">Last page</button>
+                    <button className="page-link">Last Page</button>
                 </li>
             </ul>
         </nav>

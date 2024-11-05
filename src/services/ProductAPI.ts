@@ -39,18 +39,27 @@ export async function getTopRateProducts(): Promise<IProductResponse> {
 }
 
 export async function filterProduct(
-    keyword: string,
-    categoryId: number
+    keyword?: string,
+    categoryId?: number
 ): Promise<IProductResponse> {
-    // endpoint: localhost:8080/productss
-    let endpoint: string = `http://localhost:8080/products?size=4&page=0`;
-    if (keyword !== "" && categoryId == 0) {
-        endpoint = `http://localhost:8080/products/search/findByProductNameContaining?size=4&page=0&productName=${keyword}`;
-    } else if (keyword === "" && categoryId > 0) {
-        endpoint = `http://localhost:8080/products/search/findByCategoryList_CategoryId?categoryId=${categoryId}&size=4&page=0`;
-    } else if (keyword !== "" && categoryId > 0) {
-        endpoint = `http://localhost:8080/products/search/findByProductNameContainingAndCategoryList_Category?productName=${keyword}&categoryId=${categoryId}&size=4&page=0`;
+    let baseEndpoint = "http://localhost:8080/products";
+    let endpoint = baseEndpoint;
+    const params = new URLSearchParams({ size: "4", page: "0" });
+
+    if (keyword && !categoryId) {
+        endpoint = `${baseEndpoint}/search/findByProductNameContaining`;
+        params.append("productName", keyword);
+    } else if (categoryId && !keyword) {
+        endpoint = `${baseEndpoint}/search/findByCategoryList_CategoryId`;
+        params.append("categoryId", categoryId.toString());
+    } else if (categoryId && keyword) {
+        endpoint = `${baseEndpoint}/search/findByProductNameContainingAndCategoryList_CategoryId`;
+        params.append("productName", keyword);
+        params.append("categoryId", categoryId.toString());
     }
+
+    // Ghép endpoint với các tham số
+    endpoint = `${endpoint}?${params.toString()}`;
 
     return getProducts(endpoint);
 }
