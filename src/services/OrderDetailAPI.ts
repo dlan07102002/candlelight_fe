@@ -25,9 +25,10 @@ export async function addOd(od: OrderDetailModel): Promise<boolean> {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    orderId: od.orderDetailId,
                     orderDetailId: od.orderDetailId,
                     productId: od.productId,
+                    orderId: od.orderId,
+                    userId: od.userId,
                     quantity: od.quantity,
                     sellPrice: od.sellPrice,
                 }),

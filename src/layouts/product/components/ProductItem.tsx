@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ProductModel from "../../../models/ProductModel";
 import ImageModel from "../../../models/ImageModel";
 import { getImagesByProductId } from "../../../services/ImageAPI";
 import { Link } from "react-router-dom";
 import ratingStarRender from "../../utils/ratingStar";
+import { MyContext } from "../../../App";
+import OrderDetailModel from "../../../models/OrderDetailModel";
+import { addOd } from "../../../services/OrderDetailAPI";
 interface IProductItem {
     product: ProductModel;
 }
@@ -13,6 +16,8 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const [images, setImages] = useState<ImageModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { userId, order, orderDetails } = useContext(MyContext); // Get value from context
 
     // get data from be
     useEffect(
@@ -30,7 +35,32 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         [] //get data at the first one
     );
 
-    const addToCart = async () => {};
+    const addToCart = async () => {
+        let orderDetail: OrderDetailModel | null = null;
+
+        if (order != undefined) {
+            orderDetail = new OrderDetailModel(
+                product.productId,
+                order.orderId,
+                userId,
+                1,
+                product.sellPrice ? product.sellPrice : 0
+            );
+            console.log({
+                orderDetailId: orderDetail.orderDetailId,
+                productId: orderDetail.productId,
+                orderId: order.orderId,
+                userId: userId,
+                quantity: orderDetail.quantity,
+                sellPrice: orderDetail.sellPrice,
+            });
+        }
+
+        if (orderDetail != null && userId > 0) {
+            const response = await addOd(orderDetail);
+            console.log(response);
+        }
+    };
 
     if (isLoading) {
         return (

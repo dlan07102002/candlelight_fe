@@ -2,20 +2,21 @@ class OrderDetailModel {
     private _orderDetailId: number;
     private _productId: number;
     private _quantity: number;
-    private _sellPrice: number;
+    private _sellPrice?: number;
     private _orderId: number;
+    private _userId: number;
 
     constructor(
-        orderDetailId: number,
         productId: number,
+        orderId: number,
+        userId: number,
         quantity: number,
-        sellPrice: number,
-        orderId: number
+        sellPrice: number
     ) {
-        this._orderDetailId = orderDetailId;
+        this._orderDetailId = 0;
         this._productId = productId;
         this._orderId = orderId;
-
+        this._userId = userId;
         this._quantity = quantity;
         this._sellPrice = sellPrice;
     }
@@ -36,6 +37,15 @@ class OrderDetailModel {
 
     set productId(value: number) {
         this._productId = value;
+    }
+
+    // Getter and Setter for userId
+    get userId(): number {
+        return this._userId;
+    }
+
+    set userId(value: number) {
+        this._userId = value;
     }
 
     // Getter and Setter for orderId
@@ -60,7 +70,7 @@ class OrderDetailModel {
     }
 
     // Getter and Setter for sellPrice
-    get sellPrice(): number {
+    get sellPrice(): number | undefined {
         return this._sellPrice;
     }
 
@@ -69,20 +79,6 @@ class OrderDetailModel {
             throw new Error("Sell price cannot be negative");
         }
         this._sellPrice = value;
-    }
-
-    // Method to calculate the total price
-    getTotalPrice(): number {
-        return this._quantity * this._sellPrice;
-    }
-
-    // Method to display order detail information
-    displayOrderDetail(): string {
-        return `Order Detail ID: ${this._orderDetailId}, Quantity: ${
-            this._quantity
-        }, Sell Price: ${
-            this._sellPrice
-        }, Total Price: ${this.getTotalPrice()}`;
     }
 }
 

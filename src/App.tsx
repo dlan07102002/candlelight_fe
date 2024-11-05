@@ -86,53 +86,55 @@ const App: React.FC = () => {
 
     return (
         <div className="App">
-            {/* <MyContext.Provider value={contextValue}>
-                <ProductList />
-            </MyContext.Provider> */}
             <BrowserRouter>
-                <Navbar
-                    setKeyWord={setKeyWord}
-                    isLogin={isLogin}
-                    setLogin={setLogin}
-                />
-                <Routes>
-                    <Route path="/" element={<HomePage keyword={keyword} />} />
-                    <Route
-                        path="/:categoryId"
-                        element={<HomePage keyword={keyword} />}
+                <MyContext.Provider value={contextValue}>
+                    <Navbar
+                        setKeyWord={setKeyWord}
+                        isLogin={isLogin}
+                        setLogin={setLogin}
                     />
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<HomePage keyword={keyword} />}
+                        />
+                        <Route
+                            path="/:categoryId"
+                            element={<HomePage keyword={keyword} />}
+                        />
 
-                    <Route
-                        path="/products/:productId"
-                        element={<ProductDetail />}
-                    />
+                        <Route
+                            path="/products/:productId"
+                            element={<ProductDetail />}
+                        />
 
-                    <Route path="/about" element={<About />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route
-                        path="/login"
-                        element={
-                            <Login isLogin={isLogin} setLogin={setLogin} />
-                        }
-                    />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route
+                            path="/login"
+                            element={
+                                <Login isLogin={isLogin} setLogin={setLogin} />
+                            }
+                        />
 
-                    <Route
-                        path="/activate/:email/:activateCode"
-                        element={<AccountActivate />}
-                    />
+                        <Route
+                            path="/activate/:email/:activateCode"
+                            element={<AccountActivate />}
+                        />
 
-                    <Route
-                        path="/cart"
-                        element={<CartList orderDetails={orderDetails} />}
-                    />
+                        <Route
+                            path="/cart"
+                            element={<CartList orderDetails={orderDetails} />}
+                        />
 
-                    <Route
-                        path="/admin/product-form"
-                        element={<ProductForm />}
-                    />
-                    <Route path="/test" element={<Test />} />
-                </Routes>
-                <Footer />
+                        <Route
+                            path="/admin/product-form"
+                            element={<ProductForm />}
+                        />
+                        <Route path="/test" element={<Test />} />
+                    </Routes>
+                    <Footer />
+                </MyContext.Provider>
             </BrowserRouter>
         </div>
     );
