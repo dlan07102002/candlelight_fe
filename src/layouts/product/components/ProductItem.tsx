@@ -92,9 +92,12 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         sellPrice = product.sellPrice.toFixed(2);
     }
     return (
-        <div className="col-md-3 col-sm-6 mt-2" style={{ height: "450px" }}>
-            <div className="card" style={{ height: "100%" }}>
-                <div style={{ height: "250px" }}>
+        <div
+            className="col-md-3 col-sm-6 mt-2 mb-2 col-10 "
+            style={{ height: "450px" }}
+        >
+            <div className="card">
+                <div>
                     <Link to={`/products/${product.productId}`}>
                         <img
                             src={dataImg}
@@ -105,7 +108,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                     </Link>
                 </div>
 
-                <div className="card-body">
+                <div className="card-body mt-1">
                     <Link
                         to={`/products/${product.productId}`}
                         style={{ textDecoration: "none", color: "black" }}
