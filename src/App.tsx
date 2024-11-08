@@ -16,7 +16,8 @@ import CartList from "./layouts/product/cart/CartList";
 import { getLatestOrderAndOrderDetailByUserId } from "./services/OrderAPI";
 import OrderDetailModel from "./models/OrderDetailModel";
 import OrderModel from "./models/OrderModel";
-import ProductList from "./layouts/product/ProductList";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 interface JwtPayload {
     uid: number;
     exp: number;
@@ -136,6 +137,7 @@ const App: React.FC = () => {
                     <Footer />
                 </MyContext.Provider>
             </BrowserRouter>
+            <ToastContainer />
         </div>
     );
 };

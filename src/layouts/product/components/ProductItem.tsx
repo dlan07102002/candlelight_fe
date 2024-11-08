@@ -7,6 +7,7 @@ import ratingStarRender from "../../utils/ratingStar";
 import { MyContext } from "../../../App";
 import OrderDetailModel from "../../../models/OrderDetailModel";
 import { addOd } from "../../../services/OrderDetailAPI";
+import { toast } from "react-toastify";
 interface IProductItem {
     product: ProductModel;
 }
@@ -60,6 +61,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
             const response = await addOd(orderDetail);
             console.log(response);
         }
+        toast.success("You have successfully added the product to the cart");
     };
 
     if (isLoading) {

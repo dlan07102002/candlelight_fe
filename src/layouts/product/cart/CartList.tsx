@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { getLatestOrderAndOrderDetailByUserId } from "../../../services/OrderAPI";
 import OrderDetailModel from "../../../models/OrderDetailModel";
 import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
-import ProductModel from "../../../models/ProductModel";
 import CartItem from "./CartItem";
 
 const CartList: React.FC<{
     orderDetails: OrderDetailModel[];
 }> = ({ orderDetails }) => {
-    // const [orders, setOrders] = useState([]);
-    // const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
-    // const [products, setProducts] = useState<ProductModel[]>([]);
     const [cartItems, setCartItems] = useState<any>([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
-    // useEffect(() => {
-    //     if (userId > 0) {
-    //         getLatestOrderAndOrderDetailByUserId(userId)
-    //             .then((response) => {
-    //                 console.log(response.order);
-    //                 setOrderDetails(response.orderDetailList);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //             });
-    //     }
-    // }, [userId]);
 
     useEffect(() => {
         const fetchProducts = async () => {
