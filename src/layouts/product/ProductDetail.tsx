@@ -8,6 +8,7 @@ import ProductReview from "./components/ProductReview";
 import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import ProductPaymentForm from "./components/ProductPaymentForm";
 import ratingStarRender from "../utils/ratingStar";
+import { toast } from "react-toastify";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
@@ -84,6 +85,10 @@ const ProductDetail: React.FC = () => {
         );
     }
 
+    const addToCart = () => {
+        toast.success("Add to cart successfully");
+    };
+
     let discountPercent = 0;
     let listPrice: string = "";
     if (product.listPrice != null) {
@@ -156,7 +161,10 @@ const ProductDetail: React.FC = () => {
                                 </button>
                             </li>
                             <li className="mb-2">
-                                <button className="btn btn-light btn-md w-100 btn-outline-secondary">
+                                <button
+                                    className="btn btn-light btn-md w-100 btn-outline-secondary"
+                                    onClick={addToCart}
+                                >
                                     Add to Cart
                                 </button>
                             </li>
@@ -175,20 +183,7 @@ const ProductDetail: React.FC = () => {
             <div className="row mt-4 mb-4">
                 <div className="col">
                     <h3>Detailed Description</h3>
-                    <p>
-                        Sản phẩm nến thơm tinh dầu quế NEOP giúp bạn tận hưởng
-                        hương thơm tự nhiên và thư giãn tuyệt đối trong không
-                        gian sống. Nến được sản xuất từ sáp tự nhiên và tinh dầu
-                        quế nguyên chất, không gây hại cho sức khỏe và an toàn
-                        khi sử dụng trong gia đình.
-                    </p>
-                    <p>
-                        Với thiết kế đẹp mắt và hương thơm dịu nhẹ, nến tinh dầu
-                        quế NEOP không chỉ là một sản phẩm trang trí mà còn mang
-                        đến không gian thư giãn hoàn hảo. Hãy trải nghiệm cảm
-                        giác thư giãn và bình yên ngay tại nhà với sản phẩm nến
-                        thơm từ NEOP.
-                    </p>
+                    <p>{product.description}</p>
                 </div>
             </div>
 

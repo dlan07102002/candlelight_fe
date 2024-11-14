@@ -7,6 +7,7 @@ import ratingStarRender from "../../utils/ratingStar";
 import { MyContext } from "../../../App";
 import OrderDetailModel from "../../../models/OrderDetailModel";
 import { addOd } from "../../../services/OrderDetailAPI";
+import { toast } from "react-toastify";
 interface IProductItem {
     product: ProductModel;
 }
@@ -60,6 +61,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
             const response = await addOd(orderDetail);
             console.log(response);
         }
+        toast.success("The product has been successfully added!");
     };
 
     if (isLoading) {
@@ -78,8 +80,8 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     }
 
     let dataImg: string = "";
-    if (images[0] && images[0].imageData) {
-        dataImg = images[0].imageData;
+    if (images[0] && images[0].link) {
+        dataImg = images[0].link;
     }
 
     let listPrice: string = "";
@@ -94,7 +96,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     return (
         <div
             className="col-md-3 col-sm-6 mt-2 mb-2 col-10 "
-            style={{ height: "450px" }}
+            style={{ height: "500px" }}
         >
             <div className="card">
                 <div>
@@ -103,7 +105,6 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                             src={dataImg}
                             className="card-img-top"
                             alt={product.description}
-                            style={{ height: "200px" }}
                         />
                     </Link>
                 </div>
@@ -113,11 +114,13 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                         to={`/products/${product.productId}`}
                         style={{ textDecoration: "none", color: "black" }}
                     >
-                        <h5 className="card-title">{product.productName}</h5>
+                        <p className="card-title" style={{ minHeight: "48px" }}>
+                            {product.productName}
+                        </p>
                     </Link>
-                    <p className="card-text" style={{ height: "48px" }}>
+                    {/* <p className="card-text" style={{ height: "48px" }}>
                         {product.description}
-                    </p>
+                    </p> */}
 
                     <div className="price ms-4">
                         <span

@@ -16,7 +16,8 @@ import CartList from "./layouts/product/cart/CartList";
 import { getLatestOrderAndOrderDetailByUserId } from "./services/OrderAPI";
 import OrderDetailModel from "./models/OrderDetailModel";
 import OrderModel from "./models/OrderModel";
-import ProductList from "./layouts/product/ProductList";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface JwtPayload {
     uid: number;
     exp: number;
@@ -87,6 +88,7 @@ const App: React.FC = () => {
     return (
         <div className="App">
             <BrowserRouter>
+                <ToastContainer></ToastContainer>
                 <MyContext.Provider value={contextValue}>
                     <Navbar
                         setKeyWord={setKeyWord}

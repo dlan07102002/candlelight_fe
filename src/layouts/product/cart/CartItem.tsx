@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductModel from "../../../models/ProductModel";
-import { deleteOd } from "../../../services/OrderDetailAPI";
+import { deleteOd, updateOdQuantity } from "../../../services/OrderDetailAPI";
 
 const CartItem: React.FC<{
     item: any;
@@ -13,14 +13,28 @@ const CartItem: React.FC<{
     );
 
     useEffect(() => {
-        isNaN(quantity)
-            ? setTotalProductPrice(0)
-            : setTotalProductPrice(quantity * item.sellPrice);
+        const newTotalPrice = isNaN(quantity) ? 0 : quantity * item.sellPrice;
+        setTotalProductPrice(newTotalPrice);
+        updateQuantity(item.productId, quantity);
+        const fetchAPI = async () => {
+            const response = await updateOdQuantity(
+                item.orderDetailId,
+                quantity
+            );
+            console.log("Updated State: " + response);
+        };
+        fetchAPI();
     }, [quantity, item.sellPrice]);
 
     const removeItem = async (odId: number) => {
-        const response = await deleteOd(odId);
-        console.log(response);
+        try {
+            const response = await deleteOd(odId);
+            if (response) {
+                console.log("Delete successful");
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const handleRemove = (odId: number) => {
@@ -28,10 +42,27 @@ const CartItem: React.FC<{
         removeItemFE(odId);
     };
 
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newQuantity = parseInt(e.target.value);
-        setQuantity(newQuantity);
-        updateQuantity(item.productId, newQuantity);
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+
+        if (!isNaN(Number(value))) {
+            let newQuantity = Number(value);
+            if (newQuantity === 0 || value === "") {
+                setQuantity(0);
+            } else if (newQuantity > item.stockQuantity) {
+                setQuantity(item.stockQuantity);
+            } else {
+                setQuantity(newQuantity);
+            }
+        }
+    };
+
+    const handleChangeClick = (action: string) => {
+        if (action === "+") {
+            setQuantity((prev: any) => Math.min(prev + 1, item.stockQuantity));
+        } else {
+            setQuantity((prev: any) => Math.max(prev - 1, 0));
+        }
     };
 
     return (
@@ -41,14 +72,33 @@ const CartItem: React.FC<{
             </td>
             <td>${item.sellPrice.toFixed(2)}</td>
             <td>
-                <input
-                    type="number"
-                    className="form-control mx-auto text-end"
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                    min="1"
-                    style={{ width: "60px" }}
-                />
+                <div className="input-group m-auto" style={{ width: "150px" }}>
+                    <div className="input-group-prepend">
+                        <button
+                            onClick={() => handleChangeClick("-")}
+                            className="btn btn-outline-secondary"
+                        >
+                            <i className="fa-solid fa-subtract"></i>
+                        </button>
+                    </div>
+
+                    <input
+                        type="text"
+                        id="quantity"
+                        className="form-control"
+                        value={quantity}
+                        onChange={(e) => handleInputChange(e)}
+                    />
+
+                    <div className="input-group-append">
+                        <button
+                            onClick={() => handleChangeClick("+")}
+                            className="btn btn-outline-secondary"
+                        >
+                            <i className="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
             </td>
             <td>${totalProductPrice.toFixed(2)}</td>
             <td>

@@ -24,8 +24,8 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
     );
 
     useEffect(() => {
-        if (images[0] && images[0].imageData) {
-            setActive(images[0].imageData);
+        if (images[0] && images[0].link) {
+            setActive(images[0].link);
         }
     }, [images]); // Chạy lại mỗi khi images thay đổi
 
@@ -57,10 +57,10 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
                 {images.map((img) => (
                     <img
                         key={img.imageId}
-                        src={img.imageData}
+                        src={img.link}
                         alt={img.imageId + ""}
                         className="img-thumbnail image-thumbnail" // Thêm class mới
-                        onClick={() => setActive(img.imageData)}
+                        onClick={() => setActive(img.link)}
                     />
                 ))}
             </div>

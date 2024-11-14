@@ -44,8 +44,8 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
         );
     }
     let dataImg: string = "";
-    if (image[0] && image[0].imageData) {
-        dataImg = image[0].imageData;
+    if (image[0] && image[0].link) {
+        dataImg = image[0].link;
     }
     return (
         <div

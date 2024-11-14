@@ -1,7 +1,7 @@
 function Banner() {
     return (
-        <div className="p-2 mb-2 bg-dark">
-            <div className="container-fluid py-5 text-white d-flex justify-content-center align-items-center">
+        <div style={{ backgroundColor: "#d7b27a" }} className="p-2 mb-2 ">
+            <div className="container-fluid py-5  d-flex justify-content-center align-items-center">
                 <div className="text-center">
                     <h3 className="display-5 fw-bold">
                         Illuminate Your Space with Our Premium Scented Candles{" "}
@@ -11,7 +11,12 @@ function Banner() {
                     <p className="lead">
                         Transform your home into a sanctuary of soothing aromas.
                     </p>
-                    <button className="btn btn-primary btn-lg text-white mt-3">
+                    <button
+                        style={{
+                            backgroundColor: "#20575d",
+                        }}
+                        className="btn text-white btn-lg mt-3"
+                    >
                         Discover Your Perfect Candle at CandleLight.com
                     </button>
                 </div>
