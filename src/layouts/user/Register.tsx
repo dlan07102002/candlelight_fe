@@ -58,7 +58,7 @@ function RegisterForm() {
     // check username
     useEffect(() => {
         const fetchData = async () => {
-            const response = await isUsernameExist(usernameDebounced);
+            const response = await isUsernameExist(usernameDebounced + "");
             if (response) {
                 setUsernameError("Username already exists!");
             }
@@ -89,7 +89,7 @@ function RegisterForm() {
     // check email
     useEffect(() => {
         const fetchData = async () => {
-            const response = await isEmailExists(emailDebounced);
+            const response = await isEmailExists(emailDebounced + "");
             if (response) {
                 setEmailError("Email already exists!");
             }
