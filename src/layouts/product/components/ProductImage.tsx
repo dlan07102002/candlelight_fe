@@ -45,11 +45,11 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
     }
 
     return (
-        <div className="col mb-4">
+        <div className="col-12 col-xl-3 mb-4">
             <div className="product-image mb-4">
                 <img
                     src={active}
-                    alt="Nến Tinh Dầu Thơm Quế NEOP"
+                    alt={images[0].imageId + ""}
                     className="img-fluid rounded"
                 />
             </div>

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductByProductId } from "../../services/ProductAPI";
+import {
+    getProductByProductId,
+    getSimilarProductByContentBased,
+} from "../../services/ProductAPI";
 import ProductModel from "../../models/ProductModel";
 import CategoryModel from "../../models/CategoryModel";
 import ProductImage from "./components/ProductImage";
@@ -29,6 +32,7 @@ const ProductDetail: React.FC = () => {
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState<CategoryModel[] | null>([]);
     const [reviewQuantity, setReviewQuantity] = useState(0);
+    const [similarProducts, setSimilarProducts] = useState([]);
 
     useEffect(() => {
         getProductByProductId(productIdNum)
@@ -59,6 +63,18 @@ const ProductDetail: React.FC = () => {
                 setIsLoading(false);
             });
     }, [productId]);
+
+    // Fetch Similar Product
+    useEffect(() => {
+        const fetchAPI = async () => {
+            const response = await getSimilarProductByContentBased(
+                productIdNum
+            );
+            console.log("similar: ", response);
+        };
+
+        fetchAPI();
+    }, []);
 
     // get data from be
 
@@ -105,7 +121,7 @@ const ProductDetail: React.FC = () => {
                 <ProductImage productId={productIdNum} />
 
                 {/* Product Info */}
-                <div className="col-5 mb-4 pb-4 mt-4 product-detail_info">
+                <div className="col-12 col-xl-5 col-lg-5 mb-4 pb-4 mt-4 product-detail_info">
                     <h5 className="product-title product-detail-title mt-2">
                         {product.productName}
                     </h5>
@@ -145,7 +161,8 @@ const ProductDetail: React.FC = () => {
                         </li>
                     </ul>
 
-                    {/* Quantity and Add to Cart */}
+                    {/* Similar Product */}
+                    <p className="product-description">Similar products:</p>
                 </div>
                 <ProductPaymentForm product={product} />
             </div>

@@ -42,7 +42,7 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
         total = (product.sellPrice * Number(quantity)).toFixed(2);
     }
     return (
-        <div className="card col-3 pb-4 mt-4">
+        <div className="card col-xl-3 col-lg-3 col-12 pb-4 mt-4">
             {/*  Seller Info */}
             <div className="seller-info d-flex align-items-center">
                 <div>

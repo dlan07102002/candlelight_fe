@@ -82,3 +82,20 @@ export async function getProductByProductId(productId: number): Promise<{
 }
 // Await here mean the response of getProduct will be the input to get res[0]
 // http://localhost:8080/products/1/categoryList
+export async function getSimilarProductByContentBased(
+    productId: number
+): Promise<{
+    products: [] | null;
+} | null> {
+    const endpoint = `http://localhost:5555/api?product_id=${productId}`;
+
+    try {
+        const products = await requestBE(endpoint);
+
+        // If productResponse is null, return both responses
+        return products;
+    } catch (error) {
+        console.error("Error fetching product or categories:", error);
+        return null;
+    }
+}
