@@ -95,9 +95,9 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
             </div>
 
             {/* Price */}
-            <div className="price d-flex justify-content-between">
-                <span>Subtotal:</span>
-                <div>${total}</div>
+            <div className="price d-flex justify-content-between ms-0">
+                <span>Sub Total:</span>
+                <span>${total}</span>
             </div>
 
             {/* Action Buttons */}

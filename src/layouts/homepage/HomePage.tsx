@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import Banner from "./components/Banner";
 import Carousel from "./components/Carousel";
 import ProductList from "../product/ProductList";
 import { useParams } from "react-router-dom";
-import OrderModel from "../../models/OrderModel";
-import OrderDetailModel from "../../models/OrderDetailModel";
+import { MyContext } from "../../App";
+
 interface IHomePage {
     keyword: string;
 }

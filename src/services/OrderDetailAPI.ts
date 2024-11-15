@@ -51,6 +51,43 @@ export async function addOd(od: OrderDetailModel): Promise<boolean> {
     }
 }
 
+export async function updateQuantity(
+    odId: number,
+    quantity: number
+): Promise<boolean> {
+    const endpoint = `http://localhost:8080/order-details/${odId}`;
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        try {
+            const response = await fetch(endpoint, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    quantity: quantity,
+                }),
+            });
+            if (response.ok) {
+                return true;
+            } else {
+                console.error(
+                    `Update orderDetail id: ${odId} failed with status ${response.status}`
+                );
+                return false;
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+            return false;
+        }
+    } else {
+        console.log("Updating Failed");
+        return false;
+    }
+}
+
 export async function deleteOd(odId: number): Promise<boolean> {
     const token = localStorage.getItem("token");
     const endpoint = `http://localhost:8080/order-details/${odId}`;

@@ -18,6 +18,7 @@ import OrderDetailModel from "./models/OrderDetailModel";
 import OrderModel from "./models/OrderModel";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import UseDebounce from "./hooks/UseDebounce";
 interface JwtPayload {
     uid: number;
     exp: number;
@@ -27,17 +28,22 @@ interface MyContextType {
     userId: number;
     order: OrderModel | undefined;
     orderDetails: OrderDetailModel[];
+    setChangeOrderDetail:
+        | React.Dispatch<React.SetStateAction<boolean>>
+        | undefined;
 }
 export const MyContext = createContext<MyContextType>({
     userId: 0,
     order: undefined,
     orderDetails: [],
+    setChangeOrderDetail: undefined,
 });
 const App: React.FC = () => {
     const [keyword, setKeyWord] = useState("");
     const [isLogin, setLogin] = useState(false);
     const [userId, setUserId] = useState(0);
     const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    const [isChangeOrderDetail, setChangeOrderDetail] = useState(false);
     const [latestOrder, setLatestOrder] = useState<OrderModel | undefined>(
         undefined
     );
@@ -61,6 +67,7 @@ const App: React.FC = () => {
         }
     }, [isLogin]);
 
+    let isChangeOrderDetailDebounced = UseDebounce(isChangeOrderDetail, 200);
     // get order and order details by userId
     useEffect(() => {
         if (userId > 0) {
@@ -72,17 +79,15 @@ const App: React.FC = () => {
                 .catch((err) => {
                     console.log(err);
                 });
+            setChangeOrderDetail(false);
         }
-    }, [userId]);
+    }, [userId, isChangeOrderDetailDebounced]);
 
-    const contextValue: {
-        userId: number;
-        order: OrderModel | undefined;
-        orderDetails: OrderDetailModel[];
-    } = {
+    const contextValue = {
         userId: userId,
         order: latestOrder, // hoặc giá trị kiểu OrderModel
         orderDetails: orderDetails,
+        setChangeOrderDetail: setChangeOrderDetail,
     };
 
     return (
@@ -123,10 +128,7 @@ const App: React.FC = () => {
                             element={<AccountActivate />}
                         />
 
-                        <Route
-                            path="/cart"
-                            element={<CartList orderDetails={orderDetails} />}
-                        />
+                        <Route path="/cart" element={<CartList />} />
 
                         <Route
                             path="/admin/product-form"

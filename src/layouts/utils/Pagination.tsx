@@ -49,7 +49,7 @@ const Pagination: React.FC<PaginationInterface> = ({
                     }`}
                     onClick={() => paging(1)}
                 >
-                    <button className="page-link">First Page</button>
+                    <button className="page-link paging-btn">First Page</button>
                 </li>
 
                 {pageList.map((page) => (
@@ -60,7 +60,7 @@ const Pagination: React.FC<PaginationInterface> = ({
                         key={page}
                         onClick={() => paging(page)}
                     >
-                        <button className="page-link">{page}</button>
+                        <button className="page-link paging-btn">{page}</button>
                     </li>
                 ))}
 
@@ -70,7 +70,7 @@ const Pagination: React.FC<PaginationInterface> = ({
                     }`}
                     onClick={() => paging(total)}
                 >
-                    <button className="page-link">Last Page</button>
+                    <button className="page-link paging-btn">Last Page</button>
                 </li>
             </ul>
         </nav>

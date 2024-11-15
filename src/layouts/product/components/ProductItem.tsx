@@ -18,7 +18,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { userId, order, orderDetails } = useContext(MyContext); // Get value from context
+    const { userId, order, setChangeOrderDetail } = useContext(MyContext); // Get value from context
 
     // get data from be
     useEffect(
@@ -47,20 +47,14 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                 1,
                 product.sellPrice ? product.sellPrice : 0
             );
-            console.log({
-                orderDetailId: orderDetail.orderDetailId,
-                productId: orderDetail.productId,
-                orderId: order.orderId,
-                userId: userId,
-                quantity: orderDetail.quantity,
-                sellPrice: orderDetail.sellPrice,
-            });
         }
 
         if (orderDetail != null && userId > 0) {
             const response = await addOd(orderDetail);
+            setChangeOrderDetail && setChangeOrderDetail(Boolean(response));
             console.log(response);
         }
+
         toast.success("You have successfully added the product to the cart");
     };
 
@@ -80,8 +74,8 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     }
 
     let dataImg: string = "";
-    if (images[0] && images[0].imageData) {
-        dataImg = images[0].imageData;
+    if (images[0] && images[0].link) {
+        dataImg = images[0].link;
     }
 
     let listPrice: string = "";
@@ -96,7 +90,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     return (
         <div
             className="col-md-3 col-sm-6 mt-2 mb-2 col-10 "
-            style={{ height: "450px" }}
+            style={{ minHeight: "450px" }}
         >
             <div className="card">
                 <div>
@@ -105,45 +99,37 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                             src={dataImg}
                             className="card-img-top"
                             alt={product.description}
-                            style={{ height: "200px" }}
                         />
                     </Link>
                 </div>
 
-                <div className="card-body mt-1">
+                <div className="card-body mt-1 pt-0">
+                    <p>
+                        {ratingStarRender(
+                            product.rateAverage ? product.rateAverage : 0
+                        )}
+                    </p>
                     <Link
                         to={`/products/${product.productId}`}
                         style={{ textDecoration: "none", color: "black" }}
                     >
-                        <h5 className="card-title">{product.productName}</h5>
+                        <p className="card-title product-name">
+                            {product.productName}
+                        </p>
                     </Link>
-                    <p className="card-text" style={{ height: "48px" }}>
-                        {product.description}
-                    </p>
 
-                    <div className="price ms-4">
-                        <span
-                            className="original-price "
-                            style={{ fontSize: "12px" }}
-                        >
-                            <del>${listPrice}</del>
-                        </span>
-                        <span className="discounted-price">
+                    <div className="price ">
+                        <span className="sell-price">
                             <strong>${sellPrice}</strong>
+                        </span>
+                        <span className="list-price ">
+                            <del>${listPrice}</del>
                         </span>
                     </div>
 
                     <div className="row mt-2 " role="group">
-                        <div className="col-6">
-                            <p>
-                                {ratingStarRender(
-                                    product.rateAverage
-                                        ? product.rateAverage
-                                        : 0
-                                )}
-                            </p>
-                        </div>
-                        <div className="col-6 ">
+                        <div className="col-6"></div>
+                        <div>
                             <button
                                 className="btn btn-success btn-block float-end"
                                 onClick={() => addToCart()}

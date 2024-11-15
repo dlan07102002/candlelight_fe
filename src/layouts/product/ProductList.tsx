@@ -3,8 +3,6 @@ import ProductItem from "./components/ProductItem";
 import ProductModel from "../../models/ProductModel";
 import { getAllProducts, filterProduct } from "../../services/ProductAPI";
 import Pagination from "../utils/Pagination";
-import OrderModel from "../../models/OrderModel";
-import OrderDetailModel from "../../models/OrderDetailModel";
 
 interface IProductList {
     keyword?: string;

@@ -28,18 +28,22 @@ const CartItem: React.FC<{
         removeItemFE(odId);
     };
 
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleQuantityChange = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const newQuantity = parseInt(e.target.value);
         setQuantity(newQuantity);
-        updateQuantity(item.productId, newQuantity);
+        updateQuantity(item.orderDetailId, newQuantity);
     };
+
+    let sellPrice = item.sellPrice ? item.sellPrice.toFixed(2) : "0.00";
 
     return (
         <tr key={item.productId} className="align-middle">
             <td className="text-end">
                 <strong>{item.productName}</strong>
             </td>
-            <td>${item.sellPrice.toFixed(2)}</td>
+            <td>${sellPrice}</td>
             <td>
                 <input
                     type="number"

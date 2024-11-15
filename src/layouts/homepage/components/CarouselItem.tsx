@@ -44,8 +44,8 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
         );
     }
     let dataImg: string = "";
-    if (image[0] && image[0].imageData) {
-        dataImg = image[0].imageData;
+    if (image[0] && image[0].link) {
+        dataImg = image[0].link;
     }
     return (
         <div
@@ -59,8 +59,12 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
                     <img src={dataImg} className="float-end" height="150px" />
                 </div>
                 <div className="col-7">
-                    <h5>{props.product.productName}</h5>
-                    <p>{props.product.description}</p>
+                    <h5 className="carousel-name">
+                        {props.product.productName}
+                    </h5>
+                    <p className="carousel-description">
+                        {props.product.description}
+                    </p>
                 </div>
             </div>
         </div>

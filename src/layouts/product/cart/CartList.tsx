@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import OrderDetailModel from "../../../models/OrderDetailModel";
 import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
 import CartItem from "./CartItem";
+import { updateQuantity as updateOdQuantity } from "../../../services/OrderDetailAPI";
+import { MyContext } from "../../../App";
 
-const CartList: React.FC<{
-    orderDetails: OrderDetailModel[];
-}> = ({ orderDetails }) => {
+const CartList: React.FC = () => {
     const [cartItems, setCartItems] = useState<any>([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const { orderDetails } = useContext(MyContext); // Get value from context
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -28,12 +29,15 @@ const CartList: React.FC<{
         fetchProducts();
     }, [orderDetails]);
 
-    const updateQuantity = (id: number, quantity: number) => {
+    const updateQuantity = async (id: number, quantity: number) => {
         setCartItems((prevCartItems: any) =>
-            prevCartItems.map((item: any) =>
-                item.productId === id ? { ...item, quantity } : item
-            )
+            prevCartItems.map((item: any) => {
+                return item.orderDetailId === id ? { ...item, quantity } : item;
+            })
         );
+
+        const response = await updateOdQuantity(id, quantity);
+        console.log(response);
     };
 
     const removeItem = (oId: number) => {

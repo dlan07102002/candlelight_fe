@@ -133,7 +133,7 @@ const ProductDetail: React.FC = () => {
                     </p>
 
                     {/* Additional Information */}
-                    <ul className="list-unstyled">
+                    <ul className="list-unstyled my-2">
                         <li>
                             Categories:{" "}
                             {categories &&
@@ -174,21 +174,8 @@ const ProductDetail: React.FC = () => {
             {/* Detailed Description */}
             <div className="row mt-4 mb-4">
                 <div className="col">
-                    <h3>Detailed Description</h3>
-                    <p>
-                        Sản phẩm nến thơm tinh dầu quế NEOP giúp bạn tận hưởng
-                        hương thơm tự nhiên và thư giãn tuyệt đối trong không
-                        gian sống. Nến được sản xuất từ sáp tự nhiên và tinh dầu
-                        quế nguyên chất, không gây hại cho sức khỏe và an toàn
-                        khi sử dụng trong gia đình.
-                    </p>
-                    <p>
-                        Với thiết kế đẹp mắt và hương thơm dịu nhẹ, nến tinh dầu
-                        quế NEOP không chỉ là một sản phẩm trang trí mà còn mang
-                        đến không gian thư giãn hoàn hảo. Hãy trải nghiệm cảm
-                        giác thư giãn và bình yên ngay tại nhà với sản phẩm nến
-                        thơm từ NEOP.
-                    </p>
+                    <h3>Detailed Description:</h3>
+                    <p>{product.description}</p>
                 </div>
             </div>
 
