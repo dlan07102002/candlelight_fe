@@ -93,6 +93,7 @@ const App: React.FC = () => {
     return (
         <div className="App">
             <BrowserRouter>
+                <ToastContainer></ToastContainer>
                 <MyContext.Provider value={contextValue}>
                     <Navbar
                         setKeyWord={setKeyWord}

@@ -11,6 +11,7 @@ import ProductReview from "./components/ProductReview";
 import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import ProductPaymentForm from "./components/ProductPaymentForm";
 import ratingStarRender from "../utils/ratingStar";
+import { toast } from "react-toastify";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
@@ -99,6 +100,10 @@ const ProductDetail: React.FC = () => {
             </div>
         );
     }
+
+    const addToCart = () => {
+        toast.success("Add to cart successfully");
+    };
 
     let discountPercent = 0;
     let listPrice: string = "";

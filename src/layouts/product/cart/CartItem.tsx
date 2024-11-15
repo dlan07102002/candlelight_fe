@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ProductModel from "../../../models/ProductModel";
 import { deleteOd } from "../../../services/OrderDetailAPI";
 
 const CartItem: React.FC<{
