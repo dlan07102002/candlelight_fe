@@ -45,7 +45,7 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
     }
 
     return (
-        <div className="col-md-4 mb-4">
+        <div className="col mb-4">
             <div className="product-image mb-4">
                 <img
                     src={active}

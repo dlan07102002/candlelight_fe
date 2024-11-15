@@ -156,6 +156,13 @@
 }
 /* Product Item */
 
+.product-detail_info{
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding-left: 48px;
+  margin-right: 48px;
+}
+
 .product-name{
   min-height: 2rem;
   margin-top: 0.5rem;

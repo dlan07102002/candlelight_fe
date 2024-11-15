@@ -105,7 +105,7 @@ const ProductDetail: React.FC = () => {
                 <ProductImage productId={productIdNum} />
 
                 {/* Product Info */}
-                <div className=" card col-md-4 col-12 col-sm-12 mb-4 me-3 pb-4 mt-4">
+                <div className="col-5 mb-4 pb-4 mt-4 product-detail_info">
                     <h5 className="product-title product-detail-title mt-2">
                         {product.productName}
                     </h5>
@@ -146,29 +146,6 @@ const ProductDetail: React.FC = () => {
                     </ul>
 
                     {/* Quantity and Add to Cart */}
-
-                    <div>
-                        <ul
-                            className="list-unstyled mb-0 "
-                            style={{ width: "135px" }}
-                        >
-                            <li className="mb-2">
-                                <button className="btn btn-danger btn-md w-100">
-                                    Buy Now
-                                </button>
-                            </li>
-                            <li className="mb-2">
-                                <button className="btn btn-light btn-md w-100 btn-outline-secondary">
-                                    Add to Cart
-                                </button>
-                            </li>
-                            <li>
-                                <button className="btn btn-light btn-md w-100 btn-outline-secondary">
-                                    Add to Wishlist
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
                 <ProductPaymentForm product={product} />
             </div>
