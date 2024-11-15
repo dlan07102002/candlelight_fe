@@ -79,6 +79,7 @@ const Carousel: React.FC = () => {
                     <span className="visually-hidden">Next</span>
                 </button>
             </div>
+            <hr />
         </div>
     );
 };

@@ -4,14 +4,14 @@ function Footer() {
             <footer className="py-5">
                 <div className="row">
                     <div className="col-6 col-md-2 mb-3">
-                        <h5>Section</h5>
+                        <h5>Products</h5>
                         <ul className="nav flex-column">
                             <li className="nav-item mb-2">
                                 <a
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Home
+                                    Scented Candles
                                 </a>
                             </li>
                             <li className="nav-item mb-2">
@@ -19,7 +19,7 @@ function Footer() {
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Features
+                                    Gift Sets
                                 </a>
                             </li>
                             <li className="nav-item mb-2">
@@ -27,37 +27,21 @@ function Footer() {
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Pricing
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    FAQs
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    About
+                                    Candle Accessories
                                 </a>
                             </li>
                         </ul>
                     </div>
 
                     <div className="col-6 col-md-2 mb-3">
-                        <h5>Section</h5>
+                        <h5>About Us</h5>
                         <ul className="nav flex-column">
                             <li className="nav-item mb-2">
                                 <a
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Home
+                                    Our Story
                                 </a>
                             </li>
                             <li className="nav-item mb-2">
@@ -65,7 +49,7 @@ function Footer() {
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Features
+                                    Sustainability
                                 </a>
                             </li>
                             <li className="nav-item mb-2">
@@ -73,55 +57,15 @@ function Footer() {
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    Pricing
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    FAQs
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    About
+                                    Press
                                 </a>
                             </li>
                         </ul>
                     </div>
 
                     <div className="col-6 col-md-2 mb-3">
-                        <h5>Section</h5>
+                        <h5>Support</h5>
                         <ul className="nav flex-column">
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    Home
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    Features
-                                </a>
-                            </li>
-                            <li className="nav-item mb-2">
-                                <a
-                                    href="#"
-                                    className="nav-link p-0 text-body-secondary"
-                                >
-                                    Pricing
-                                </a>
-                            </li>
                             <li className="nav-item mb-2">
                                 <a
                                     href="#"
@@ -135,7 +79,15 @@ function Footer() {
                                     href="#"
                                     className="nav-link p-0 text-body-secondary"
                                 >
-                                    About
+                                    Shipping & Returns
+                                </a>
+                            </li>
+                            <li className="nav-item mb-2">
+                                <a
+                                    href="#"
+                                    className="nav-link p-0 text-body-secondary"
+                                >
+                                    Contact Us
                                 </a>
                             </li>
                         </ul>
@@ -143,10 +95,10 @@ function Footer() {
 
                     <div className="col-md-5 offset-md-1 mb-3">
                         <form>
-                            <h5>Subscribe to our newsletter</h5>
+                            <h5>Subscribe to CandleLight</h5>
                             <p>
-                                Monthly digest of what's new and exciting from
-                                us.
+                                Stay updated with our latest products and
+                                offers.
                             </p>
                             <div className="d-flex flex-column flex-sm-row w-100 gap-2">
                                 <label
@@ -173,10 +125,12 @@ function Footer() {
                 </div>
 
                 <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-                    <p>© 2024 Company, Inc. All rights reserved.</p>
+                    <p>© 2024 CandleLight, All rights reserved.</p>
                     <ul className="list-unstyled d-flex">
                         <li className="ms-3">
-                            <i className="fa-brands fa-facebook"></i>
+                            <a className="link-body-emphasis" href="#">
+                                <i className="fa-brands fa-facebook"></i>
+                            </a>
                         </li>
                         <li className="ms-3">
                             <a className="link-body-emphasis" href="#">

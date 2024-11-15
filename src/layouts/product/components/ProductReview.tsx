@@ -45,7 +45,9 @@ const ProductReview: React.FC<{
     return (
         <div className="row col-12 col-sm-12 col-md-8 col-log-8 col-xl-8">
             <div className="container mt-5 ">
-                <h2 className="mb-4">Customer Reviews</h2>
+                <h3 className="mb-4 product-detail-sub_title">
+                    Customer Reviews
+                </h3>
 
                 {reviews &&
                     reviews.map((review) => (

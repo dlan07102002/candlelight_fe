@@ -70,7 +70,7 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
         );
     }
     return (
-        <div className="container">
+        <div className="container ">
             <div className="row mt-4">
                 {products.map((product) => (
                     <ProductItem key={product.productId} product={product} />

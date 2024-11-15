@@ -99,14 +99,16 @@ const ProductDetail: React.FC = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container">
             <div className="row">
                 {/* Product Image */}
                 <ProductImage productId={productIdNum} />
 
                 {/* Product Info */}
-                <div className=" card col-md-4 col-12 col-sm-12 mb-4 me-3 pb-4">
-                    <h1 className="product-title">{product.productName}</h1>
+                <div className=" card col-md-4 col-12 col-sm-12 mb-4 me-3 pb-4 mt-4">
+                    <h5 className="product-title product-detail-title mt-2">
+                        {product.productName}
+                    </h5>
                     <div className="product-rating d-flex  mb-2">
                         <span className="ms-2 me-2">
                             ({reviewQuantity} review)
@@ -174,8 +176,16 @@ const ProductDetail: React.FC = () => {
             {/* Detailed Description */}
             <div className="row mt-4 mb-4">
                 <div className="col">
-                    <h3>Detailed Description:</h3>
-                    <p>{product.description}</p>
+                    <h3 className="product-detail-sub_title">
+                        Detailed Description:
+                    </h3>
+                    {product.detailDescription && (
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: product.detailDescription,
+                            }}
+                        />
+                    )}
                 </div>
             </div>
 

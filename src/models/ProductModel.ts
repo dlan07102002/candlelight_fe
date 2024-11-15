@@ -2,6 +2,7 @@ class ProductModel {
     private _productId: number;
     private _productName?: string;
     private _description?: string;
+    private _detailDescription?: string;
     private _listPrice?: number;
     private _sellPrice?: number;
     private _quantity?: number;
@@ -11,6 +12,7 @@ class ProductModel {
         productId: number,
         productName: string,
         description?: string,
+        detailDescription?: string,
         listPrice?: number,
         sellPrice?: number,
         quantity?: number,
@@ -39,6 +41,14 @@ class ProductModel {
     }
     public set productName(value: string | undefined) {
         this._productName = value;
+    }
+
+    // Getter and Setter for description
+    public get detailDescription(): string | undefined {
+        return this._detailDescription;
+    }
+    public set detailDescription(value: string | undefined) {
+        this._detailDescription = value;
     }
 
     // Getter and Setter for description

@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarInterface> = ({
                                 Products
                             </NavLink>
                             <ul className=" dropdown-menu custom-dropdown-menu">
-                                <li className="dropdown-header">Category</li>
+                                <li className="dropdown-header">CATEGORIES</li>
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>

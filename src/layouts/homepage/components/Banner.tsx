@@ -1,6 +1,6 @@
 function Banner() {
     return (
-        <div className="p-2 mb-2 banner">
+        <div className="p-2 banner">
             <div className="container-fluid py-5  d-flex justify-content-center align-items-center">
                 <div className="text-center">
                     <h3 className="display-5 fw-bold ">ALL PRODUCTS</h3>

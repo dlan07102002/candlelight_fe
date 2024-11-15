@@ -117,14 +117,19 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                             {product.productName}
                         </p>
                     </Link>
+                    <p className="product-item_description">
+                        {product.description}
+                    </p>
 
-                    <div className="price ">
+                    <div className="mt-4">
                         <span className="sell-price">
                             <strong>${sellPrice}</strong>
                         </span>
-                        <span className="list-price ">
-                            <del>${listPrice}</del>
-                        </span>
+                        {listPrice && (
+                            <span className="list-price ">
+                                <del>${listPrice}</del>
+                            </span>
+                        )}
                     </div>
 
                     <div className="row mt-2 " role="group">
