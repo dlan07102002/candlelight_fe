@@ -84,9 +84,12 @@ export async function getProductByProductId(productId: number): Promise<{
 // http://localhost:8080/products/1/categoryList
 export async function getSimilarProductByContentBased(
     productId: number
-): Promise<{
-    products: [] | null;
-} | null> {
+): Promise<
+    | {
+          Recommend: [];
+      }
+    | {}
+> {
     const endpoint = `http://localhost:5555/api?product_id=${productId}`;
 
     try {
@@ -96,6 +99,6 @@ export async function getSimilarProductByContentBased(
         return products;
     } catch (error) {
         console.error("Error fetching product or categories:", error);
-        return null;
+        return {};
     }
 }

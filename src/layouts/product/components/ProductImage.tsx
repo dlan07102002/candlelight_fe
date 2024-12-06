@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ProductModel from "../../../models/ProductModel";
 import { getImagesByProductId } from "../../../services/ImageAPI";
 import ImageModel from "../../../models/ImageModel";
 
@@ -20,7 +19,7 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
                     setError(error.message);
                 });
         },
-        [] //get data at the first one
+        [productId] //get data at the first one
     );
 
     useEffect(() => {

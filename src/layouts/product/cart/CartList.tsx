@@ -2,12 +2,28 @@ import React, { useContext, useEffect, useState } from "react";
 import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
 import CartItem from "./CartItem";
 import { updateQuantity as updateOdQuantity } from "../../../services/OrderDetailAPI";
+import "../../../App.css";
 import { MyContext } from "../../../App";
+import { getLatestOrderAndOrderDetailByUserId } from "../../../services/OrderAPI";
+import OrderDetailModel from "../../../models/OrderDetailModel";
 
 const CartList: React.FC = () => {
     const [cartItems, setCartItems] = useState<any>([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    const { orderDetails } = useContext(MyContext); // Get value from context
+
+    const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    const { userId } = useContext(MyContext);
+    useEffect(() => {
+        if (userId > 0) {
+            getLatestOrderAndOrderDetailByUserId(userId)
+                .then((response) => {
+                    setOrderDetails(response.orderDetailList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [userId]);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -20,9 +36,11 @@ const CartList: React.FC = () => {
                     );
                     if (product) {
                         const stockQuantity = product.quantity;
+                        console.log(orderDetails);
                         newCartItems.push({
                             ...product,
                             ...od,
+                            quantity: od.quantity,
                             stockQuantity: stockQuantity,
                         });
                     }
@@ -71,15 +89,25 @@ const CartList: React.FC = () => {
     return (
         <div className="py-5 ">
             <h2 className="text-center mb-5">Shopping Cart</h2>
-            <div className="table-responsive">
-                <table className="table table-hover align-middle text-center">
-                    <thead className=" text-white ">
+            <div className="table-responsive container">
+                <table className="table table-hover  text-center table-bordered border-primary">
+                    <thead className=" text-uppercase">
                         <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" className="cart-table-head">
+                                Product
+                            </th>
+                            <th scope="col" className="cart-table-head">
+                                Price
+                            </th>
+                            <th scope="col" className="cart-table-head">
+                                Quantity
+                            </th>
+                            <th scope="col" className="cart-table-head">
+                                Total
+                            </th>
+                            <th scope="col" className="cart-table-head">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,11 +132,11 @@ const CartList: React.FC = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div className="d-flex justify-content-end mt-4">
-                <button className="btn btn-lg btn-primary px-5">
-                    Checkout
-                </button>
+                <div className="d-flex justify-content-end mt-4">
+                    <button className="btn btn-lg btn-primary px-5">
+                        Checkout
+                    </button>
+                </div>
             </div>
         </div>
     );

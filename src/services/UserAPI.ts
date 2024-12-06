@@ -67,6 +67,7 @@ export async function register(user: UserModel): Promise<boolean> {
             }),
         });
         if (response.ok) {
+            response.json().then((res) => console.log(res));
             return true;
         } else {
             throw new Error("Registration failed");
@@ -100,9 +101,9 @@ export async function login(username: string, password: string) {
             })
             .then((data) => {
                 // Successfully Login
-                const { jwt } = data;
+                const { result } = data;
                 // Store jwt token into localStorage
-                localStorage.setItem("token", jwt);
+                localStorage.setItem("token", result);
             });
     } catch (error) {
         throw new Error("Invalid username or password");

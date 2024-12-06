@@ -6,6 +6,7 @@ import {
 } from "../../services/UserAPI";
 import UseDebounce from "../../hooks/UseDebounce";
 import UserModel from "../../models/UserModel";
+import { toast } from "react-toastify";
 
 function RegisterForm() {
     const [username, setUsername] = useState("");
@@ -45,7 +46,11 @@ function RegisterForm() {
                     gender
                 )
             );
+            console.log(res);
             if (res) {
+                toast.success(
+                    "Registration successful. Please check your email to activate your account"
+                );
                 setNotification(
                     "Registration successful. Please check your email to activate your account"
                 );

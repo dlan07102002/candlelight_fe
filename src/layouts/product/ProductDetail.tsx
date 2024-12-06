@@ -12,6 +12,7 @@ import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import ProductPaymentForm from "./components/ProductPaymentForm";
 import ratingStarRender from "../utils/ratingStar";
 import { toast } from "react-toastify";
+import ProductItem from "./recommend/ProductItem";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
@@ -33,7 +34,10 @@ const ProductDetail: React.FC = () => {
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState<CategoryModel[] | null>([]);
     const [reviewQuantity, setReviewQuantity] = useState(0);
-    const [similarProducts, setSimilarProducts] = useState([]);
+    const [similarProductIds, setSimilarProductIds] = useState([]);
+    const [similarProducts, setSimilarProducts] = useState<
+        ProductModel[] | null
+    >([]);
 
     useEffect(() => {
         getProductByProductId(productIdNum)
@@ -68,16 +72,36 @@ const ProductDetail: React.FC = () => {
     // Fetch Similar Product
     useEffect(() => {
         const fetchAPI = async () => {
-            const response = await getSimilarProductByContentBased(
-                productIdNum
-            );
-            console.log("similar: ", response);
+            const response = await getSimilarProductByContentBased(productIdNum)
+                .then((data) => {
+                    if (data && "Recommend" in data) {
+                        const list = data.Recommend;
+                        console.log(list);
+                        setSimilarProductIds(list);
+                    }
+                })
+                .catch((e) => console.log(e));
         };
 
         fetchAPI();
     }, []);
 
-    // get data from be
+    useEffect(() => {
+        similarProductIds.forEach(async (similarProductId) => {
+            const response = await getProductByProductId(similarProductId).then(
+                (data) => {
+                    const product = data ? data.res : null;
+                    if (product != null) {
+                        setSimilarProducts((prevState) => [
+                            ...(prevState || []),
+                            product,
+                        ]);
+                    }
+                }
+            );
+        });
+        console.log(similarProducts);
+    }, [similarProductIds.toString()]);
 
     if (isLoading) {
         return (
@@ -168,6 +192,15 @@ const ProductDetail: React.FC = () => {
 
                     {/* Similar Product */}
                     <p className="product-description">Similar products:</p>
+                    <div className="row">
+                        {similarProducts &&
+                            similarProducts.map((similarProduct) => (
+                                <ProductItem
+                                    key={similarProduct.productId}
+                                    product={similarProduct}
+                                />
+                            ))}
+                    </div>
                 </div>
                 <ProductPaymentForm product={product} />
             </div>

@@ -298,3 +298,19 @@ ul.pagination > li.active button{
   color: white;
   background-color: #20575d;
 }
+
+/* Cart List */
+th.cart-table-head{
+  background-color: #20575d;
+  color: white;
+
+}
+
+th.cart-table-head:first-child{
+  border-top-left-radius: 5px;
+}
+
+th.cart-table-head:last-child{
+  border-top-right-radius: 5px;
+  padding-right: 2rem;
+}
