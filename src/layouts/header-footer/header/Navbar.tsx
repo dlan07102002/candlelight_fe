@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CategoryModel from "../../../models/CategoryModel";
 import { getAllCategories } from "../../../services/CategoryAPI";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { MyContext } from "../../../App";
 interface NavbarInterface {
     // keyword: string;
     setKeyWord: React.Dispatch<string>;
@@ -15,7 +16,7 @@ const Navbar: React.FC<NavbarInterface> = ({
 }) => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [inputValue, setInputValue] = useState("");
-    // const [isLogin, setLogin] = useState(false);
+    const { setUserId } = useContext(MyContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,6 +39,7 @@ const Navbar: React.FC<NavbarInterface> = ({
     };
 
     const handleLogout = () => {
+        setUserId && setUserId(0);
         localStorage.removeItem("token");
         setLogin(false);
     };
@@ -162,7 +164,10 @@ const Navbar: React.FC<NavbarInterface> = ({
                 {/* Shopping Cart Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/cart">
+                        <NavLink
+                            className="nav-link"
+                            to={isLogin ? "/cart" : "/login"}
+                        >
                             <i className="fas fa-shopping-cart"></i>
                         </NavLink>
                     </li>

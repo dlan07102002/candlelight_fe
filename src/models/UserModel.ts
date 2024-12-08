@@ -1,19 +1,19 @@
 class UserModel {
     private _userId?: number;
-    private _username: string;
-    private _email: string;
+    private _username?: string;
+    private _email?: string;
     private _phoneNumber?: string;
     private _firstName?: string;
     private _lastName?: string;
-    private _password: string;
+    private _password?: string;
     private _gender?: string;
     private _orderAddress?: string;
     private _deliveryAddress?: string;
 
     constructor(
-        username: string,
-        email: string,
-        password: string,
+        username?: string,
+        email?: string,
+        password?: string,
         phoneNumber?: string,
         firstName?: string,
         lastName?: string,
@@ -38,14 +38,14 @@ class UserModel {
     public set userId(userId: number | undefined) {
         this._userId = userId;
     }
-    public get username(): string {
+    public get username(): string | undefined {
         return this._username;
     }
     public set username(username: string) {
         this._username = username;
     }
 
-    public get email(): string {
+    public get email(): string | undefined {
         return this._email;
     }
     public set email(email: string) {
@@ -73,7 +73,7 @@ class UserModel {
         this._lastName = lastName;
     }
 
-    public get password(): string {
+    public get password(): string | undefined {
         return this._password;
     }
     public set password(password: string) {

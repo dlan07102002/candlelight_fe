@@ -2,7 +2,7 @@ class OrderDetailModel {
     private _orderDetailId: number;
     private _productId: number;
     private _quantity: number;
-    private _sellPrice?: number;
+    private _sellPrice: number;
     private _orderId: number;
     private _userId: number;
 
@@ -70,7 +70,7 @@ class OrderDetailModel {
     }
 
     // Getter and Setter for sellPrice
-    get sellPrice(): number | undefined {
+    get sellPrice(): number {
         return this._sellPrice;
     }
 

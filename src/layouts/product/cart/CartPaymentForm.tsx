@@ -1,109 +1,158 @@
-import React, { useEffect, useState } from "react";
-import ProductModel from "../../../models/ProductModel";
+import React, { useContext, useEffect, useState } from "react";
+import { MyContext } from "../../../App";
+import DeliveryDetail from "./order-review/DeliveryDetail";
+import CartItemsDetails from "./order-review/CartItemsDetails";
+import UserModel from "../../../models/UserModel";
 
-const CartPaymentForm: React.FC<{ product: ProductModel }> = ({ product }) => {
-    const [quantity, setQuantity] = useState<number | "">(1);
+interface ICartPaymentForm {
+    cartItems: ICartItem[];
+    totalAmount: number;
+    isShow: boolean;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    user: UserModel;
+}
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target;
-        // Kiểm tra nếu value chỉ chứa số
-        // setQuantity(value);
-        console.log(value);
-        const stockQuantity = product.quantity ? product.quantity : 0;
+interface ICartItem {
+    orderDetailId: number;
+    productName: string;
+    quantity: number;
+    sellPrice: number;
+}
 
-        if (!isNaN(Number(value))) {
-            if (value === "") {
-                setQuantity(0);
-            }
-            if (Number(value) >= stockQuantity) {
-                setQuantity(stockQuantity); // Chỉ cập nhật nếu là số
-            } else {
-                setQuantity(Number(value)); // Chỉ cập nhật nếu là số
-            }
-        }
+const CartPaymentForm: React.FC<ICartPaymentForm> = ({
+    cartItems,
+    totalAmount,
+    setShow,
+    user,
+}) => {
+    const { userId } = useContext(MyContext); // Lấy thông tin userId từ context
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [stage, setStage] = useState(1);
+
+    const handleCancel = () => {
+        setShow(false);
     };
 
-    const handleChangeClick = (action: string) => {
-        if (action === "+") {
-            const stockQuantity = product.quantity ? product.quantity : 0;
-            if (Number(quantity) < stockQuantity)
-                setQuantity(Number(quantity) + 1);
-        } else {
-            if (Number(quantity) > 0) {
-                setQuantity(Number(quantity) - 1);
-            }
-        }
-    };
-
-    let total: string = "";
-    if (product.sellPrice != null) {
-        total = (product.sellPrice * Number(quantity)).toFixed(2);
-    }
-    return (
-        <div className="card col-12 col-lg-4 col-xl-4 pb-4">
-            {/*  Seller Info */}
-            <div className="seller-info d-flex align-items-center">
-                <div>
-                    <img src="/src/assets/images/logo.svg" alt="Candle Light" />
-                </div>
-                <div className="ms-3">
-                    <h5 className="mb-0">CandleLight Trading</h5>
-                    <small>Official Store</small>
-                </div>
-            </div>
-
-            {/* Product Rating */}
-            {/* <div className="rating d-flex align-items-center">
-                <span>4.7</span>
-                <img src="" alt="Star Icon" width="16" />
-                <small className="ms-2">(5.5k+ reviews)</small>
-            </div> */}
-
-            {/* Quantity Selector */}
-            <div className="quantity d-flex align-items-center">
-                <label htmlFor="quantity" className="me-3">
-                    Quantity:
-                </label>
-                <div className="input-group">
-                    <div className="input-group-append">
-                        <button
-                            onClick={() => handleChangeClick("+")}
-                            className="btn btn-outline-secondary"
-                        >
-                            <i className="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-
-                    <input
-                        type="text"
-                        id="quantity"
-                        className="form-control"
-                        value={quantity}
-                        onChange={(e) => handleInputChange(e)}
+    // Dummy calculations for subtotal, tax, and shipping
+    const subtotal = cartItems.reduce(
+        (acc, item) => acc + item.quantity * item.sellPrice,
+        0
+    );
+    const tax = subtotal * 0.1; // Example tax rate
+    const shipping = 5.0; // Example shipping fee
+    const checkStage = () => {
+        switch (stage) {
+            case 1:
+                return <DeliveryDetail user={user} />;
+            case 2:
+                return (
+                    <CartItemsDetails
+                        cartItems={cartItems}
+                        totalAmount={totalAmount}
                     />
-                    <div className="input-group-prepend">
+                );
+
+            default:
+                return (
+                    <div className="total-amount mb-4">
+                        <h4 className="text-center">
+                            <strong>
+                                Total Amount: ${totalAmount.toFixed(2)}
+                            </strong>
+                        </h4>
+                        {cartItems.length > 0 && (
+                            <p className="text-center mt-2">
+                                <strong>Subtotal:</strong> $
+                                {subtotal.toFixed(2)} <br />
+                                <strong>Tax:</strong> ${tax.toFixed(2)} <br />
+                                <strong>Shipping:</strong> $
+                                {shipping.toFixed(2)}
+                            </p>
+                        )}
+                    </div>
+                );
+        }
+    };
+
+    const handleContinue = () => {
+        console.log(stage);
+        setStage((prevState) => ++prevState);
+    };
+
+    return (
+        <div className="overlay d-flex align-items-center justify-content-center">
+            <div className="overlay-content shadow-lg rounded-lg bg-white h-100 d-flex flex-column">
+                <h3 className="text-center order-review-header mb-0">
+                    Order Review
+                </h3>
+                <div className="order-stage w-100 d-flex">
+                    <ul className="payment-stages w-75">
+                        <li>
+                            <div
+                                className="circle-number text-white mt-2"
+                                onClick={() => setStage(1)}
+                            >
+                                <p className="payment-stage">1</p>
+                            </div>
+                            <span>Address</span>
+                        </li>
+                        <li style={{ flex: 2 }}>
+                            <div
+                                className="circle-number text-white mt-2"
+                                onClick={() => setStage(2)}
+                            >
+                                <p className="payment-stage">2</p>
+                            </div>
+                            <span>Order Summary</span>
+                        </li>
+                        <li>
+                            <div
+                                className="circle-number text-white mt-2"
+                                onClick={() => setStage(3)}
+                            >
+                                <p className="payment-stage">3</p>
+                            </div>
+                            <span>Payment</span>
+                        </li>
+                    </ul>
+                </div>
+
+                {checkStage()}
+
+                <div className="stage-action mt-auto">
+                    {/* Actions */}
+                    <div className="checkout-actions text-center">
+                        {userId > 0 ? (
+                            <button
+                                className="btn btn-primary w-50 py-2"
+                                onClick={handleContinue}
+                            >
+                                Continue
+                            </button>
+                        ) : (
+                            <button className="btn btn-secondary w-50 py-2">
+                                Login to Proceed
+                            </button>
+                        )}
+                    </div>
+                    {/* Back to Cart */}
+                    <div className="text-center">
                         <button
-                            onClick={() => handleChangeClick("-")}
-                            className="btn btn-outline-secondary"
+                            className="btn btn-secondary w-50 py-2 mt-2 mb-4"
+                            onClick={handleCancel}
                         >
-                            <i className="fa-solid fa-subtract"></i>
+                            Back to Cart
                         </button>
                     </div>
                 </div>
-            </div>
 
-            {/* Price */}
-            <div className="price d-flex justify-content-between">
-                <span>Sub Total:</span>
-                <div>${total}</div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="action-buttons d-flex justify-content-between">
-                <button className="btn btn-danger">Buy Now</button>
-                <button className="btn btn-outline-secondary ms-4">
-                    Add to Cart
-                </button>
+                {/* Loading Spinner */}
+                <div className="loading-spinner text-center">
+                    {isLoading && (
+                        <div className="spinner-border" role="status"></div>
+                    )}
+                </div>
             </div>
         </div>
     );

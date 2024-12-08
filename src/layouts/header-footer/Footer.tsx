@@ -100,19 +100,14 @@ function Footer() {
                                 Stay updated with our latest products and
                                 offers.
                             </p>
-                            <div className="d-flex flex-column flex-sm-row w-100 gap-2">
-                                <label
-                                    htmlFor="newsletter1"
-                                    className="visually-hidden"
-                                >
-                                    Email address
-                                </label>
+                            <div className="d-flex flex-column flex-sm-row w-100 gap-2 mt-3">
                                 <input
                                     id="newsletter1"
                                     type="text"
                                     className="form-control"
                                     placeholder="Email address"
                                 />
+
                                 <button
                                     className="btn btn-primary"
                                     type="button"

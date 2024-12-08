@@ -17,6 +17,15 @@ async function getUsers(endpoint: string): Promise<UserInterface> {
     return { res: res };
 }
 
+export async function getUserById(userId: number): Promise<UserModel> {
+    const endpoint = `http://localhost:8080/users/${userId}`;
+    let user = new UserModel();
+    const response = await requestBE(endpoint).then((data) => {
+        user = data;
+    });
+    return user;
+}
+
 // http://localhost:8080/users/search/existsByUsername%7B?username}
 
 export async function isUsernameExist(

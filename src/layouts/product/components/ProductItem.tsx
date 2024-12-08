@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import ratingStarRender from "../../utils/ratingStar";
 import { MyContext } from "../../../App";
 import OrderDetailModel from "../../../models/OrderDetailModel";
-import { addOd } from "../../../services/OrderDetailAPI";
+import { addOd, updateQuantity } from "../../../services/OrderDetailAPI";
 import { toast } from "react-toastify";
 interface IProductItem {
     product: ProductModel;
@@ -17,8 +17,14 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const [images, setImages] = useState<ImageModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [cartList, setCartList] = useState<OrderDetailModel[]>([]);
+    const { userId, order, orderDetails } = useContext(MyContext); // Get value from context
+    let odId = 0;
+    let isExist = false;
 
-    const { userId, order } = useContext(MyContext); // Get value from context
+    useEffect(() => {
+        if (orderDetails && orderDetails.length != 0) setCartList(orderDetails);
+    }, [orderDetails]);
 
     // get data from be
     useEffect(
@@ -39,24 +45,77 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const addToCart = async () => {
         try {
             let orderDetail: OrderDetailModel | null = null;
-            if (order) {
-                orderDetail = new OrderDetailModel(
-                    product.productId,
-                    order.orderId,
-                    userId,
-                    1,
-                    product.sellPrice ?? 0 // Using nullish coalescing operator
-                );
-            }
+            let currentQuantity = 1;
 
-            if (orderDetail && userId > 0) {
-                const response = await addOd(orderDetail);
-                if (response) {
-                    toast.success(
-                        "You have successfully added the product to the cart"
-                    );
-                } else {
-                    toast.error("Failed to add the product to the cart");
+            if (order) {
+                let productId = product.productId;
+
+                // Check product is exist in cart or not
+                cartList.forEach((cartItem) => {
+                    if (cartItem.productId === productId) {
+                        isExist = true;
+                        console.log(cartItem.orderDetailId);
+                        // setOdId(cartItem.orderDetailId);
+                        odId = cartItem.orderDetailId;
+                        currentQuantity = cartItem.quantity;
+                    }
+                });
+
+                if (userId > 0) {
+                    if (!isExist) {
+                        orderDetail = new OrderDetailModel(
+                            product.productId,
+                            order.orderId ?? 0,
+                            userId,
+                            currentQuantity,
+                            product.sellPrice ?? 0 // Using nullish coalescing operator
+                        );
+                        const response = await addOd(orderDetail);
+
+                        if (response !== 0 && orderDetail) {
+                            odId = response;
+                            toast.success(
+                                "You have successfully added the product to the cart"
+                            );
+
+                            setCartList((prevState) => {
+                                const result = [...prevState];
+                                orderDetail!.orderDetailId = response;
+                                result.push(orderDetail!);
+                                return result;
+                            });
+                        } else {
+                            toast.error(
+                                "Failed to add the product to the cart"
+                            );
+                        }
+                    } else {
+                        // Quantity + 1 when product was in CartList
+                        setCartList(
+                            cartList.map((cartItem) => {
+                                if (cartItem.productId == productId) {
+                                    cartItem.quantity += 1;
+                                }
+                                return cartItem;
+                            })
+                        );
+
+                        if (odId !== 0) {
+                            const response = await updateQuantity(
+                                odId,
+                                currentQuantity + 1
+                            );
+                            if (response) {
+                                toast.success(
+                                    "You have successfully added the product to the cart"
+                                );
+                            } else {
+                                toast.error(
+                                    "Failed to add the product to the cart"
+                                );
+                            }
+                        }
+                    }
                 }
             }
         } catch (error) {

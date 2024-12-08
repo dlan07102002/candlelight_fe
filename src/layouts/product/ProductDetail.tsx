@@ -40,6 +40,10 @@ const ProductDetail: React.FC = () => {
     >([]);
 
     useEffect(() => {
+        window.scrollTo(0, 0); // Scroll to 0,0
+    }, [productId]);
+
+    useEffect(() => {
         getProductByProductId(productIdNum)
             .then((response) => {
                 if (response) {
@@ -72,6 +76,7 @@ const ProductDetail: React.FC = () => {
     // Fetch Similar Product
     useEffect(() => {
         const fetchAPI = async () => {
+            console.log(productIdNum);
             const response = await getSimilarProductByContentBased(productIdNum)
                 .then((data) => {
                     if (data && "Recommend" in data) {
@@ -84,24 +89,32 @@ const ProductDetail: React.FC = () => {
         };
 
         fetchAPI();
-    }, []);
+    }, [productId]);
 
     useEffect(() => {
-        similarProductIds.forEach(async (similarProductId) => {
-            const response = await getProductByProductId(similarProductId).then(
-                (data) => {
-                    const product = data ? data.res : null;
-                    if (product != null) {
-                        setSimilarProducts((prevState) => [
-                            ...(prevState || []),
-                            product,
-                        ]);
-                    }
-                }
-            );
-        });
+        const fetchAPI = async () => {
+            try {
+                const products = await Promise.all(
+                    similarProductIds.map(async (similarProductId) => {
+                        const data = await getProductByProductId(
+                            similarProductId
+                        );
+                        return data ? data.res : null;
+                    })
+                );
+                // Filter null item
+                setSimilarProducts(
+                    products.filter((product) => product !== null)
+                );
+            } catch (error) {
+                console.error("Error fetching similar products:", error);
+            }
+        };
+        if (similarProductIds.length > 0) {
+            fetchAPI();
+        }
         console.log(similarProducts);
-    }, [similarProductIds.toString()]);
+    }, [similarProductIds]);
 
     if (isLoading) {
         return (
@@ -207,7 +220,7 @@ const ProductDetail: React.FC = () => {
 
             {/* Detailed Description */}
             <div className="row mt-4 mb-4">
-                <div className="col">
+                <div className="col-xl-8 col-lg-8 ">
                     <h3 className="product-detail-sub_title">
                         Detailed Description:
                     </h3>

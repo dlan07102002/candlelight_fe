@@ -24,7 +24,7 @@ export async function getOrdersByUserId(
     userId: number
 ): Promise<{ res: OrderModel[] }> {
     const endpoint = `http://localhost:8080/users/${userId}/orderList`;
-    const response = getOrders(endpoint);
+    const response = await getOrders(endpoint);
     return response;
 }
 
@@ -44,4 +44,45 @@ export async function getLatestOrderAndOrderDetailByUserId(
         .orderDetails as OrderDetail[];
 
     return { order: order, orderDetailList: orderDetailList };
+}
+
+export async function createOrder(order: OrderModel): Promise<number> {
+    const endpoint = `http://localhost:8080/api/order`;
+    const token = localStorage.getItem("token");
+    let orderId = 0;
+    if (token) {
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    createdAt: order.createdAt,
+                    orderAddress: "",
+                    deliveryAddress: "",
+                    paymentCost: 0,
+                    deliveryCost: 0,
+                    totalPrice: 0,
+                    deliveryStatus: "PENDING",
+                    paymentStatus: "PENDING",
+                }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                orderId = parseInt(data);
+            } else {
+                console.error(
+                    `Add order id: ${order.orderId} failed with status ${response.status}`
+                );
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+    } else {
+        console.error("Adding Failed");
+    }
+
+    return orderId;
 }

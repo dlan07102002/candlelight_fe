@@ -1,9 +1,7 @@
 import OrderDetailModel from "../models/OrderDetailModel";
 import ProductModel from "../models/ProductModel";
 import requestBE from "./Request";
-interface IOrderDetail {
-    res: OrderDetailModel[];
-}
+
 export async function getProductByOrderDetailId(
     odId: number
 ): Promise<ProductModel> {
@@ -12,10 +10,10 @@ export async function getProductByOrderDetailId(
     return response;
 }
 
-export async function addOd(od: OrderDetailModel): Promise<boolean> {
+export async function addOd(od: OrderDetailModel): Promise<number> {
     const endpoint = `http://localhost:8080/api/order-detail`;
     const token = localStorage.getItem("token");
-
+    let odId = 0;
     if (token) {
         try {
             const response = await fetch(endpoint, {
@@ -34,21 +32,20 @@ export async function addOd(od: OrderDetailModel): Promise<boolean> {
                 }),
             });
             if (response.ok) {
-                return true;
+                const data = await response.json();
+                odId = parseInt(data);
             } else {
                 console.error(
                     `Add orderDetail id: ${od.orderDetailId} failed with status ${response.status}`
                 );
-                return false;
             }
         } catch (error) {
             console.error("An error occurred:", error);
-            return false;
         }
     } else {
-        console.log("Adding Failed");
-        return false;
+        console.error("Adding Failed");
     }
+    return odId;
 }
 
 export async function updateQuantity(

@@ -1,21 +1,21 @@
 class OrderModel {
-    private _orderId: number;
+    private _orderId?: number;
     private _createdAt: Date;
     private _orderAddress?: string;
-    private _deliveryAddress: string;
-    private _paymentCost: number;
-    private _deliveryCost: number;
-    private _totalPrice: number;
-    private _deliveryStatus: string;
-    private _paymentStatus: string;
+    private _deliveryAddress?: string;
+    private _paymentCost?: number;
+    private _deliveryCost?: number;
+    private _totalPrice?: number;
+    private _deliveryStatus?: string;
+    private _paymentStatus?: string;
 
     constructor(
-        orderId: number,
-        orderAddress: string,
-        deliveryAddress: string,
-        paymentCost: number,
-        deliveryCost: number,
-        totalProductPrice: number
+        orderId?: number,
+        orderAddress?: string,
+        deliveryAddress?: string,
+        paymentCost?: number,
+        deliveryCost?: number,
+        totalPrice?: number
     ) {
         this._orderId = orderId;
         this._createdAt = new Date(Date.now());
@@ -23,13 +23,13 @@ class OrderModel {
         this._deliveryAddress = deliveryAddress;
         this._paymentCost = paymentCost;
         this._deliveryCost = deliveryCost;
-        this._totalPrice = totalProductPrice;
+        this._totalPrice = totalPrice;
         this._deliveryStatus = "Pending";
         this._paymentStatus = "Pending";
     }
 
     // Getters
-    public get orderId(): number {
+    public get orderId(): number | undefined {
         return this._orderId;
     }
 
@@ -41,33 +41,28 @@ class OrderModel {
         return this._orderAddress;
     }
 
-    public get deliveryAddress(): string {
+    public get deliveryAddress(): string | undefined {
         return this._deliveryAddress;
     }
 
-    public get paymentCost(): number {
+    public get paymentCost(): number | undefined {
         return this._paymentCost;
     }
 
-    public get deliveryCost(): number {
+    public get deliveryCost(): number | undefined {
         return this._deliveryCost;
     }
 
-    public get totalProductPrice(): number {
+    public get totalPrice(): number | undefined {
         return this._totalPrice;
     }
 
-    public get deliveryStatus(): string {
+    public get deliveryStatus(): string | undefined {
         return this._deliveryStatus;
     }
 
-    public get paymentStatus(): string {
+    public get paymentStatus(): string | undefined {
         return this._paymentStatus;
-    }
-
-    // Optional: Method to calculate total cost
-    public getTotalCost(): number {
-        return this._paymentCost + this._deliveryCost;
     }
 }
 

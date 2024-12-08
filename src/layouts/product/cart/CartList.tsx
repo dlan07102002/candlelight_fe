@@ -6,10 +6,15 @@ import "../../../App.css";
 import { MyContext } from "../../../App";
 import { getLatestOrderAndOrderDetailByUserId } from "../../../services/OrderAPI";
 import OrderDetailModel from "../../../models/OrderDetailModel";
+import CartPaymentForm from "./CartPaymentForm";
+import { getUserById } from "../../../services/UserAPI";
+import UserModel from "../../../models/UserModel";
 
 const CartList: React.FC = () => {
     const [cartItems, setCartItems] = useState<any>([]);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [isShow, setShow] = useState(false);
+    const [user, setUser] = useState<UserModel>();
 
     const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
     const { userId } = useContext(MyContext);
@@ -22,6 +27,20 @@ const CartList: React.FC = () => {
                 .catch((err) => {
                     console.log(err);
                 });
+        } else {
+            setOrderDetails([]);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        if (userId > 0) {
+            const fetchApi = async () => {
+                const response = await getUserById(userId).then((data) => {
+                    console.log(data);
+                    setUser(data);
+                });
+            };
+            fetchApi();
         }
     }, [userId]);
 
@@ -36,7 +55,6 @@ const CartList: React.FC = () => {
                     );
                     if (product) {
                         const stockQuantity = product.quantity;
-                        console.log(orderDetails);
                         newCartItems.push({
                             ...product,
                             ...od,
@@ -54,6 +72,11 @@ const CartList: React.FC = () => {
 
         fetchProducts();
     }, [orderDetails]);
+
+    // Recalculate total price whenever cart items change
+    useEffect(() => {
+        calculateTotalPrice();
+    }, [cartItems]); // Depend on cartItems, not totalPrice
 
     const updateQuantity = async (id: number, quantity: number) => {
         setCartItems((prevCartItems: any) =>
@@ -78,13 +101,12 @@ const CartList: React.FC = () => {
             0
         );
 
-        setTotalPrice(isNaN(total) ? 0 : total);
+        setTotalAmount(isNaN(total) ? 0 : total);
     };
 
-    // Recalculate total price whenever cart items change
-    useEffect(() => {
-        calculateTotalPrice();
-    }, [cartItems]); // Depend on cartItems, not totalPrice
+    const handlePaymentShow = () => {
+        setShow(!isShow);
+    };
 
     return (
         <div className="py-5 ">
@@ -128,16 +150,28 @@ const CartList: React.FC = () => {
                             <td colSpan={3} className="text-end">
                                 Total
                             </td>
-                            <td colSpan={2}>${totalPrice.toFixed(2)}</td>
+                            <td colSpan={2}>${totalAmount.toFixed(2)}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div className="d-flex justify-content-end mt-4">
-                    <button className="btn btn-lg btn-primary px-5">
+                    <button
+                        className="btn btn-lg btn-primary px-5"
+                        onClick={handlePaymentShow}
+                    >
                         Checkout
                     </button>
                 </div>
             </div>
+            {isShow && (
+                <CartPaymentForm
+                    cartItems={cartItems}
+                    totalAmount={totalAmount}
+                    isShow={isShow}
+                    setShow={setShow}
+                    user={user!}
+                />
+            )}
         </div>
     );
 };

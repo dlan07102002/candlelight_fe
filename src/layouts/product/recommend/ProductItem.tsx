@@ -11,7 +11,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const productId: number = product.productId;
 
     const [images, setImages] = useState<ImageModel[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // get data from be
@@ -20,23 +20,23 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
             getImagesByProductId(productId)
                 .then((response) => {
                     setImages(response);
-                    setIsLoading(false);
+                    // setIsLoading(false);
                 })
                 .catch((error) => {
-                    setIsLoading(false);
+                    // setIsLoading(false);
                     setError(error.message);
                 });
         },
         [] //get data at the first one
     );
 
-    if (isLoading) {
-        return (
-            <div>
-                <h1>Loading</h1>
-            </div>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div>
+    //             <h1>Loading</h1>
+    //         </div>
+    //     );
+    // }
     if (error) {
         return (
             <div>
@@ -70,7 +70,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                         <img
                             style={{ height: "50px", width: "50px" }}
                             src={dataImg}
-                            className="card-img-top"
+                            className="card-img-top d-block m-auto"
                             alt={product.description}
                         />
                     </Link>
