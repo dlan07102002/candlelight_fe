@@ -7,9 +7,15 @@ interface IProductResponse {
     totalElements: number;
 }
 
+export async function countProducts(): Promise<number> {
+    let result = 0;
+    const endpoint = `http://localhost:8080/products/search/countProducts`;
+    await requestBE(endpoint).then((data) => (result = data));
+    return result;
+}
+
 async function getProducts(endpoint: string): Promise<IProductResponse> {
     const res: ProductModel[] = [];
-    // endpoint: localhost:8080/products
 
     const response = await requestBE(endpoint);
     const productList = response._embedded.products;
@@ -17,8 +23,8 @@ async function getProducts(endpoint: string): Promise<IProductResponse> {
     // Get page state
     const totalPages: number = response.page.totalPages;
     const totalElements: number = response.page.totalElements;
-    for (const key in productList) {
-        res.push(productList[key]);
+    for (const product of productList) {
+        res.push(product);
     }
 
     return { res: res, totalElements: totalElements, totalPages: totalPages };

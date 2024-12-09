@@ -6,6 +6,13 @@ interface IOrderResponse {
     res: OrderModel[];
 }
 
+export async function countOrders(): Promise<number> {
+    let result = 0;
+    const endpoint = `http://localhost:8080/orders/search/countOrders`;
+    await requestBE(endpoint).then((data) => (result = data));
+    return result;
+}
+
 async function getOrders(endpoint: string): Promise<IOrderResponse> {
     const res: OrderModel[] = [];
     const response = await requestBE(endpoint);

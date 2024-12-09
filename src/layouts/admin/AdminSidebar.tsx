@@ -24,7 +24,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
             <nav className="mt-3 px-2">
                 <button
                     onClick={() => setActiveTab("dashboard")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn  text-decoration-none btn-link w-100 text-start ${
                         activeTab === "dashboard" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -36,7 +36,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("users")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "users" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -48,7 +48,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("products")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "products" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -60,7 +60,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("orders")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "orders" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -72,7 +72,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("categories")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "categories" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -84,7 +84,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("analytics")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "analytics" ? "bg-light" : "text-dark"
                     }`}
                 >
@@ -96,7 +96,7 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab("settings")}
-                    className={`btn btn-link w-100 text-start ${
+                    className={`btn text-decoration-none btn-link w-100 text-start ${
                         activeTab === "settings" ? "bg-light" : "text-dark"
                     }`}
                 >

@@ -7,6 +7,7 @@ class UserModel {
     private _lastName?: string;
     private _password?: string;
     private _gender?: string;
+    private _isActivate?: boolean;
     private _orderAddress?: string;
     private _deliveryAddress?: string;
 
@@ -18,6 +19,7 @@ class UserModel {
         firstName?: string,
         lastName?: string,
         gender?: string,
+        isActivate?: boolean,
         orderAddress?: string,
         deliveryAddress?: string
     ) {
@@ -28,6 +30,7 @@ class UserModel {
         this._lastName = lastName;
         this._password = password;
         this._gender = gender;
+        this._isActivate = isActivate;
         this._orderAddress = orderAddress;
         this._deliveryAddress = deliveryAddress;
     }
@@ -99,6 +102,13 @@ class UserModel {
     }
     public set deliveryAddress(deliveryAddress: string | undefined) {
         this._deliveryAddress = deliveryAddress;
+    }
+
+    public get isActivate(): boolean | undefined {
+        return this._isActivate;
+    }
+    public set isActivate(isActivate: boolean | undefined) {
+        this.isActivate = isActivate;
     }
 }
 

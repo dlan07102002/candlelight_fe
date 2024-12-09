@@ -1,10 +1,42 @@
+import { useEffect, useState } from "react";
 import {
     FiUsers,
     FiPackage,
     FiShoppingCart,
     FiDollarSign,
 } from "react-icons/fi";
+import { countUsers } from "../../services/UserAPI";
+import { countOrders } from "../../services/OrderAPI";
+import { countProducts } from "../../services/ProductAPI";
 const DashBoard: React.FC = () => {
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [totalProducts, setTotalProducts] = useState(0);
+    const [totalOrders, setTotalOrders] = useState(0);
+    useEffect(() => {
+        const fetchUsersNumber = async () => {
+            await countUsers()
+                .then((data) => {
+                    console.log(data);
+                    setTotalUsers(data);
+                })
+                .catch((e) => console.log("Fetch user failed: " + e));
+            await countProducts()
+                .then((data) => {
+                    console.log(data);
+                    setTotalProducts(data);
+                })
+                .catch((e) => console.log("Fetch user failed: " + e));
+            await countOrders()
+                .then((data) => {
+                    console.log(data);
+                    setTotalOrders(data);
+                })
+                .catch((e) => console.log("Fetch user failed: " + e));
+        };
+        fetchUsersNumber();
+    }, []);
+    console.log(totalUsers);
+
     return (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-4">
             <div className="col">
@@ -12,7 +44,7 @@ const DashBoard: React.FC = () => {
                     <div className="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <p className="text-muted mb-1">Total Users</p>
-                            <h3 className="fw-bold mb-0">1,234</h3>
+                            <h3 className="fw-bold mb-0">{totalUsers}</h3>
                         </div>
                         <FiUsers className="text-primary fs-2" />
                     </div>
@@ -23,7 +55,7 @@ const DashBoard: React.FC = () => {
                     <div className="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <p className="text-muted mb-1">Total Products</p>
-                            <h3 className="fw-bold mb-0">456</h3>
+                            <h3 className="fw-bold mb-0">{totalProducts}</h3>
                         </div>
                         <FiPackage className="text-success fs-2" />
                     </div>
@@ -34,7 +66,7 @@ const DashBoard: React.FC = () => {
                     <div className="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <p className="text-muted mb-1">Total Orders</p>
-                            <h3 className="fw-bold mb-0">789</h3>
+                            <h3 className="fw-bold mb-0">{totalOrders}</h3>
                         </div>
                         <FiShoppingCart className="text-purple fs-2" />
                     </div>

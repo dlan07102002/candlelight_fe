@@ -4,7 +4,7 @@ export const AdminNavbar: React.FC = () => {
             <div className="container-fluid">
                 <a className="navbar-brand" href="#">
                     <img
-                        src="https://images.unsplash.com/photo-1572177812156-58036aae439c?fit=crop&w=32&h=32"
+                        src="https://static.vecteezy.com/system/resources/previews/043/900/708/non_2x/user-profile-icon-illustration-vector.jpg"
                         alt="Logo"
                         className="d-inline-block align-text-top"
                         style={{ height: "32px" }}

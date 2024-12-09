@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "../../services/UserAPI";
 import { Link, useNavigate } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 interface LoginInterface {
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,11 +10,16 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [notification, setNotification] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
     const navigate = useNavigate();
     if (isLogin) {
         navigate("/");
         return;
     }
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
         e: React.FormEvent<HTMLFormElement>
     ) => {
@@ -21,7 +27,7 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
 
         if (username.trim() !== "" && password.trim() !== "") {
             const response = await login(username, password)
-                .then((res) => {
+                .then(() => {
                     setNotification("");
                     setLogin(true);
                     // forward to homepage
@@ -46,7 +52,7 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
             className="container mt-5 p-5 border rounded bg-light shadow-sm"
             style={{ maxWidth: "450px" }}
         >
-            <h2 className="text-center mb-4">Login</h2>
+            <h2 className="text-center mb-4">Welcome back</h2>
             {notification ? (
                 <div className="text-danger text-center mb-3">
                     {notification}
@@ -69,19 +75,31 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                 />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 position-relative">
                 <label htmlFor="password" className="form-label">
                     Password
                 </label>
                 <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     className="form-control"
                     autoComplete="off"
                     value={password}
                     onChange={handlePasswordChange}
+                    placeholder="Password"
                     required
                 />
+                <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="position-absolute top-50 bottom-50 end-0 pe-3 border-0 bg-transparent"
+                >
+                    {showPassword ? (
+                        <FiEyeOff className="text-muted" />
+                    ) : (
+                        <FiEye className="text-muted" />
+                    )}
+                </button>
             </div>
 
             <div className="d-grid">
@@ -89,11 +107,27 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                     Login
                 </button>
             </div>
-
+            <div className="d-flex justify-content-between mb-3 mt-3 align-items-center">
+                <div className="form-check d-flex">
+                    <input
+                        type="checkbox"
+                        id="remember-me"
+                        className="form-check-input"
+                    />
+                    <label htmlFor="remember-me" className=" m-auto ms-2">
+                        Remember me
+                    </label>
+                </div>
+                <button type="button" className="text-primary btn p-0 ">
+                    Forgot password?
+                </button>
+            </div>
             <div className="text-center mt-3">
                 <p>
                     Don't have an account?{" "}
-                    <Link to="/register">Sign up here</Link>
+                    <Link to="/register" className="text-primary btn p-0">
+                        Sign up here
+                    </Link>
                 </p>
             </div>
         </form>

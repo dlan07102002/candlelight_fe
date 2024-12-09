@@ -13,6 +13,7 @@ import ProductPaymentForm from "./components/ProductPaymentForm";
 import ratingStarRender from "../utils/ratingStar";
 import { toast } from "react-toastify";
 import ProductItem from "./recommend/ProductItem";
+import { CategoryIcon } from "../../assets/icons";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
@@ -77,7 +78,7 @@ const ProductDetail: React.FC = () => {
     useEffect(() => {
         const fetchAPI = async () => {
             console.log(productIdNum);
-            const response = await getSimilarProductByContentBased(productIdNum)
+            await getSimilarProductByContentBased(productIdNum)
                 .then((data) => {
                     if (data && "Recommend" in data) {
                         const list = data.Recommend;
@@ -197,14 +198,16 @@ const ProductDetail: React.FC = () => {
                         <li>
                             Categories:{" "}
                             {categories &&
-                                categories
-                                    .map((category) => category.categoryName)
-                                    .join(", ")}
+                                categories.map((category) => (
+                                    <CategoryIcon
+                                        category={category.categoryName}
+                                    />
+                                ))}
                         </li>
                     </ul>
 
                     {/* Similar Product */}
-                    <p className="product-description">Similar products:</p>
+                    <p className="product-description">You may also like:</p>
                     <div className="row">
                         {similarProducts &&
                             similarProducts.map((similarProduct) => (

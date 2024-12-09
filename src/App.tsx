@@ -22,6 +22,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import OrderDetailModel from "./models/OrderDetailModel";
 import AdminDashboard from "./layouts/admin/AdminDashboard";
+import PermissionDenied from "./layouts/error/403Error";
+import UserEditForm from "./layouts/admin/UserEditForm";
 interface JwtPayload {
     uid: number;
     exp: number;
@@ -131,6 +133,7 @@ const App: React.FC = () => {
                         path="/login"
                         element={
                             <Login isLogin={isLogin} setLogin={setLogin} />
+                            // <LoginForm />
                         }
                     />
 
@@ -139,15 +142,21 @@ const App: React.FC = () => {
                         element={<AccountActivate />}
                     />
 
+                    <Route path="/update" element={<UserEditForm />} />
+
                     <Route path="/cart" element={<CartList />} />
 
                     {/* ADMIN */}
+
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route
                         path="/admin/product-form"
                         element={<ProductForm />}
                     />
                     <Route path="/test" element={<Test />} />
+
+                    {/* ERROR */}
+                    <Route path="/403-error" element={<PermissionDenied />} />
                 </Routes>
                 {!isAdminRoute && <Footer />}
             </MyContext.Provider>

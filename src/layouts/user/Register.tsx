@@ -7,6 +7,7 @@ import {
 import UseDebounce from "../../hooks/UseDebounce";
 import UserModel from "../../models/UserModel";
 import { toast } from "react-toastify";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 function RegisterForm() {
     const [username, setUsername] = useState("");
@@ -22,6 +23,8 @@ function RegisterForm() {
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [notification, setNotification] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const usernameDebounced = UseDebounce(username, 100);
     const emailDebounced = UseDebounce(email, 100);
@@ -71,25 +74,6 @@ function RegisterForm() {
         };
         fetchData();
     }, [usernameDebounced]);
-
-    // Manual
-    const checkUsernameExists = async (username: string) => {
-        const url = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
-        console.log(url);
-
-        try {
-            const response = await fetch(url);
-            const data = await response.text();
-            if (data === "true") {
-                setUsernameError("Username already exists!");
-                return true;
-            }
-            return false;
-        } catch (error) {
-            console.error("Error when checking username:", error);
-            return false;
-        }
-    };
 
     // check email
     useEffect(() => {
@@ -162,7 +146,7 @@ function RegisterForm() {
             onSubmit={handleSubmit}
             className="container mt-5 p-4 border rounded bg-light row m-auto"
         >
-            <h2 className="text-center mb-4">Register</h2>
+            <h2 className="text-center mb-4">Create your account</h2>
             <div className="text-success">{notification}</div>
             <div className="col-lg-6">
                 <div className="mb-3">
@@ -254,12 +238,12 @@ function RegisterForm() {
                     />
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 position-relative">
                     <label htmlFor="password" className="form-label">
                         Password
                     </label>
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         id="password"
                         className="form-control"
                         autoComplete="off"
@@ -267,6 +251,17 @@ function RegisterForm() {
                         onChange={handlePasswordChange}
                         required
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="position-absolute top-50 bottom-50 end-0 pe-3 border-0 bg-transparent"
+                    >
+                        {showPassword ? (
+                            <FiEyeOff className="text-muted" />
+                        ) : (
+                            <FiEye className="text-muted" />
+                        )}
+                    </button>
                 </div>
                 {passwordError && (
                     <div
@@ -277,12 +272,12 @@ function RegisterForm() {
                     </div>
                 )}
 
-                <div className="mb-3">
+                <div className="mb-3 position-relative">
                     <label htmlFor="confirmPassword" className="form-label">
                         Confirm Password
                     </label>
                     <input
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         id="confirmPassword"
                         autoComplete="off"
                         className="form-control"
@@ -290,6 +285,19 @@ function RegisterForm() {
                         onChange={handleConfirmPasswordChange}
                         required
                     />
+                    <button
+                        type="button"
+                        onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="position-absolute top-50 bottom-50 end-0 pe-3 border-0 bg-transparent"
+                    >
+                        {showConfirmPassword ? (
+                            <FiEyeOff className="text-muted" />
+                        ) : (
+                            <FiEye className="text-muted" />
+                        )}
+                    </button>
                 </div>
                 {confirmPasswordError && (
                     <div

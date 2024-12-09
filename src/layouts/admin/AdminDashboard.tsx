@@ -9,6 +9,7 @@ import Analytics from "./Analytics";
 import Setting from "./Setting";
 import { AdminNavbar } from "./AdminNavbar";
 import { AdminSidebar } from "./AdminSidebar";
+import RequiredAdmin from "./RequiredAdmin";
 
 const AdminDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState("dashboard");
@@ -89,4 +90,4 @@ const AdminDashboard: React.FC = () => {
     );
 };
 
-export default AdminDashboard;
+export default RequiredAdmin(AdminDashboard);

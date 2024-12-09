@@ -35,7 +35,7 @@ const CartList: React.FC = () => {
     useEffect(() => {
         if (userId > 0) {
             const fetchApi = async () => {
-                const response = await getUserById(userId).then((data) => {
+                await getUserById(userId).then((data) => {
                     console.log(data);
                     setUser(data);
                 });
