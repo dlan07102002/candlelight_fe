@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import ProductModel from "../../models/ProductModel";
 import { filterProduct, getAllProducts } from "../../services/ProductAPI";
+import Pagination from "../utils/Pagination";
+import { getCategoriesByProductId } from "../../services/CategoryAPI";
+import { CategoryIcon } from "../../assets/icons";
 
 // const data = {
 //     products: [
@@ -32,42 +34,70 @@ interface IProductManagement {
 const ProductManagement: React.FC<IProductManagement> = ({
     setShowModal,
     setModalType,
-    keyword,
-    categoryId,
 }) => {
-    const [products, setProducts] = useState<ProductModel[]>([]);
+    const [products, setProducts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [keyword, setKeyWord] = useState("");
+
     // get data from be
+    console.log(currentPage);
     useEffect(() => {
-        if (keyword === "" && categoryId == 0) {
-            getAllProducts(currentPage - 1)
-                .then((response) => {
-                    setProducts(response.res);
-                    setTotalPages(response.totalPages);
-                    setIsLoading(false);
-                })
-                .catch((error) => {
-                    setIsLoading(false);
+        const fetchProducts = async () => {
+            setIsLoading(true);
+            setError(null); // Đặt lại trạng thái lỗi
 
-                    setError(error.message);
-                });
-        } else {
-            filterProduct(keyword, categoryId)
-                .then((response) => {
-                    setProducts(response.res);
-                    setTotalPages(response.totalPages);
-                    setIsLoading(false);
-                })
-                .catch((error) => {
-                    setIsLoading(false);
+            try {
+                let response;
+                if (keyword === "") {
+                    response = await getAllProducts(currentPage - 1);
+                } else {
+                    response = await filterProduct(keyword);
+                }
 
-                    setError(error.message);
-                });
-        }
-    }, [currentPage, keyword, categoryId]);
+                // setProducts(response.res);
+                setTotalPages(response.totalPages);
+                setIsLoading(false);
+                return response.res; // Trả về danh sách sản phẩm
+            } catch (error: any) {
+                setIsLoading(false);
+                setError(error.message);
+                return []; // Trả về mảng rỗng nếu có lỗi để tránh lỗi undefined
+            }
+        };
+
+        fetchProducts()
+            .then(async (data) => {
+                const products = await Promise.all(
+                    data.map(async (product: any) => {
+                        const category = await getCategoriesByProductId(
+                            product.productId
+                        );
+                        let categoryName: string[] = [];
+                        if (category && category.res != null) {
+                            category.res!.forEach((item) => {
+                                categoryName.push(item.categoryName);
+                            });
+                        }
+
+                        return {
+                            ...product,
+                            category: categoryName,
+                        };
+                    })
+                );
+                console.log(products);
+
+                setProducts(products);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+
+                setError(error.message);
+            });
+    }, [currentPage, keyword]);
 
     const paging = (page: number) => {
         setCurrentPage(page);
@@ -114,27 +144,86 @@ const ProductManagement: React.FC<IProductManagement> = ({
                     <table className="table">
                         <thead className="table-light">
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Stock</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col" style={{ width: "20%" }}>
+                                    Name
+                                </th>
+                                <th scope="col" style={{ width: "30%" }}>
+                                    Category
+                                </th>
+                                <th
+                                    scope="col"
+                                    style={{
+                                        width: "10%",
+                                    }}
+                                >
+                                    Price
+                                </th>
+                                <th
+                                    scope="col"
+                                    style={{
+                                        width: "10%",
+                                    }}
+                                >
+                                    Stock
+                                </th>
+                                <th
+                                    scope="col"
+                                    style={{
+                                        width: "10%",
+                                    }}
+                                >
+                                    Status
+                                </th>
+                                <th
+                                    scope="col"
+                                    style={{
+                                        width: "20%",
+                                    }}
+                                >
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product.productId}>
                                     <td>{product.productName}</td>
-                                    {/* <td>{product.productcategory}</td> */}
-                                    <td>${product.sellPrice}</td>
-                                    <td>{product.quantity}</td>
-                                    {/* <td>{product.productstatus}</td> */}
                                     <td>
-                                        <button className="btn btn-link text-primary me-2">
+                                        {product.category.map((item: any) => (
+                                            <CategoryIcon category={item} />
+                                        ))}
+                                        <CategoryIcon
+                                            category={product.category}
+                                        />
+                                    </td>
+                                    <td>${product.sellPrice}</td>
+                                    <td>
+                                        {product.quantity
+                                            ? product.quantity
+                                            : 0}
+                                    </td>
+                                    <td>
+                                        {product.quantity > 0
+                                            ? "In Stock"
+                                            : "Out of stock"}
+                                    </td>
+                                    <td>
+                                        <button
+                                            style={{ width: "5rem" }}
+                                            className="btn btn-primary text-white me-2 p-0"
+                                            // onClick={() =>
+                                            //     handleShowUpdate(user)
+                                            // }
+                                        >
                                             Edit
                                         </button>
-                                        <button className="btn btn-link text-danger">
+                                        <button
+                                            style={{ width: "5rem" }}
+                                            className="btn btn-danger text-white p-0"
+                                            // onClick={() =>
+                                            //     handleDeleteUser(user.userId)
+                                            // }
+                                        >
                                             Delete
                                         </button>
                                     </td>
@@ -142,6 +231,11 @@ const ProductManagement: React.FC<IProductManagement> = ({
                             ))}
                         </tbody>
                     </table>
+                    <Pagination
+                        currentPage={currentPage}
+                        total={totalPages}
+                        paging={paging}
+                    />
                 </div>
             </div>
         </div>

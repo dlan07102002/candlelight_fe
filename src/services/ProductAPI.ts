@@ -32,7 +32,7 @@ async function getProducts(endpoint: string): Promise<IProductResponse> {
 
 export async function getAllProducts(page: number): Promise<IProductResponse> {
     // endpoint: localhost:8080/products
-    const endpoint: string = `http://localhost:8080/products?size=4&page=${page}`;
+    const endpoint: string = `http://localhost:8080/products?size=8&page=${page}`;
 
     return getProducts(endpoint);
 }
