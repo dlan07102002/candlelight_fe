@@ -1,54 +1,34 @@
 import { useEffect, useState } from "react";
-import { filterProduct, getAllProducts } from "../../services/ProductAPI";
+import {
+    deleteProductById,
+    filterProduct,
+    getAllProducts,
+} from "../../services/ProductAPI";
 import Pagination from "../utils/Pagination";
 import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import { CategoryIcon } from "../../assets/icons";
-
-// const data = {
-//     products: [
-//         {
-//             id: 1,
-//             name: "Product 1",
-//             category: "Electronics",
-//             price: 299.99,
-//             stock: 50,
-//             status: "In Stock",
-//         },
-//         {
-//             id: 2,
-//             name: "Product 2",
-//             category: "Clothing",
-//             price: 49.99,
-//             stock: 100,
-//             status: "In Stock",
-//         },
-//     ],
-// };
+import { confirmDeleteToast } from "../utils/CustomToast";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import ProductForm from "./ProductForm";
 
 interface IProductManagement {
-    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-    setModalType: React.Dispatch<React.SetStateAction<string>>;
     keyword?: string;
     categoryId?: number;
 }
-const ProductManagement: React.FC<IProductManagement> = ({
-    setShowModal,
-    setModalType,
-}) => {
+const ProductManagement: React.FC<IProductManagement> = ({}) => {
     const [products, setProducts] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [showProductForm, setShowProductForm] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [keyword, setKeyWord] = useState("");
+    const navigate = useNavigate();
+    const [productEdit, setProductEdit] = useState<any>(null);
+    const [isNew, setIsNew] = useState(false);
 
     // get data from be
-    console.log(currentPage);
     useEffect(() => {
         const fetchProducts = async () => {
-            setIsLoading(true);
-            setError(null); // Đặt lại trạng thái lỗi
-
             try {
                 let response;
                 if (keyword === "") {
@@ -59,11 +39,8 @@ const ProductManagement: React.FC<IProductManagement> = ({
 
                 // setProducts(response.res);
                 setTotalPages(response.totalPages);
-                setIsLoading(false);
                 return response.res; // Trả về danh sách sản phẩm
             } catch (error: any) {
-                setIsLoading(false);
-                setError(error.message);
                 return []; // Trả về mảng rỗng nếu có lỗi để tránh lỗi undefined
             }
         };
@@ -93,37 +70,45 @@ const ProductManagement: React.FC<IProductManagement> = ({
                 setProducts(products);
             })
             .catch((error) => {
-                setIsLoading(false);
-
-                setError(error.message);
+                console.log(error.message);
             });
     }, [currentPage, keyword]);
+
+    const handleEdit = (product: any) => {
+        setIsNew(false);
+        setProductEdit(product);
+        setShowProductForm(true);
+    };
 
     const paging = (page: number) => {
         setCurrentPage(page);
     };
-    if (isLoading) {
-        return (
-            <div>
-                <h1>Loading</h1>
-            </div>
-        );
-    }
-    if (error) {
-        return (
-            <div>
-                <h1>Get error: {error}</h1>
-            </div>
-        );
-    }
 
-    if (products.length == 0) {
-        return (
-            <div className="container">
-                <h1>NOT FOUND</h1>
-            </div>
-        );
-    }
+    // Delete handler
+    const handleDeleteProduct = async (productId: number) => {
+        try {
+            const confirm = await confirmDeleteToast(productId); // Hiển thị xác nhận xóa
+            if (!confirm) {
+                toast.info("Delete action canceled.");
+                return;
+            }
+
+            const success = await deleteProductById(productId, navigate); // Gọi API xóa user
+            if (success) {
+                setProducts((prevState) =>
+                    prevState.filter(
+                        (product) => product.productId !== productId
+                    )
+                );
+                toast.success("User deleted successfully!");
+            } else {
+                toast.error("Failed to delete user!");
+            }
+        } catch (error) {
+            console.error("Error during delete operation:", error);
+            toast.error("An unexpected error occurred!");
+        }
+    };
 
     return (
         <div className="admin-content-container shadow-sm">
@@ -132,8 +117,8 @@ const ProductManagement: React.FC<IProductManagement> = ({
                     <h2 className="h5 fw-bold">Product Management</h2>
                     <button
                         onClick={() => {
-                            setModalType("add-product");
-                            setShowModal(true);
+                            setIsNew(true);
+                            setShowProductForm(true);
                         }}
                         className="btn btn-success"
                     >
@@ -144,10 +129,10 @@ const ProductManagement: React.FC<IProductManagement> = ({
                     <table className="table">
                         <thead className="table-light">
                             <tr>
-                                <th scope="col" style={{ width: "20%" }}>
+                                <th scope="col" style={{ width: "30%" }}>
                                     Name
                                 </th>
-                                <th scope="col" style={{ width: "30%" }}>
+                                <th scope="col" style={{ width: "20%" }}>
                                     Category
                                 </th>
                                 <th
@@ -190,11 +175,11 @@ const ProductManagement: React.FC<IProductManagement> = ({
                                     <td>{product.productName}</td>
                                     <td>
                                         {product.category.map((item: any) => (
-                                            <CategoryIcon category={item} />
+                                            <CategoryIcon
+                                                key={item}
+                                                category={item}
+                                            />
                                         ))}
-                                        <CategoryIcon
-                                            category={product.category}
-                                        />
                                     </td>
                                     <td>${product.sellPrice}</td>
                                     <td>
@@ -202,27 +187,35 @@ const ProductManagement: React.FC<IProductManagement> = ({
                                             ? product.quantity
                                             : 0}
                                     </td>
-                                    <td>
+
+                                    <td
+                                        className={
+                                            product.quantity > 0
+                                                ? "text-success"
+                                                : "text-danger"
+                                        }
+                                        style={{ fontWeight: "bold" }}
+                                    >
                                         {product.quantity > 0
                                             ? "In Stock"
                                             : "Out of stock"}
                                     </td>
                                     <td>
                                         <button
-                                            style={{ width: "5rem" }}
-                                            className="btn btn-primary text-white me-2 p-0"
-                                            // onClick={() =>
-                                            //     handleShowUpdate(user)
-                                            // }
+                                            style={{ width: "4rem" }}
+                                            className="btn btn-primary text-white me-2 p-0 mt-2"
+                                            onClick={() => handleEdit(product)}
                                         >
                                             Edit
                                         </button>
                                         <button
-                                            style={{ width: "5rem" }}
-                                            className="btn btn-danger text-white p-0"
-                                            // onClick={() =>
-                                            //     handleDeleteUser(user.userId)
-                                            // }
+                                            style={{ width: "4rem" }}
+                                            className="btn btn-danger text-white p-0 mt-2 "
+                                            onClick={() =>
+                                                handleDeleteProduct(
+                                                    product.productId
+                                                )
+                                            }
                                         >
                                             Delete
                                         </button>
@@ -236,6 +229,13 @@ const ProductManagement: React.FC<IProductManagement> = ({
                         total={totalPages}
                         paging={paging}
                     />
+                    {showProductForm && (
+                        <ProductForm
+                            isNew={isNew}
+                            setShowProductForm={setShowProductForm}
+                            product={isNew ? null : productEdit}
+                        />
+                    )}
                 </div>
             </div>
         </div>

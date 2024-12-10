@@ -147,10 +147,7 @@ const App: React.FC = () => {
                     {/* ADMIN */}
 
                     <Route path="/admin" element={<AdminDashboard />} />
-                    <Route
-                        path="/admin/product-form"
-                        element={<ProductForm />}
-                    />
+
                     <Route path="/test" element={<Test />} />
 
                     {/* ERROR */}

@@ -1,13 +1,32 @@
 import React, { useState } from "react";
 import RequiredAdmin from "./RequiredAdmin";
-
-const ProductForm = () => {
+import { toast } from "react-toastify";
+interface IProductForm {
+    isNew: boolean;
+    setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
+    product?: any;
+}
+const ProductForm: React.FC<IProductForm> = ({
+    isNew,
+    setShowProductForm,
+    product,
+}) => {
     const productId = 0;
-    const [productName, setProductName] = useState("");
-    const [description, setDescription] = useState("");
-    const [listPrice, setListPrice] = useState("");
-    const [sellPrice, setSellPrice] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [productName, setProductName] = useState(
+        product && product.productName ? product.productName : ""
+    );
+    const [description, setDescription] = useState(
+        product && product.detailDescription ? product.detailDescription : ""
+    );
+    const [listPrice, setListPrice] = useState(
+        product && product.listPrice ? product.listPrice : ""
+    );
+    const [sellPrice, setSellPrice] = useState(
+        product && product.sellPrice ? product.sellPrice : ""
+    );
+    const [quantity, setQuantity] = useState(
+        product && product.quantity ? product.quantity : ""
+    );
     const [image, setImage] = useState<File | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,26 +34,38 @@ const ProductForm = () => {
 
         // Handle data submission to the server or process logic here
         const token = localStorage.getItem("token");
+        console.log(
+            `http://localhost:8080/${
+                isNew ? "admin/products" : "products" + "/" + product.productId
+            }`
+        );
         token &&
-            (await fetch("http://localhost:8080/admin/products", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    productId: productId,
-                    productName: productName,
-                    description: description,
-                    listPrice: parseInt(listPrice),
-                    sellPrice: parseInt(sellPrice),
-                    quantity: parseInt(quantity),
-                    rateAverage: 0,
-                }),
-            })
+            (await fetch(
+                `http://localhost:8080/${
+                    isNew
+                        ? "admin/products"
+                        : "products" + "/" + product.productId
+                }`,
+                {
+                    method: isNew ? "POST" : "PATCH",
+                    headers: {
+                        "Content-type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        // productId: productId,
+                        productName: productName,
+                        description: description,
+                        listPrice: parseInt(listPrice),
+                        sellPrice: parseInt(sellPrice),
+                        quantity: parseInt(quantity),
+                        rateAverage: 0,
+                    }),
+                }
+            )
                 .then((response) => {
                     if (response.ok) {
-                        alert("Product added successfully");
+                        toast.success("Product added successfully");
 
                         setProductName("");
                         setDescription("");
@@ -42,7 +73,7 @@ const ProductForm = () => {
                         setSellPrice("");
                         setListPrice("");
                     } else {
-                        alert("Product added failed");
+                        toast.error("Product added failed");
                     }
                     return response.text();
                 })
@@ -100,16 +131,22 @@ const ProductForm = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className=" shadow-sm product-form-border ">
-                <div className=" bg-secondary text-white">
+        <div className="overlay d-flex" style={{ zIndex: 10 }}>
+            <div
+                className="overlay-content p-4 shadow-sm product-form-border m-auto"
+                style={{ maxHeight: "90%" }}
+            >
+                <div className="text-center">
                     <h3 className="mb-0">Product</h3>
                 </div>
                 <div className="">
                     <form onSubmit={handleSubmit}>
                         <input type="hidden" id="productId" value={productId} />
                         <div>
-                            <label htmlFor="productName" className="form-label">
+                            <label
+                                htmlFor="productName"
+                                className="form-label mt-2 ms-1"
+                            >
                                 Product Name
                             </label>
                             <input
@@ -119,12 +156,14 @@ const ProductForm = () => {
                                 placeholder="Product Name"
                                 value={productName}
                                 onChange={(e) => setProductName(e.target.value)}
-                                required
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="description" className="form-label">
+                            <label
+                                htmlFor="description"
+                                className="form-label mt-2 ms-1"
+                            >
                                 Description
                             </label>
                             <textarea
@@ -137,7 +176,10 @@ const ProductForm = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="quantity" className="form-label">
+                            <label
+                                htmlFor="quantity"
+                                className="form-label mt-2 ms-1"
+                            >
                                 Quantity
                             </label>
                             <input
@@ -147,12 +189,14 @@ const ProductForm = () => {
                                 placeholder="Units"
                                 value={quantity}
                                 onChange={(e) => setQuantity(e.target.value)}
-                                required
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="list_price" className="form-label">
+                            <label
+                                htmlFor="list_price"
+                                className="form-label mt-2 ms-1"
+                            >
                                 List Price
                             </label>
                             <input
@@ -162,12 +206,14 @@ const ProductForm = () => {
                                 placeholder="List Price"
                                 value={listPrice}
                                 onChange={(e) => setListPrice(e.target.value)}
-                                required
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="sell_price" className="form-label">
+                            <label
+                                htmlFor="sell_price"
+                                className="form-label mt-2 ms-1"
+                            >
                                 Sell Price
                             </label>
                             <input
@@ -177,12 +223,14 @@ const ProductForm = () => {
                                 placeholder="Sell Price"
                                 value={sellPrice}
                                 onChange={(e) => setSellPrice(e.target.value)}
-                                required
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="file_img" className="form-label">
+                            <label
+                                htmlFor="file_img"
+                                className="form-label mt-2 ms-1"
+                            >
                                 Image (jpg/png)
                             </label>
                             <input
@@ -194,24 +242,23 @@ const ProductForm = () => {
                             />
                         </div>
 
-                        <div>
-                            <label
-                                htmlFor="file_archive"
-                                className="form-label"
+                        <div className="col-md-12 text-center mt-5">
+                            <button
+                                type="submit"
+                                className={
+                                    isNew
+                                        ? "btn btn-success"
+                                        : "btn btn-primary"
+                                }
                             >
-                                Files
-                            </label>
-                            <input
-                                type="file"
-                                className="form-control"
-                                id="file_archive"
-                                accept=".zip, .rar"
-                            />
-                        </div>
-
-                        <div className="col-md-12 text-end mt-3">
-                            <button type="submit" className="btn btn-primary">
                                 Submit
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-danger ms-4"
+                                onClick={() => setShowProductForm(false)}
+                            >
+                                Cancel
                             </button>
                         </div>
                     </form>
@@ -220,5 +267,6 @@ const ProductForm = () => {
         </div>
     );
 };
-const RequiredAdmin_ProductForm: React.FC = RequiredAdmin(ProductForm);
+const RequiredAdmin_ProductForm: React.FC<IProductForm> =
+    RequiredAdmin(ProductForm);
 export default RequiredAdmin_ProductForm;

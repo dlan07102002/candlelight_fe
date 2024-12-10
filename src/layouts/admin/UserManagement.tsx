@@ -152,8 +152,8 @@ const UserManagement: React.FC<IUserManagement> = ({
                                     </td>
                                     <td>
                                         <button
-                                            style={{ width: "5rem" }}
-                                            className="btn btn-primary text-white me-2 "
+                                            style={{ width: "4rem" }}
+                                            className="btn btn-primary text-white me-2 p-0 mt-2"
                                             onClick={() =>
                                                 handleShowUpdate(user)
                                             }
@@ -161,8 +161,8 @@ const UserManagement: React.FC<IUserManagement> = ({
                                             Edit
                                         </button>
                                         <button
-                                            style={{ width: "5rem" }}
-                                            className="btn btn-danger text-white "
+                                            style={{ width: "4rem" }}
+                                            className="btn btn-danger text-white p-0 mt-2"
                                             onClick={() =>
                                                 handleDeleteUser(user.userId)
                                             }
