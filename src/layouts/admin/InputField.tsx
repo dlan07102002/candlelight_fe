@@ -8,6 +8,7 @@ const InputField: React.FC<{
     value: any;
     readOnly?: boolean | undefined;
     error?: any;
+    className?: string | undefined;
     setState: React.Dispatch<React.SetStateAction<any>>;
     isPassword?: boolean | undefined;
     showPassword?: boolean | undefined;
@@ -24,15 +25,16 @@ const InputField: React.FC<{
     isPassword,
     showPassword,
     setShowPassword,
+    className,
 }) => {
     return (
-        <div className="mb-3 ">
+        <div className={"mb-3"}>
             <label htmlFor={name} className="form-label">
                 {label}
             </label>
             <div className="input-group ">
                 <span className="input-group-text ">
-                    <Icon className="h-5 w-5 text-gray-400" />
+                    <Icon className="text-gray-400" />
                 </span>
                 <input
                     type={showPassword ? type : "text"}
@@ -45,6 +47,13 @@ const InputField: React.FC<{
                         error ? "is-invalid" : ""
                     } ${readOnly ? "bg-light" : ""}`}
                 />
+                {error && (
+                    <div className="invalid-feedback position-absolute top-100">
+                        {" "}
+                        {error}
+                    </div>
+                )}
+
                 {isPassword && (
                     <button
                         type="button"
@@ -62,7 +71,6 @@ const InputField: React.FC<{
                     </button>
                 )}
             </div>
-            {error && <div className="invalid-feedback">{error}</div>}
         </div>
     );
 };

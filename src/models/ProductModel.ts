@@ -25,6 +25,7 @@ class ProductModel {
         this._sellPrice = sellPrice;
         this._quantity = quantity;
         this._rateAverage = rateAverage;
+        this.detailDescription = detailDescription;
     }
 
     // Getter and Setter for productId

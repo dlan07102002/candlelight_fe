@@ -2,21 +2,40 @@ import React, { useState } from "react";
 import { FiUser, FiMail, FiPhone, FiLock, FiMapPin } from "react-icons/fi";
 import InputField from "./InputField";
 
-const UserEditForm = () => {
-    const [userId, setUserId] = useState("");
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [password, setPassword] = useState("");
-    const [gender, setGender] = useState("PREFER_NOT_TO_SAY");
+interface IUserEditForm {
+    setShowUpdateForm: React.Dispatch<React.SetStateAction<boolean>>;
+    user?: any;
+}
+const UserEditForm: React.FC<IUserEditForm> = ({ setShowUpdateForm, user }) => {
+    const [userId, setUserId] = useState(user.userId ? user.userId : "");
+    const [username, setUsername] = useState(
+        user.username ? user.username : ""
+    );
+    const [email, setEmail] = useState(user.email ? user.email : "");
+    const [firstName, setFirstName] = useState(
+        user.firstName ? user.firstName : ""
+    );
+    const [lastName, setLastName] = useState(
+        user.lastName ? user.lastName : ""
+    );
+    const [phoneNumber, setPhoneNumber] = useState(
+        user.phoneNumber ? user.phoneNumber : ""
+    );
+    const [password, setPassword] = useState(
+        user.password ? user.password : ""
+    );
+    const [gender, setGender] = useState(
+        user.gender ? user.gender : "PREFER_NOT_TO_SAY"
+    );
     const [showPassword, setShowPassword] = useState(false);
-    const [orderAddress, setOrderAddress] = useState("");
-    const [deliveryAddress, setDeliveryAddress] = useState("");
+    const [orderAddress, setOrderAddress] = useState(
+        user.orderAddress ? user.orderAddress : ""
+    );
+    const [deliveryAddress, setDeliveryAddress] = useState(
+        user.deliveryAddress
+    );
 
     const [errors, setErrors] = useState<any>({});
-
     const validateForm = () => {
         const newErrors: any = {};
 
@@ -86,15 +105,18 @@ const UserEditForm = () => {
     };
 
     return (
-        <div className="container py-5 ">
-            <div className="row justify-content-center">
-                <div className="col-md-8">
-                    <div className="admin-content-container shadow-sm p-4">
-                        <div className="">
-                            <h2 className=" text-center mb-4">
-                                Update User Information
-                            </h2>
-                            <form onSubmit={handleSubmit}>
+        <div className="overlay d-flex" style={{ zIndex: 10 }}>
+            <div
+                className="overlay-content container m-auto"
+                style={{ maxWidth: "800px", maxHeight: "fit-content" }}
+            >
+                <div className=" justify-content-center  bg-white">
+                    <div className="admin-content-container shadow-sm p-4 ">
+                        <h2 className=" text-center mb-4">
+                            Update User Information
+                        </h2>
+                        <form onSubmit={handleSubmit} className="row">
+                            <div className="col-6">
                                 <InputField
                                     icon={FiUser}
                                     label="User ID"
@@ -129,28 +151,6 @@ const UserEditForm = () => {
                                     error={errors.phoneNumber}
                                     setState={setPhoneNumber}
                                 />
-                                <div className="row mb-3">
-                                    <div className="col-md-6">
-                                        <InputField
-                                            icon={FiUser}
-                                            label="First Name"
-                                            name="firstName"
-                                            value={firstName}
-                                            error={errors.firstName}
-                                            setState={setFirstName}
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <InputField
-                                            icon={FiUser}
-                                            label="Last Name"
-                                            name="lastName"
-                                            value={lastName}
-                                            error={errors.lastName}
-                                            setState={setLastName}
-                                        />
-                                    </div>
-                                </div>
                                 <InputField
                                     icon={FiLock}
                                     label="Password"
@@ -163,6 +163,25 @@ const UserEditForm = () => {
                                     error={errors.password}
                                     setState={setPassword}
                                 />
+                            </div>
+
+                            <div className="col-6 ">
+                                <InputField
+                                    icon={FiUser}
+                                    label="First Name"
+                                    name="firstName"
+                                    value={firstName}
+                                    setState={setFirstName}
+                                />
+
+                                <InputField
+                                    icon={FiUser}
+                                    label="Last Name"
+                                    name="lastName"
+                                    value={lastName}
+                                    setState={setLastName}
+                                />
+
                                 <div className="mb-3">
                                     <label
                                         htmlFor="gender"
@@ -172,7 +191,7 @@ const UserEditForm = () => {
                                     </label>
                                     <select
                                         id="gender"
-                                        className="form-select"
+                                        className="form-select "
                                         value={gender}
                                         onChange={(e) =>
                                             setGender(e.target.value)
@@ -208,16 +227,25 @@ const UserEditForm = () => {
                                     error={errors.deliveryAddress}
                                     setState={setDeliveryAddress}
                                 />
-                                <div className="text-center">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary w-100"
-                                    >
-                                        Update User
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div className="text-center d-flex mt-3 justify-content-evenly">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary "
+                                    style={{ width: "6rem" }}
+                                >
+                                    Update
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-danger "
+                                    style={{ width: "6rem" }}
+                                    onClick={() => setShowUpdateForm(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -45,33 +45,21 @@ const ProductDetail: React.FC = () => {
     }, [productId]);
 
     useEffect(() => {
-        getProductByProductId(productIdNum)
-            .then((response) => {
-                if (response) {
-                    setProduct(response.res);
-                }
-
+        const fetchAPI = async () => {
+            try {
+                const [productData, categoriesData] = await Promise.all([
+                    getProductByProductId(productIdNum),
+                    getCategoriesByProductId(productIdNum),
+                ]);
+                productData && setProduct(productData.res);
+                categoriesData && setCategories(categoriesData.res);
                 setIsLoading(false);
-            })
-            .catch((err) => {
-                setError(err);
+            } catch (error) {
+                console.error("Error fetching data:", error);
                 setIsLoading(false);
-            });
-    }, [productId]);
-
-    useEffect(() => {
-        getCategoriesByProductId(productIdNum)
-            .then((response) => {
-                if (response) {
-                    setCategories(response.res);
-                }
-
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                setError(err);
-                setIsLoading(false);
-            });
+            }
+        };
+        fetchAPI();
     }, [productId]);
 
     // Fetch Similar Product

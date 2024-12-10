@@ -142,8 +142,6 @@ const App: React.FC = () => {
                         element={<AccountActivate />}
                     />
 
-                    <Route path="/update" element={<UserEditForm />} />
-
                     <Route path="/cart" element={<CartList />} />
 
                     {/* ADMIN */}

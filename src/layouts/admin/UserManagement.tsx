@@ -23,6 +23,9 @@ const UserManagement: React.FC<IUserManagement> = ({
     const [currentPage, setCurrentPage] = useState(1);
     const [users, setUsers] = useState<any[]>([]);
     const [totalPage, setTotalPage] = useState(0);
+    const [showUpdateForm, setShowUpdateForm] = useState(false);
+    const [userUpdated, setUserUpdated] = useState<any>(undefined);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,6 +72,11 @@ const UserManagement: React.FC<IUserManagement> = ({
             console.error("Error during delete operation:", error);
             toast.error("An unexpected error occurred!");
         }
+    };
+
+    const handleShowUpdate = (user: any) => {
+        setUserUpdated(user);
+        setShowUpdateForm(!showUpdateForm);
     };
 
     const paging = (page: number) => {
@@ -146,6 +154,9 @@ const UserManagement: React.FC<IUserManagement> = ({
                                         <button
                                             style={{ width: "5rem" }}
                                             className="btn btn-primary text-white me-2 "
+                                            onClick={() =>
+                                                handleShowUpdate(user)
+                                            }
                                         >
                                             Edit
                                         </button>
@@ -170,7 +181,12 @@ const UserManagement: React.FC<IUserManagement> = ({
                     />
                 </div>
             </div>
-            <UserEditForm />
+            {showUpdateForm && (
+                <UserEditForm
+                    user={userUpdated}
+                    setShowUpdateForm={setShowUpdateForm}
+                />
+            )}
         </div>
     );
 };
