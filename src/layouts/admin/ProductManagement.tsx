@@ -37,7 +37,6 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
                     response = await filterProduct(keyword);
                 }
 
-                // setProducts(response.res);
                 setTotalPages(response.totalPages);
                 return response.res; // Trả về danh sách sản phẩm
             } catch (error: any) {
@@ -100,9 +99,9 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
                         (product) => product.productId !== productId
                     )
                 );
-                toast.success("User deleted successfully!");
+                toast.success("Product deleted successfully!");
             } else {
-                toast.error("Failed to delete user!");
+                toast.error("Failed to delete product!");
             }
         } catch (error) {
             console.error("Error during delete operation:", error);
@@ -234,6 +233,8 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
                             isNew={isNew}
                             setShowProductForm={setShowProductForm}
                             product={isNew ? null : productEdit}
+                            setProducts={setProducts}
+                            products={products}
                         />
                     )}
                 </div>

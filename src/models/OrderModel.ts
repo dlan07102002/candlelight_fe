@@ -1,6 +1,7 @@
 class OrderModel {
     private _orderId?: number;
-    private _createdAt: Date;
+    private _createdAt?: Date;
+    private _userId?: number;
     private _orderAddress?: string;
     private _deliveryAddress?: string;
     private _paymentCost?: number;
@@ -33,8 +34,12 @@ class OrderModel {
         return this._orderId;
     }
 
-    public get createdAt(): Date {
+    public get createdAt(): Date | undefined {
         return this._createdAt;
+    }
+
+    public get userId(): number | undefined {
+        return this._userId;
     }
 
     public get orderAddress(): string | undefined {
@@ -63,6 +68,47 @@ class OrderModel {
 
     public get paymentStatus(): string | undefined {
         return this._paymentStatus;
+    }
+
+    // Setters
+    public set orderId(value: number | undefined) {
+        this._orderId = value;
+    }
+
+    public set createdAt(value: Date | undefined) {
+        this._createdAt = value;
+    }
+
+    public set userId(value: number | undefined) {
+        this._userId = value;
+    }
+
+    public set orderAddress(value: string | undefined) {
+        this._orderAddress = value;
+    }
+
+    public set deliveryAddress(value: string | undefined) {
+        this._deliveryAddress = value;
+    }
+
+    public set paymentCost(value: number | undefined) {
+        this._paymentCost = value;
+    }
+
+    public set deliveryCost(value: number | undefined) {
+        this._deliveryCost = value;
+    }
+
+    public set totalPrice(value: number | undefined) {
+        this._totalPrice = value;
+    }
+
+    public set deliveryStatus(value: string | undefined) {
+        this._deliveryStatus = value;
+    }
+
+    public set paymentStatus(value: string | undefined) {
+        this._paymentStatus = value;
     }
 }
 

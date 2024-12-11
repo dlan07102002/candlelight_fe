@@ -6,12 +6,13 @@ import {
     FiDollarSign,
 } from "react-icons/fi";
 import { countUsers } from "../../services/UserAPI";
-import { countOrders } from "../../services/OrderAPI";
+import { calculateRevenue, countOrders } from "../../services/OrderAPI";
 import { countProducts } from "../../services/ProductAPI";
 const DashBoard: React.FC = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalProducts, setTotalProducts] = useState(0);
     const [totalOrders, setTotalOrders] = useState(0);
+    const [revenue, setRevenue] = useState(0);
     useEffect(() => {
         const fetchUsersNumber = async () => {
             await countUsers()
@@ -25,13 +26,19 @@ const DashBoard: React.FC = () => {
                     console.log(data);
                     setTotalProducts(data);
                 })
-                .catch((e) => console.log("Fetch user failed: " + e));
+                .catch((e) => console.log("Fetch product failed: " + e));
             await countOrders()
                 .then((data) => {
                     console.log(data);
                     setTotalOrders(data);
                 })
-                .catch((e) => console.log("Fetch user failed: " + e));
+                .catch((e) => console.log("Fetch order failed: " + e));
+            await calculateRevenue()
+                .then((data) => {
+                    console.log(data);
+                    setRevenue(data);
+                })
+                .catch((e) => console.log("Fetch revenue failed: " + e));
         };
         fetchUsersNumber();
     }, []);
@@ -77,7 +84,7 @@ const DashBoard: React.FC = () => {
                     <div className="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <p className="text-muted mb-1">Revenue</p>
-                            <h3 className="fw-bold mb-0">$12,345</h3>
+                            <h3 className="fw-bold mb-0">${revenue}</h3>
                         </div>
                         <FiDollarSign className="text-warning fs-2" />
                     </div>

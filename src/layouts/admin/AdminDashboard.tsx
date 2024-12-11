@@ -34,12 +34,7 @@ const AdminDashboard: React.FC = () => {
                             setShowModal={setShowModal}
                         />
                     )}
-                    {activeTab === "products" && (
-                        <ProductManagement
-                            setModalType={setModalType}
-                            setShowModal={setShowModal}
-                        />
-                    )}
+                    {activeTab === "products" && <ProductManagement />}
                     {activeTab === "orders" && <OrderManagement />}
                     {activeTab === "categories" && (
                         <CategoryManagement

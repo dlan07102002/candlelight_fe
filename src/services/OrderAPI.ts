@@ -4,11 +4,20 @@ import requestBE from "./Request";
 
 interface IOrderResponse {
     res: OrderModel[];
+    totalPages: number;
+    totalElements: number;
 }
 
 export async function countOrders(): Promise<number> {
     let result = 0;
     const endpoint = `http://localhost:8080/orders/search/countOrders`;
+    await requestBE(endpoint).then((data) => (result = data));
+    return result;
+}
+
+export async function calculateRevenue(): Promise<number> {
+    let result = 0;
+    const endpoint = `http://localhost:8080/api/order`;
     await requestBE(endpoint).then((data) => (result = data));
     return result;
 }
@@ -19,12 +28,21 @@ async function getOrders(endpoint: string): Promise<IOrderResponse> {
     const orderList = response._embedded.orders;
 
     // Get page state
-
+    const totalPages: number = response.page.totalPages;
+    const totalElements: number = response.page.totalElements;
     for (const key in orderList) {
         res.push(orderList[key]);
     }
 
-    return { res: res };
+    return { res: res, totalElements, totalPages };
+}
+
+export async function getOrdersWithPaging(
+    page: number
+): Promise<IOrderResponse> {
+    const endpoint = `http://localhost:8080/orders?size=8&page=${page}`;
+    const response = await getOrders(endpoint);
+    return response;
 }
 
 export async function getOrdersByUserId(

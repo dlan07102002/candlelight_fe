@@ -4,7 +4,7 @@ import requestBE from "./Request";
 interface ReviewInterface {
     res: ReviewModel[];
 }
-async function getCategories(endpoint: string): Promise<ReviewInterface> {
+async function getReviews(endpoint: string): Promise<ReviewInterface> {
     const res: ReviewModel[] = [];
     const response = await requestBE(endpoint);
     const reviewList = response._embedded.reviews;
@@ -20,9 +20,9 @@ async function getCategories(endpoint: string): Promise<ReviewInterface> {
     return { res: res };
 }
 
-export function getAllCategories(): Promise<ReviewInterface> {
+export function getAllReviews(): Promise<ReviewInterface> {
     const endpoint: string = `http://localhost:8080/reviews`;
-    return getCategories(endpoint);
+    return getReviews(endpoint);
 }
 
 // Product Detail Review Data

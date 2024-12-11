@@ -5,11 +5,15 @@ interface IProductForm {
     isNew: boolean;
     setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
     product?: any;
+    setProducts: React.Dispatch<React.SetStateAction<any>>;
+    products: any[];
 }
 const ProductForm: React.FC<IProductForm> = ({
     isNew,
     setShowProductForm,
     product,
+    setProducts,
+    products,
 }) => {
     const productId = 0;
     const [productName, setProductName] = useState(
@@ -65,7 +69,21 @@ const ProductForm: React.FC<IProductForm> = ({
             )
                 .then((response) => {
                     if (response.ok) {
-                        toast.success("Product added successfully");
+                        products.push({
+                            productId: 0,
+                            category: [],
+                            productName: productName,
+                            description: description,
+                            listPrice: listPrice ? parseInt(listPrice) : 0,
+                            sellPrice: sellPrice ? parseInt(sellPrice) : 0,
+                            quantity: parseInt(quantity),
+                            rateAverage: 0,
+                        });
+                        setProducts(products);
+
+                        isNew
+                            ? toast.success("Product was added successfully")
+                            : toast.info("Product was updated successfully");
 
                         setProductName("");
                         setDescription("");
@@ -73,7 +91,11 @@ const ProductForm: React.FC<IProductForm> = ({
                         setSellPrice("");
                         setListPrice("");
                     } else {
-                        toast.error("Product added failed");
+                        toast.error(
+                            isNew
+                                ? "Product added failed"
+                                : "Product updated failed"
+                        );
                     }
                     return response.text();
                 })
