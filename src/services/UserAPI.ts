@@ -186,7 +186,7 @@ export async function register(user: UserModel): Promise<boolean> {
 export async function login(username: string, password: string) {
     const endpoint = `http://localhost:8080/account/login`;
     try {
-        const response = await fetch(endpoint, {
+        await fetch(endpoint, {
             method: "POST",
             headers: {
                 "Access-Control-Allow-Methods": "POST, GET, PUT",

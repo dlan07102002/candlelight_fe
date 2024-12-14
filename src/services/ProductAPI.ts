@@ -88,17 +88,29 @@ export async function getProductByProductId(productId: number): Promise<{
         return null;
     }
 }
-// Await here mean the response of getProduct will be the input to get res[0]
-// http://localhost:8080/products/1/categoryList
+
+export async function getSimilarProductByCF(
+    userId: number
+): Promise<{ CFBased: [] } | {}> {
+    const endpoint = `http://localhost:5555/collaborative/${userId}`;
+    try {
+        const products = await requestBE(endpoint);
+        return products;
+    } catch (error) {
+        console.log(error);
+        return {};
+    }
+}
+
 export async function getSimilarProductByContentBased(
     productId: number
 ): Promise<
     | {
-          Recommend: [];
+          contentBased: [];
       }
     | {}
 > {
-    const endpoint = `http://localhost:5555/api?product_id=${productId}`;
+    const endpoint = `http://localhost:5555/content/${productId}`;
 
     try {
         const products = await requestBE(endpoint);

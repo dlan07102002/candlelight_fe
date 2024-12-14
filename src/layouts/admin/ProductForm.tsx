@@ -38,17 +38,11 @@ const ProductForm: React.FC<IProductForm> = ({
 
         // Handle data submission to the server or process logic here
         const token = localStorage.getItem("token");
-        console.log(
-            `http://localhost:8080/${
-                isNew ? "admin/products" : "products" + "/" + product.productId
-            }`
-        );
+
         token &&
             (await fetch(
-                `http://localhost:8080/${
-                    isNew
-                        ? "admin/products"
-                        : "products" + "/" + product.productId
+                `http://localhost:8080/products${
+                    isNew ? "" : "/" + product.productId
                 }`,
                 {
                     method: isNew ? "POST" : "PATCH",
@@ -57,7 +51,6 @@ const ProductForm: React.FC<IProductForm> = ({
                         Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        // productId: productId,
                         productName: productName,
                         description: description,
                         listPrice: parseInt(listPrice),

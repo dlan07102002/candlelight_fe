@@ -10,6 +10,7 @@ class UserModel {
     private _isActivate?: boolean;
     private _orderAddress?: string;
     private _deliveryAddress?: string;
+    private _reviewCnt?: number;
 
     constructor(
         username?: string,
@@ -21,7 +22,8 @@ class UserModel {
         gender?: string,
         isActivate?: boolean,
         orderAddress?: string,
-        deliveryAddress?: string
+        deliveryAddress?: string,
+        reviewCnt?: number
     ) {
         this._username = username;
         this._email = email;
@@ -33,6 +35,7 @@ class UserModel {
         this._isActivate = isActivate;
         this._orderAddress = orderAddress;
         this._deliveryAddress = deliveryAddress;
+        this._reviewCnt = reviewCnt;
     }
 
     public get userId(): number | undefined {
@@ -40,6 +43,13 @@ class UserModel {
     }
     public set userId(userId: number | undefined) {
         this._userId = userId;
+    }
+
+    public get reviewCnt(): number | undefined {
+        return this._reviewCnt;
+    }
+    public set reviewCnt(reviewCnt: number | undefined) {
+        this._reviewCnt = reviewCnt;
     }
     public get username(): string | undefined {
         return this._username;

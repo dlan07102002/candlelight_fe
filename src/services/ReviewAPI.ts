@@ -26,19 +26,65 @@ export function getAllReviews(): Promise<ReviewInterface> {
 }
 
 // Product Detail Review Data
-export async function getReviewsByProductId(productId: number): Promise<{
+export async function getReviewsByProductId(
+    productId: number,
+    currentPage: number
+): Promise<{
     res: ReviewModel[] | null;
+    totalPages: number;
 } | null> {
-    const productEndpoint = `http://localhost:8080/products/${productId}`;
-    const endpoint = `${productEndpoint}/reviewList`;
+    // http://localhost:8080/reviews/search/findReviewsByProductId?productId=1&size=5
+    const endpoint = `http://localhost:8080/reviews/search/findReviewsByProductId?productId=${productId}&size=5&page=${currentPage}`;
+    const token = localStorage.getItem("token");
 
     try {
-        const reviews = (await requestBE(endpoint))._embedded.reviews;
-
+        const response = await fetch(endpoint, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        const reviews = data._embedded.reviews;
+        const totalPages = data.page.totalPages;
         // If productResponse is null, return both responses
-        return { res: reviews };
+        return { res: reviews, totalPages: totalPages };
     } catch (error) {
         console.error("Error fetching product or reviews:", error);
         return null;
     }
+}
+
+export async function submitReview(review: ReviewModel): Promise<number> {
+    const endpoint = `http://localhost:8080/api/review`;
+    const token = localStorage.getItem("token");
+    let reviewId = 0;
+    try {
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                user_id: review.userId,
+                comment: review.comment,
+                rate: review.rate,
+                productId: review.productId,
+            }),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            reviewId = parseInt(data);
+            console.log("Review Id: " + data);
+        } else {
+            console.error(
+                `Submit review failed with status ${response.status}`
+            );
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    return reviewId;
 }

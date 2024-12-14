@@ -2,6 +2,7 @@ import { useState } from "react";
 import { login } from "../../services/UserAPI";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 interface LoginInterface {
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -108,27 +109,60 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                 </button>
             </div>
             <div className="d-flex justify-content-between mb-3 mt-3 align-items-center">
-                <div className="form-check d-flex">
-                    <input
-                        type="checkbox"
-                        id="remember-me"
-                        className="form-check-input"
-                    />
-                    <label htmlFor="remember-me" className=" m-auto ms-2">
-                        Remember me
-                    </label>
-                </div>
                 <button type="button" className="text-primary btn p-0 ">
                     Forgot password?
                 </button>
             </div>
-            <div className="text-center mt-3">
-                <p>
-                    Don't have an account?{" "}
-                    <Link to="/register" className="text-primary btn p-0">
-                        Sign up here
-                    </Link>
-                </p>
+
+            <div className="mt-3">
+                <div className="position-relative">
+                    <div
+                        className="position-absolute w-100 d-flex align-items-center"
+                        style={{ top: "50%", transform: "translateY(-50%)" }}
+                    >
+                        <hr className="w-100 text-secondary" />
+                    </div>
+                    <div
+                        className="text-center position-relative text-muted d-inline-block px-2 "
+                        style={{
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            backgroundColor: "#f8f9fa",
+                        }}
+                    >
+                        Or continue with
+                    </div>
+                </div>
+
+                <div className="mt-3 row g-3">
+                    <div className="col">
+                        <button
+                            type="button"
+                            className="btn w-100 border rounded py-2 d-flex align-items-center justify-content-center bg-white text-muted"
+                        >
+                            <FaGoogle className="me-2 text-danger" />
+                            <span>Google</span>
+                        </button>
+                    </div>
+
+                    <div className="col">
+                        <button
+                            type="button"
+                            className="btn w-100 border rounded py-2 d-flex align-items-center justify-content-center bg-white text-muted"
+                        >
+                            <FaGithub className="me-2 text-dark" />
+                            <span>GitHub</span>
+                        </button>
+                    </div>
+                </div>
+                <div className="text-center mt-3">
+                    <p>
+                        Don't have an account?{" "}
+                        <Link to="/register" className="text-primary btn p-0">
+                            Sign up here
+                        </Link>
+                    </p>
+                </div>
             </div>
         </form>
     );

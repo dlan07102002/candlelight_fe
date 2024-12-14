@@ -68,8 +68,8 @@ const ProductDetail: React.FC = () => {
             console.log(productIdNum);
             await getSimilarProductByContentBased(productIdNum)
                 .then((data) => {
-                    if (data && "Recommend" in data) {
-                        const list = data.Recommend;
+                    if (data && "contentBased" in data) {
+                        const list = data.contentBased;
                         console.log(list);
                         setSimilarProductIds(list);
                     }
@@ -188,6 +188,7 @@ const ProductDetail: React.FC = () => {
                             {categories &&
                                 categories.map((category) => (
                                     <CategoryIcon
+                                        key={category.categoryId}
                                         category={category.categoryName}
                                     />
                                 ))}

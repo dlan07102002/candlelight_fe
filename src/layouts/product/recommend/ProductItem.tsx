@@ -15,20 +15,17 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const [error, setError] = useState(null);
 
     // get data from be
-    useEffect(
-        () => {
-            getImagesByProductId(productId)
-                .then((response) => {
-                    setImages(response);
-                    // setIsLoading(false);
-                })
-                .catch((error) => {
-                    // setIsLoading(false);
-                    setError(error.message);
-                });
-        },
-        [] //get data at the first one
-    );
+    useEffect(() => {
+        getImagesByProductId(productId)
+            .then((response) => {
+                setImages(response);
+                // setIsLoading(false);
+            })
+            .catch((error) => {
+                // setIsLoading(false);
+                setError(error.message);
+            });
+    }, []);
 
     // if (isLoading) {
     //     return (
@@ -62,13 +59,13 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     return (
         <div
             className="col-md-3 col-sm-3 mt-3 mb-3 col-3 "
-            style={{ height: "150px" }}
+            style={{ minHeight: "8.5rem" }}
         >
             <div className="card">
                 <div>
                     <Link to={`/products/${product.productId}`}>
                         <img
-                            style={{ height: "50px", width: "50px" }}
+                            style={{ height: "2.5rem", width: "2.5rem" }}
                             src={dataImg}
                             className="card-img-top d-block m-auto"
                             alt={product.description}
@@ -83,7 +80,11 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                     >
                         <p
                             className="card-title product-name"
-                            style={{ fontSize: "10px" }}
+                            style={{
+                                fontSize: "0.55rem",
+                                boxSizing: "border-box",
+                                height: "30%",
+                            }}
                         >
                             {product.productName}
                         </p>

@@ -3,7 +3,6 @@ import Banner from "./components/Banner";
 import Carousel from "./components/Carousel";
 import ProductList from "../product/ProductList";
 import { useParams } from "react-router-dom";
-import { MyContext } from "../../App";
 
 interface IHomePage {
     keyword: string;

@@ -10,7 +10,7 @@ import Register from "./layouts/user/Register";
 import AccountActivate from "./layouts/user/AccountActivate";
 import Login from "./layouts/user/Login";
 import Test from "./layouts/user/Test";
-import ProductForm from "./layouts/admin/ProductForm";
+
 import { jwtDecode } from "jwt-decode";
 import CartList from "./layouts/product/cart/CartList";
 import {
@@ -23,7 +23,7 @@ import { ToastContainer } from "react-toastify";
 import OrderDetailModel from "./models/OrderDetailModel";
 import AdminDashboard from "./layouts/admin/AdminDashboard";
 import PermissionDenied from "./layouts/error/403Error";
-import UserEditForm from "./layouts/admin/UserEditForm";
+
 interface JwtPayload {
     uid: number;
     exp: number;
@@ -45,6 +45,7 @@ const App: React.FC = () => {
     const [keyword, setKeyWord] = useState("");
     const [isLogin, setLogin] = useState(false);
     const [userId, setUserId] = useState(0);
+
     const [latestOrder, setLatestOrder] = useState<OrderModel | undefined>(
         undefined
     );
@@ -57,9 +58,17 @@ const App: React.FC = () => {
 
         if (token) {
             try {
-                const decodedToken = jwtDecode(token) as JwtPayload;
+                const decodedToken = jwtDecode<JwtPayload & { rvCnt?: number }>(
+                    token
+                );
                 // s -> ms
                 setUserId(decodedToken.uid);
+                const rvCnt = decodedToken.rvCnt;
+                if (rvCnt != 0) {
+                    localStorage.setItem("isNew", "false");
+                } else {
+                    localStorage.setItem("isNew", "true");
+                }
 
                 const exp = decodedToken.exp ? decodedToken.exp * 1000 : 0;
                 if (decodedToken.exp && Date.now() > exp) {
