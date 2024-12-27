@@ -16,7 +16,7 @@ export const CategoryIcon: React.FC<{ category: string | null }> = ({
     };
     return (
         <div
-            className="badge rounded-pill  text-dark border border-dark ms-2"
+            className="badge rounded-pill  text-dark border border-dark "
             style={{ backgroundColor: colorIcon() }}
         >
             {category}

@@ -2,6 +2,7 @@ import OrderDetail from "../models/OrderDetailModel";
 import OrderModel from "../models/OrderModel";
 import requestBE from "./Request";
 
+const beHost = import.meta.env.VITE_BE_HOST;
 interface IOrderResponse {
     res: OrderModel[];
     totalPages: number;
@@ -10,14 +11,14 @@ interface IOrderResponse {
 
 export async function countOrders(): Promise<number> {
     let result = 0;
-    const endpoint = `http://localhost:8080/orders/search/countOrders`;
+    const endpoint = `${beHost}/orders/search/countOrders`;
     await requestBE(endpoint).then((data) => (result = data));
     return result;
 }
 
 export async function calculateRevenue(): Promise<number> {
     let result = 0;
-    const endpoint = `http://localhost:8080/api/order`;
+    const endpoint = `${beHost}/api/order`;
     await requestBE(endpoint).then((data) => (result = data));
     return result;
 }
@@ -40,7 +41,7 @@ async function getOrders(endpoint: string): Promise<IOrderResponse> {
 export async function getOrdersWithPaging(
     page: number
 ): Promise<IOrderResponse> {
-    const endpoint = `http://localhost:8080/orders?size=8&page=${page}`;
+    const endpoint = `${beHost}/orders?size=8&page=${page}`;
     const response = await getOrders(endpoint);
     return response;
 }
@@ -48,7 +49,7 @@ export async function getOrdersWithPaging(
 export async function getOrdersByUserId(
     userId: number
 ): Promise<{ res: OrderModel[] }> {
-    const endpoint = `http://localhost:8080/users/${userId}/orderList`;
+    const endpoint = `${beHost}/users/${userId}/orderList`;
     const response = await getOrders(endpoint);
     return response;
 }
@@ -59,8 +60,8 @@ export async function getLatestOrderAndOrderDetailByUserId(
     order: OrderModel;
     orderDetailList: OrderDetail[];
 }> {
-    // http://localhost:8080/orders/search/findTopByUser_UserIdOrderByOrderIdDesc%7B?userId,page,size,sort*}
-    const endpoint = `http://localhost:8080/orders/search/findTopByUser_UserIdOrderByOrderIdDesc?userId=${userId}`;
+    // ${beHost}/orders/search/findTopByUser_UserIdOrderByOrderIdDesc%7B?userId,page,size,sort*}
+    const endpoint = `${beHost}/orders/search/findTopByUser_UserIdOrderByOrderIdDesc?userId=${userId}`;
     const response = await requestBE(endpoint);
     const order = response._embedded.orders[0];
     const odHref = order._links.orderDetailList.href;
@@ -72,7 +73,7 @@ export async function getLatestOrderAndOrderDetailByUserId(
 }
 
 export async function createOrder(order: OrderModel): Promise<number> {
-    const endpoint = `http://localhost:8080/api/order`;
+    const endpoint = `${beHost}/api/order`;
     const token = localStorage.getItem("token");
     let orderId = 0;
     if (token) {
@@ -110,4 +111,29 @@ export async function createOrder(order: OrderModel): Promise<number> {
     }
 
     return orderId;
+}
+
+export async function updateOrder(
+    deliveryStatus: string | undefined,
+    paymentStatus: string | undefined,
+    orderId: number
+) {
+    const endpoint = `${beHost}/api/order`;
+    const token = localStorage.getItem("token");
+    if (token) {
+        try {
+            await fetch(endpoint, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    deliveryStatus: deliveryStatus,
+                    paymentStatus: paymentStatus,
+                }),
+            });
+        } catch (error) {}
+    }
 }

@@ -3,6 +3,7 @@ import ProductItem from "./components/ProductItem";
 import ProductModel from "../../models/ProductModel";
 import { getAllProducts, filterProduct } from "../../services/ProductAPI";
 import Pagination from "../utils/Pagination";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface IProductList {
     keyword?: string;
@@ -22,11 +23,8 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
                 .then((response) => {
                     setProducts(response.res);
                     setTotalPages(response.totalPages);
-                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setIsLoading(false);
-
                     setError(error.message);
                 });
         } else {
@@ -34,14 +32,12 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
                 .then((response) => {
                     setProducts(response.res);
                     setTotalPages(response.totalPages);
-                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setIsLoading(false);
-
                     setError(error.message);
                 });
         }
+        setIsLoading(false);
     }, [currentPage, keyword, categoryId]);
 
     const paging = (page: number) => {
@@ -49,8 +45,16 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
     };
     if (isLoading) {
         return (
-            <div>
-                <h1>Loading</h1>
+            <div className="loading-container">
+                <AiOutlineLoading3Quarters className="loading-icon" />
+                <style>
+                    {`
+                                      @keyframes spin {
+                                          0% { transform: rotate(0deg); }
+                                          100% { transform: rotate(360deg); }
+                                      }
+                                      `}
+                </style>
             </div>
         );
     }

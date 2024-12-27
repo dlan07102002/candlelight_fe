@@ -1,4 +1,6 @@
-export const AdminNavbar: React.FC = () => {
+import { memo } from "react";
+
+const AdminNavbar: React.FC = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
             <div className="container-fluid">
@@ -14,3 +16,5 @@ export const AdminNavbar: React.FC = () => {
         </nav>
     );
 };
+
+export default memo(AdminNavbar);

@@ -10,7 +10,6 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
     const productId: number = props.product.productId;
 
     const [image, setImage] = useState<ImageModel[]>([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // get data from be
@@ -19,23 +18,14 @@ const CarouselItem: React.FC<ICarouselItem> = (props) => {
             getImageByProductId(productId)
                 .then((response) => {
                     setImage(response);
-                    setLoading(false);
                 })
                 .catch((error) => {
-                    setLoading(false);
                     setError(error.message);
                 });
         },
         [] //get data at the first one
     );
 
-    if (loading) {
-        return (
-            <div>
-                <h1>Loading</h1>
-            </div>
-        );
-    }
     if (error) {
         return (
             <div>

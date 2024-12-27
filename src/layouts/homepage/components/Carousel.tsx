@@ -7,6 +7,7 @@ import {
 } from "../../../services/ProductAPI";
 import CarouselItem from "./CarouselItem";
 import { MyContext } from "../../../App";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Carousel: React.FC = () => {
     const [loading, setLoading] = useState(true);
@@ -20,37 +21,36 @@ const Carousel: React.FC = () => {
     // get data from be
     useEffect(
         () => {
+            console.log(userId);
             const fetchAPI = async () => {
-                let isNew = false;
+                let isNew = true;
                 if (localStorage.getItem("isNew") != null) {
                     isNew = JSON.parse(localStorage.getItem("isNew")!);
                 }
+                console.log(isNew);
                 isNew
                     ? await getTopRateProducts()
                           .then((response) => {
                               setSimilarProducts(response.res);
-                              setLoading(false);
                           })
                           .catch((error) => {
-                              setLoading(false);
-
                               setError(error.message);
                           })
                     : await getSimilarProductByCF(userId)
                           .then((data) => {
                               if (data && "CFBased" in data) {
                                   const list = data.CFBased;
+                                  console.log(list);
                                   setSimilarProductIds(list);
                               }
                           })
                           .catch((e) => console.log(e));
+                setLoading(false);
             };
-            if (userId != 0) fetchAPI();
+            fetchAPI();
         },
         [userId] //get data at the first one
     );
-
-    useEffect(() => {}, [userId]);
 
     useEffect(() => {
         const fetchAPI = async () => {
@@ -71,6 +71,7 @@ const Carousel: React.FC = () => {
                 console.error("Error fetching similar products:", error);
             }
         };
+
         if (similarProductIds.length > 0) {
             fetchAPI();
         }
@@ -78,8 +79,16 @@ const Carousel: React.FC = () => {
 
     if (loading) {
         return (
-            <div>
-                <h1>Loading</h1>
+            <div className="loading-container">
+                <AiOutlineLoading3Quarters className="loading-icon" />
+                <style>
+                    {`
+                           @keyframes spin {
+                               0% { transform: rotate(0deg); }
+                               100% { transform: rotate(360deg); }
+                           }
+                           `}
+                </style>
             </div>
         );
     }

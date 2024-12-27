@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
     FiUsers,
     FiPackage,
@@ -12,10 +12,7 @@ interface IAdminSidebar {
     activeTab: string;
     setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
-export const AdminSidebar: React.FC<IAdminSidebar> = ({
-    activeTab,
-    setActiveTab,
-}) => {
+const AdminSidebar: React.FC<IAdminSidebar> = ({ activeTab, setActiveTab }) => {
     return (
         <aside
             className="bg-white shadow-sm"
@@ -110,3 +107,5 @@ export const AdminSidebar: React.FC<IAdminSidebar> = ({
         </aside>
     );
 };
+
+export default memo(AdminSidebar);

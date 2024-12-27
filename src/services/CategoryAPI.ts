@@ -2,7 +2,7 @@ import { NavigateFunction } from "react-router-dom";
 import CategoryModel from "../models/CategoryModel";
 import requestBE from "./Request";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-
+const beHost = import.meta.env.VITE_BE_HOST;
 interface CategoryInterface {
     res: CategoryModel[];
 }
@@ -23,14 +23,14 @@ async function getCategories(endpoint: string): Promise<CategoryInterface> {
 }
 
 export function getAllCategories(): Promise<CategoryInterface> {
-    const endpoint: string = `http://localhost:8080/categories`;
+    const endpoint: string = `${beHost}/categories`;
     return getCategories(endpoint);
 }
 
 export async function getCategoriesByProductId(productId: number): Promise<{
     res: CategoryModel[] | null;
 } | null> {
-    const productEndpoint = `http://localhost:8080/products/${productId}`;
+    const productEndpoint = `${beHost}/products/${productId}`;
     const endpoint = `${productEndpoint}/categoryList`;
 
     try {
@@ -48,7 +48,7 @@ export async function deleteCategoryById(
     categoryId: number,
     navigate: NavigateFunction
 ) {
-    const endpoint = `http://localhost:8080/api/category/${categoryId}`;
+    const endpoint = `${beHost}/api/category/${categoryId}`;
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -106,7 +106,7 @@ export async function deleteProductById(
     productId: number,
     navigate: NavigateFunction
 ): Promise<boolean> {
-    const endpoint = `http://localhost:8080/products/${productId}`;
+    const endpoint = `${beHost}/products/${productId}`;
     const token = localStorage.getItem("token");
 
     if (!token) {

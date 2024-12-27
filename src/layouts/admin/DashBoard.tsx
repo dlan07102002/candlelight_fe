@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import {
     FiUsers,
     FiPackage,
@@ -13,36 +13,33 @@ const DashBoard: React.FC = () => {
     const [totalProducts, setTotalProducts] = useState(0);
     const [totalOrders, setTotalOrders] = useState(0);
     const [revenue, setRevenue] = useState(0);
+
     useEffect(() => {
-        const fetchUsersNumber = async () => {
-            await countUsers()
-                .then((data) => {
-                    console.log(data);
-                    setTotalUsers(data);
-                })
-                .catch((e) => console.log("Fetch user failed: " + e));
-            await countProducts()
-                .then((data) => {
-                    console.log(data);
-                    setTotalProducts(data);
-                })
-                .catch((e) => console.log("Fetch product failed: " + e));
-            await countOrders()
-                .then((data) => {
-                    console.log(data);
-                    setTotalOrders(data);
-                })
-                .catch((e) => console.log("Fetch order failed: " + e));
-            await calculateRevenue()
-                .then((data) => {
-                    console.log(data);
-                    setRevenue(data);
-                })
-                .catch((e) => console.log("Fetch revenue failed: " + e));
+        const fetchData = async () => {
+            try {
+                const [totalUsers, totalProducts, totalOrders, revenue] =
+                    await Promise.all([
+                        countUsers(),
+                        countProducts(),
+                        countOrders(),
+                        calculateRevenue(),
+                    ]);
+
+                setTotalUsers(totalUsers);
+                setTotalProducts(totalProducts);
+                setTotalOrders(totalOrders);
+                setRevenue(revenue);
+            } catch (error) {
+                console.error("Error fetching dashboard data: ", error);
+                setTotalUsers(0);
+                setTotalProducts(0);
+                setTotalOrders(0);
+                setRevenue(0);
+            }
         };
-        fetchUsersNumber();
+
+        fetchData();
     }, []);
-    console.log(totalUsers);
 
     return (
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-4">
@@ -93,4 +90,4 @@ const DashBoard: React.FC = () => {
         </div>
     );
 };
-export default DashBoard;
+export default memo(DashBoard);

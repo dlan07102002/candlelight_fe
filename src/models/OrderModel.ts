@@ -1,4 +1,5 @@
 class OrderModel {
+    private _username?: string;
     private _orderId?: number;
     private _createdAt?: Date;
     private _userId?: number;
@@ -40,6 +41,10 @@ class OrderModel {
 
     public get userId(): number | undefined {
         return this._userId;
+    }
+
+    public get username(): string | undefined {
+        return this._username;
     }
 
     public get orderAddress(): string | undefined {

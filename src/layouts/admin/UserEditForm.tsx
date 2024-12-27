@@ -7,6 +7,7 @@ interface IUserEditForm {
     user?: any;
 }
 const UserEditForm: React.FC<IUserEditForm> = ({ setShowUpdateForm, user }) => {
+    console.log("user edit");
     const [userId, setUserId] = useState(user.userId ? user.userId : "");
     const [username, setUsername] = useState(
         user.username ? user.username : ""

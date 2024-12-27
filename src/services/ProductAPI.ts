@@ -2,7 +2,8 @@ import { NavigateFunction } from "react-router-dom";
 import ProductModel from "../models/ProductModel";
 import requestBE from "./Request";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-
+const beHost = import.meta.env.VITE_BE_HOST;
+const rcmHost = import.meta.env.VITE_RCM_HOST;
 interface IProductResponse {
     res: ProductModel[];
     totalPages: number;
@@ -11,7 +12,7 @@ interface IProductResponse {
 
 export async function countProducts(): Promise<number> {
     let result = 0;
-    const endpoint = `http://localhost:8080/products/search/countProducts`;
+    const endpoint = `${beHost}/products/search/countProducts`;
     await requestBE(endpoint).then((data) => (result = data));
     return result;
 }
@@ -34,15 +35,14 @@ async function getProducts(endpoint: string): Promise<IProductResponse> {
 
 export async function getAllProducts(page: number): Promise<IProductResponse> {
     // endpoint: localhost:8080/products
-    const endpoint: string = `http://localhost:8080/products?size=8&page=${page}`;
+    const endpoint: string = `${beHost}/products?size=8&page=${page}`;
 
     return getProducts(endpoint);
 }
 
 export async function getTopRateProducts(): Promise<IProductResponse> {
     // endpoint: localhost:8080/products
-    const endpoint: string =
-        "http://localhost:8080/products?sort=rateAverage,desc&page=0&size=3";
+    const endpoint: string = `${beHost}/products?sort=rateAverage,desc&page=0&size=3`;
     return getProducts(endpoint);
 }
 
@@ -50,7 +50,7 @@ export async function filterProduct(
     keyword?: string,
     categoryId?: number
 ): Promise<IProductResponse> {
-    let baseEndpoint = "http://localhost:8080/products";
+    let baseEndpoint = "${beHost}/products";
     let endpoint = baseEndpoint;
     const params = new URLSearchParams({ size: "4", page: "0" });
 
@@ -76,7 +76,7 @@ export async function filterProduct(
 export async function getProductByProductId(productId: number): Promise<{
     res: ProductModel | null;
 } | null> {
-    const endpoint = `http://localhost:8080/products/${productId}`;
+    const endpoint = `${beHost}/products/${productId}`;
 
     try {
         const product = await requestBE(endpoint);
@@ -92,7 +92,7 @@ export async function getProductByProductId(productId: number): Promise<{
 export async function getSimilarProductByCF(
     userId: number
 ): Promise<{ CFBased: [] } | {}> {
-    const endpoint = `http://localhost:5555/collaborative/${userId}`;
+    const endpoint = `${rcmHost}/collaborative/${userId}`;
     try {
         const products = await requestBE(endpoint);
         return products;
@@ -110,7 +110,7 @@ export async function getSimilarProductByContentBased(
       }
     | {}
 > {
-    const endpoint = `http://localhost:5555/content/${productId}`;
+    const endpoint = `${rcmHost}/content/${productId}`;
 
     try {
         const products = await requestBE(endpoint);
@@ -127,7 +127,7 @@ export async function deleteProductById(
     productId: number,
     navigate: NavigateFunction
 ): Promise<boolean> {
-    const endpoint = `http://localhost:8080/products/${productId}`;
+    const endpoint = `${beHost}/products/${productId}`;
     const token = localStorage.getItem("token");
 
     if (!token) {

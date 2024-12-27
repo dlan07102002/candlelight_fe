@@ -1,17 +1,17 @@
 import OrderDetailModel from "../models/OrderDetailModel";
 import ProductModel from "../models/ProductModel";
 import requestBE from "./Request";
-
+const beHost = import.meta.env.VITE_BE_HOST;
 export async function getProductByOrderDetailId(
     odId: number
 ): Promise<ProductModel> {
-    const endpoint = `http://localhost:8080/order-details/${odId}/product`;
+    const endpoint = `${beHost}/order-details/${odId}/product`;
     const response = await requestBE(endpoint);
     return response;
 }
 
 export async function addOd(od: OrderDetailModel): Promise<number> {
-    const endpoint = `http://localhost:8080/api/order-detail`;
+    const endpoint = `${beHost}/api/order-detail`;
     const token = localStorage.getItem("token");
     let odId = 0;
     if (token) {
@@ -52,7 +52,7 @@ export async function updateQuantity(
     odId: number,
     quantity: number
 ): Promise<boolean> {
-    const endpoint = `http://localhost:8080/order-details/${odId}`;
+    const endpoint = `${beHost}/order-details/${odId}`;
     const token = localStorage.getItem("token");
 
     if (token) {
@@ -87,7 +87,7 @@ export async function updateQuantity(
 
 export async function deleteOd(odId: number): Promise<boolean> {
     const token = localStorage.getItem("token");
-    const endpoint = `http://localhost:8080/order-details/${odId}`;
+    const endpoint = `${beHost}/order-details/${odId}`;
     if (token) {
         try {
             const response = await fetch(endpoint, {

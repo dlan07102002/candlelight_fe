@@ -3,6 +3,11 @@ import { login } from "../../services/UserAPI";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import {
+    OAuthGGConfig,
+    OAuthGHConfig,
+} from "../../configuration/configuration";
+import { v4 as uuidv4 } from "uuid";
 interface LoginInterface {
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,7 +32,7 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
         e.preventDefault();
 
         if (username.trim() !== "" && password.trim() !== "") {
-            const response = await login(username, password)
+            await login(username, password)
                 .then(() => {
                     setNotification("");
                     setLogin(true);
@@ -45,6 +50,31 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
     };
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
+    };
+
+    const handleContinueGG = () => {
+        const callbackUri = OAuthGGConfig.redirectUri;
+        const authUrl = OAuthGGConfig.authUri;
+        const googleClientId = OAuthGGConfig.clientId;
+        const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+            callbackUri
+        )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+        console.log(targetUrl);
+
+        // response_type=code -> authorization grant type, response_type=token -> implicit
+        console.log(targetUrl);
+        // Điều hướng người dùng đến URL xác thực
+        window.location.href = targetUrl;
+    };
+
+    const handleContinueGithub = () => {
+        const callbackUri = OAuthGHConfig.redirectUri;
+        const authUrl = OAuthGHConfig.authUri;
+        const githubClientId = OAuthGHConfig.clientId;
+        const targetUrl = `${authUrl}?client_id=${githubClientId}&scope=user:email&redirect_uri=${encodeURIComponent(
+            callbackUri
+        )}&state=${uuidv4()}`;
+        window.location.href = targetUrl;
     };
 
     return (
@@ -138,6 +168,7 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                     <div className="col">
                         <button
                             type="button"
+                            onClick={handleContinueGG}
                             className="btn w-100 border rounded py-2 d-flex align-items-center justify-content-center bg-white text-muted"
                         >
                             <FaGoogle className="me-2 text-danger" />
@@ -148,6 +179,7 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                     <div className="col">
                         <button
                             type="button"
+                            onClick={handleContinueGithub}
                             className="btn w-100 border rounded py-2 d-flex align-items-center justify-content-center bg-white text-muted"
                         >
                             <FaGithub className="me-2 text-dark" />

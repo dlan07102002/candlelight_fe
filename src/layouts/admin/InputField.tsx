@@ -28,7 +28,7 @@ const InputField: React.FC<{
     className,
 }) => {
     return (
-        <div className={"mb-3"}>
+        <div className={`mb-3 ${className ? className : ""}`}>
             <label htmlFor={name} className="form-label">
                 {label}
             </label>

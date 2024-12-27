@@ -53,8 +53,8 @@ const ProductForm: React.FC<IProductForm> = ({
                     body: JSON.stringify({
                         productName: productName,
                         description: description,
-                        listPrice: parseInt(listPrice),
-                        sellPrice: parseInt(sellPrice),
+                        listPrice: parseFloat(listPrice),
+                        sellPrice: parseFloat(sellPrice),
                         quantity: parseInt(quantity),
                         rateAverage: 0,
                     }),
@@ -144,6 +144,8 @@ const ProductForm: React.FC<IProductForm> = ({
             setImage(file);
         }
     };
+
+    console.log("Product Form");
 
     return (
         <div className="overlay d-flex" style={{ zIndex: 10 }}>

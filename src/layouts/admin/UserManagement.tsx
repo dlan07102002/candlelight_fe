@@ -10,6 +10,7 @@ import Pagination from "../utils/Pagination";
 import { useNavigate } from "react-router-dom";
 import { confirmDeleteToast } from "../utils/CustomToast";
 import UserEditForm from "./UserEditForm";
+import RoleModel from "../../models/RoleModel";
 
 interface IUserManagement {
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,9 +35,15 @@ const UserManagement: React.FC<IUserManagement> = ({
                 .then(async (data) => {
                     const userWithRolesList = await Promise.all(
                         data.res.map(async (user: any) => {
-                            const roles = await getUserRole(user.userId);
-
-                            return { ...user, roles: roles };
+                            const roles: RoleModel[] = await getUserRole(
+                                user.userId
+                            );
+                            if (roles[0] != undefined)
+                                return {
+                                    ...user,
+                                    roleName: roles[0].roleName,
+                                };
+                            return user;
                         })
                     );
 
@@ -129,49 +136,53 @@ const UserManagement: React.FC<IUserManagement> = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user: any, index: number) => (
-                                <tr key={index}>
-                                    <td>{user.username}</td>
-                                    <td>{user.email}</td>
-                                    <td>
-                                        {user.roles
-                                            ? user.roles[0].roleName + ""
-                                            : "NULL"}
-                                    </td>
-                                    <td
-                                        className={
-                                            user.isActivate
-                                                ? "text-success"
-                                                : "text-danger"
-                                        }
-                                        style={{ fontWeight: "bold" }}
-                                    >
-                                        {user.isActivate
-                                            ? "Active"
-                                            : "Inactive"}
-                                    </td>
-                                    <td>
-                                        <button
-                                            style={{ width: "4rem" }}
-                                            className="btn btn-primary text-white me-2 p-0 mt-2"
-                                            onClick={() =>
-                                                handleShowUpdate(user)
+                            {users.map((user: any) => {
+                                return (
+                                    <tr key={user.userId}>
+                                        <td>{user.username}</td>
+                                        <td>{user.email}</td>
+                                        <td>
+                                            {user.roleName
+                                                ? user.roleName + " "
+                                                : "NULL"}
+                                        </td>
+                                        <td
+                                            className={
+                                                user.isActivate
+                                                    ? "text-success"
+                                                    : "text-danger"
                                             }
+                                            style={{ fontWeight: "bold" }}
                                         >
-                                            Edit
-                                        </button>
-                                        <button
-                                            style={{ width: "4rem" }}
-                                            className="btn btn-danger text-white p-0 mt-2"
-                                            onClick={() =>
-                                                handleDeleteUser(user.userId)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                                            {user.isActivate
+                                                ? "Active"
+                                                : "Inactive"}
+                                        </td>
+                                        <td>
+                                            <button
+                                                style={{ width: "4rem" }}
+                                                className="btn btn-primary text-white me-2 p-0 mt-2"
+                                                onClick={() =>
+                                                    handleShowUpdate(user)
+                                                }
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                style={{ width: "4rem" }}
+                                                className="btn btn-danger text-white p-0 mt-2"
+                                                onClick={() =>
+                                                    handleDeleteUser(
+                                                        user.userId
+                                                    )
+                                                }
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                     <Pagination

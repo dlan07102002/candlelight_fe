@@ -14,6 +14,7 @@ import ratingStarRender from "../utils/ratingStar";
 import { toast } from "react-toastify";
 import ProductItem from "./recommend/ProductItem";
 import { CategoryIcon } from "../../assets/icons";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
@@ -53,9 +54,9 @@ const ProductDetail: React.FC = () => {
                 ]);
                 productData && setProduct(productData.res);
                 categoriesData && setCategories(categoriesData.res);
-                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
+            } finally {
                 setIsLoading(false);
             }
         };
@@ -107,8 +108,16 @@ const ProductDetail: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div>
-                <h1>Loading</h1>
+            <div className="loading-container">
+                <AiOutlineLoading3Quarters className="loading-icon" />
+                <style>
+                    {`
+                                       @keyframes spin {
+                                           0% { transform: rotate(0deg); }
+                                           100% { transform: rotate(360deg); }
+                                       }
+                                       `}
+                </style>
             </div>
         );
     }

@@ -1,28 +1,11 @@
 import { useEffect, useState } from "react";
 import { getOrdersWithPaging } from "../../services/OrderAPI";
 import Pagination from "../utils/Pagination";
-
-const data = {
-    orders: [
-        {
-            id: 1,
-            customer: "John Doe",
-            date: "2024-01-15",
-            total: 299.99,
-            status: "Delivered",
-        },
-        {
-            id: 2,
-            customer: "Jane Smith",
-            date: "2024-01-14",
-            total: 149.99,
-            status: "Processing",
-        },
-    ],
-};
+import OrderItem from "./OrderItem";
+import OrderModel from "../../models/OrderModel";
 
 const OrderManagement: React.FC = () => {
-    const [orders, setOrders] = useState<any[]>([]);
+    const [orders, setOrders] = useState<OrderModel[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
@@ -32,6 +15,7 @@ const OrderManagement: React.FC = () => {
                 const response = await getOrdersWithPaging(currentPage - 1);
                 console.log(response.res);
                 setOrders(response.res);
+
                 setTotalPages(response.totalPages);
             } catch (error) {
                 console.log("Error fetching orders: " + error);
@@ -63,20 +47,12 @@ const OrderManagement: React.FC = () => {
                         </thead>
                         <tbody>
                             {orders.map((order) => (
-                                <tr key={order.orderId}>
-                                    <td>#{order.orderId}</td>
-                                    <td>{order.username}</td>
-                                    <td>{order.createdAt}</td>
-                                    <td>${order.totalPrice}</td>
-                                    <td>{order.deliveryStatus}</td>
-                                    <td>{order.paymentStatus}</td>
-
-                                    <td>
-                                        <button className="btn btn-link text-primary">
-                                            Update Status
-                                        </button>
-                                    </td>
-                                </tr>
+                                <OrderItem
+                                    key={order.orderId}
+                                    order={order}
+                                    deliveryStatus={order.deliveryStatus}
+                                    paymentStatus={order.paymentStatus}
+                                />
                             ))}
                         </tbody>
                     </table>

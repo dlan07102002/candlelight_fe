@@ -1,6 +1,6 @@
 import ReviewModel from "../models/ReviewModel";
 import requestBE from "./Request";
-
+const beHost = import.meta.env.VITE_BE_HOST;
 interface ReviewInterface {
     res: ReviewModel[];
 }
@@ -21,7 +21,7 @@ async function getReviews(endpoint: string): Promise<ReviewInterface> {
 }
 
 export function getAllReviews(): Promise<ReviewInterface> {
-    const endpoint: string = `http://localhost:8080/reviews`;
+    const endpoint: string = `${beHost}/reviews`;
     return getReviews(endpoint);
 }
 
@@ -33,18 +33,11 @@ export async function getReviewsByProductId(
     res: ReviewModel[] | null;
     totalPages: number;
 } | null> {
-    // http://localhost:8080/reviews/search/findReviewsByProductId?productId=1&size=5
-    const endpoint = `http://localhost:8080/reviews/search/findReviewsByProductId?productId=${productId}&size=5&page=${currentPage}`;
-    const token = localStorage.getItem("token");
+    // ${beHost}/reviews/search/findReviewsByProductId?productId=1&size=5
+    const endpoint = `${beHost}/reviews/search/findReviewsByProductId?productId=${productId}&size=5&page=${currentPage}`;
 
     try {
-        const response = await fetch(endpoint, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await fetch(endpoint);
         const data = await response.json();
         const reviews = data._embedded.reviews;
         const totalPages = data.page.totalPages;
@@ -57,7 +50,7 @@ export async function getReviewsByProductId(
 }
 
 export async function submitReview(review: ReviewModel): Promise<number> {
-    const endpoint = `http://localhost:8080/api/review`;
+    const endpoint = `${beHost}/api/review`;
     const token = localStorage.getItem("token");
     let reviewId = 0;
     try {

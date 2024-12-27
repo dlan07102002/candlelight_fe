@@ -19,19 +19,26 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         getImagesByProductId(productId)
             .then((response) => {
                 setImages(response);
-                // setIsLoading(false);
             })
             .catch((error) => {
-                // setIsLoading(false);
                 setError(error.message);
             });
+        // setIsLoading(false);
     }, []);
 
     // if (isLoading) {
     //     return (
-    //         <div>
-    //             <h1>Loading</h1>
-    //         </div>
+    //          <div className="loading-container">
+    //     <AiOutlineLoading3Quarters className="loading-icon" />
+    //     <style>
+    //         {`
+    //                @keyframes spin {
+    //                    0% { transform: rotate(0deg); }
+    //                    100% { transform: rotate(360deg); }
+    //                }
+    //                `}
+    //     </style>
+    // </div>
     //     );
     // }
     if (error) {

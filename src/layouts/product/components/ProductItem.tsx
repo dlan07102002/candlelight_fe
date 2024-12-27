@@ -15,7 +15,6 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const productId: number = product.productId;
 
     const [images, setImages] = useState<ImageModel[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [cartList, setCartList] = useState<OrderDetailModel[]>([]);
     const { userId, order, orderDetails } = useContext(MyContext); // Get value from context
@@ -32,10 +31,8 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
             getImagesByProductId(productId)
                 .then((response) => {
                     setImages(response);
-                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setIsLoading(false);
                     setError(error.message);
                 });
         },
@@ -126,13 +123,6 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div>
-                <h1>Loading</h1>
-            </div>
-        );
-    }
     if (error) {
         return (
             <div>
@@ -189,7 +179,7 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
                         {product.description}
                     </p>
 
-                    <div className="mt-4">
+                    <div className="mt-3">
                         <span className="sell-price">
                             <strong>${sellPrice}</strong>
                         </span>

@@ -8,13 +8,6 @@ import { confirmDeleteToast } from "../utils/CustomToast";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const data = {
-    categories: [
-        { id: 1, name: "Electronics", products: 150 },
-        { id: 2, name: "Clothing", products: 200 },
-    ],
-};
-
 interface ICategoryManagement {
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     setModalType: React.Dispatch<React.SetStateAction<string>>;
@@ -23,6 +16,7 @@ const CategoryManagement: React.FC<ICategoryManagement> = ({
     setModalType,
     setShowModal,
 }) => {
+    console.log("Category Management");
     const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
     useEffect(() => {
@@ -82,8 +76,8 @@ const CategoryManagement: React.FC<ICategoryManagement> = ({
                             key={category.categoryId}
                             className="col-3 col-sm-6 col-12 col-xl-3"
                         >
-                            <div className="card border rounded-lg p-4">
-                                <div className="card-body text-center">
+                            <div className="card border rounded-lg ">
+                                <div className="card-body text-center ">
                                     <h3 className="card-title fw-bold">
                                         <CategoryIcon
                                             category={category.categoryName}

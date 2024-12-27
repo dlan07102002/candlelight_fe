@@ -9,6 +9,7 @@ import { MyContext } from "../../../App";
 import { Star, StarFill } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import Pagination from "../../utils/Pagination";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const ProductReview: React.FC<{
     productId: number;
@@ -43,18 +44,26 @@ const ProductReview: React.FC<{
                     setTotalPage(response.totalPages);
                     response.res && setReviewQuantity(response.res.length);
                 }
-
-                setIsLoading(false);
             })
             .catch((err) => {
                 setError(err);
+            })
+            .finally(() => {
                 setIsLoading(false);
             });
     }, [currentPage, productId]);
     if (isLoading) {
         return (
-            <div>
-                <h1>Loading</h1>
+            <div className="loading-container">
+                <AiOutlineLoading3Quarters className="loading-icon" />
+                <style>
+                    {`
+                                       @keyframes spin {
+                                           0% { transform: rotate(0deg); }
+                                           100% { transform: rotate(360deg); }
+                                       }
+                                       `}
+                </style>
             </div>
         );
     }

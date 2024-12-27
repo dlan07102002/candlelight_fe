@@ -3,7 +3,7 @@ import RoleModel from "../models/RoleModel";
 import UserModel from "../models/UserModel";
 import requestBE from "./Request";
 import { NavigateFunction } from "react-router-dom";
-
+const beHost = import.meta.env.VITE_BE_HOST;
 interface IUserResponse {
     res: UserModel[];
     totalPages: number;
@@ -19,13 +19,13 @@ interface JwtPayload {
 
 export async function countUsers(): Promise<number> {
     let result = 0;
-    const endpoint = `http://localhost:8080/users/search/countUsers`;
+    const endpoint = `${beHost}/users/search/countUsers`;
     await requestBE(endpoint).then((data) => (result = data));
     return result;
 }
 
 export async function getUserById(userId: number): Promise<UserModel> {
-    const endpoint = `http://localhost:8080/users/${userId}`;
+    const endpoint = `${beHost}/users/${userId}`;
     let user = new UserModel();
     await requestBE(endpoint).then((data) => {
         user = data;
@@ -50,11 +50,9 @@ export async function getUsers(endpoint: string): Promise<IUserResponse> {
     return { res: res, totalElements: totalElements, totalPages: totalPages };
 }
 
-export async function getUserRole(
-    userId: number
-): Promise<RoleModel[] | RoleModel> {
+export async function getUserRole(userId: number): Promise<RoleModel[]> {
     let result: RoleModel[] = [];
-    const endpoint = `http://localhost:8080/users/${userId}/roleList`;
+    const endpoint = `${beHost}/users/${userId}/roleList`;
     const response = await requestBE(endpoint);
     result = response._embedded.roles;
     return result;
@@ -64,7 +62,7 @@ export async function deleteUserById(
     userId: number,
     navigate: NavigateFunction
 ): Promise<boolean> {
-    const endpoint = `http://localhost:8080/users/${userId}`;
+    const endpoint = `${beHost}/users/${userId}`;
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -117,17 +115,17 @@ export async function deleteUserById(
 }
 export async function getUsersInPage(page: number): Promise<IUserResponse> {
     // endpoint: localhost:8080/products
-    const endpoint: string = `http://localhost:8080/users?size=8&page=${page}`;
+    const endpoint: string = `${beHost}/users?size=8&page=${page}`;
 
     return getUsers(endpoint);
 }
 
-// http://localhost:8080/users/search/existsByUsername%7B?username}
+// ${beHost}/users/search/existsByUsername%7B?username}
 
 export async function isUsernameExist(
     username: string
 ): Promise<boolean | string> {
-    const endpoint = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
+    const endpoint = `${beHost}/users/search/existsByUsername?username=${username}`;
     try {
         const response = await requestBE(endpoint);
 
@@ -138,7 +136,7 @@ export async function isUsernameExist(
 }
 
 export async function isEmailExists(email: string): Promise<boolean | string> {
-    const endpoint = `http://localhost:8080/users/search/existsByEmail?email=${email}`;
+    const endpoint = `${beHost}/users/search/existsByEmail?email=${email}`;
     try {
         const response = await requestBE(endpoint);
 
@@ -149,7 +147,7 @@ export async function isEmailExists(email: string): Promise<boolean | string> {
 }
 
 export async function register(user: UserModel): Promise<boolean> {
-    const endpoint = `http://localhost:8080/account/register`;
+    const endpoint = `${beHost}/account/register`;
     try {
         const response = await fetch(endpoint, {
             method: "POST",
@@ -184,7 +182,7 @@ export async function register(user: UserModel): Promise<boolean> {
 }
 
 export async function login(username: string, password: string) {
-    const endpoint = `http://localhost:8080/account/login`;
+    const endpoint = `${beHost}/account/login`;
     try {
         await fetch(endpoint, {
             method: "POST",

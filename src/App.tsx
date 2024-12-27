@@ -11,7 +11,7 @@ import AccountActivate from "./layouts/user/AccountActivate";
 import Login from "./layouts/user/Login";
 import Test from "./layouts/user/Test";
 
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import CartList from "./layouts/product/cart/CartList";
 import {
     createOrder,
@@ -23,11 +23,8 @@ import { ToastContainer } from "react-toastify";
 import OrderDetailModel from "./models/OrderDetailModel";
 import AdminDashboard from "./layouts/admin/AdminDashboard";
 import PermissionDenied from "./layouts/error/403Error";
+import Authenticate from "./layouts/user/Authenticate";
 
-interface JwtPayload {
-    uid: number;
-    exp: number;
-}
 // Tạo Context
 interface MyContextType {
     userId: number;
@@ -41,39 +38,34 @@ export const MyContext = createContext<MyContextType>({
     order: undefined,
     orderDetails: undefined,
 });
+
 const App: React.FC = () => {
     const [keyword, setKeyWord] = useState("");
     const [isLogin, setLogin] = useState(false);
     const [userId, setUserId] = useState(0);
-
     const [latestOrder, setLatestOrder] = useState<OrderModel | undefined>(
         undefined
     );
-
     const [isNewOrder, setIsNewOder] = useState(false);
     const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
     const location = useLocation();
-    useEffect(() => {
-        const token = localStorage.getItem("token");
 
+    const checkUserToken = (token: string | null) => {
         if (token) {
             try {
-                const decodedToken = jwtDecode<JwtPayload & { rvCnt?: number }>(
-                    token
-                );
-                // s -> ms
+                const decodedToken = jwtDecode<
+                    JwtPayload & { rvCnt?: number; uid: number }
+                >(token);
+
                 setUserId(decodedToken.uid);
-                const rvCnt = decodedToken.rvCnt;
-                if (rvCnt != 0) {
-                    localStorage.setItem("isNew", "false");
-                } else {
-                    localStorage.setItem("isNew", "true");
-                }
+                localStorage.setItem(
+                    "isNew",
+                    decodedToken.rvCnt !== 0 ? "false" : "true"
+                );
 
                 const exp = decodedToken.exp ? decodedToken.exp * 1000 : 0;
                 if (decodedToken.exp && Date.now() > exp) {
-                    console.log("Expired");
-                    localStorage.removeItem("token"); // Xóa token khi hết hạn
+                    localStorage.removeItem("token");
                     setUserId(0);
                 } else {
                     setLogin(true);
@@ -81,37 +73,43 @@ const App: React.FC = () => {
             } catch (error) {
                 console.error("Invalid token:", error);
             }
+        } else {
+            localStorage.setItem("isNew", "true");
         }
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        checkUserToken(token);
     }, [isLogin]);
+
     const isAdminRoute = location.pathname.startsWith("/admin");
 
-    // get order and order details by userId
+    // Lấy thông tin đơn hàng và chi tiết đơn hàng
+    const fetchOrderData = async (userId: number) => {
+        try {
+            const response = await getLatestOrderAndOrderDetailByUserId(userId);
+            setLatestOrder(response.order);
+            setOrderDetails(response.orderDetailList);
+        } catch (error) {
+            console.log("No orders found. Creating a new order...");
+            const order = new OrderModel();
+            await createOrder(order);
+            setIsNewOder(true);
+        }
+    };
+
     useEffect(() => {
         if (userId > 0) {
-            getLatestOrderAndOrderDetailByUserId(userId)
-                .then((response) => {
-                    setLatestOrder(response.order);
-                    setOrderDetails(response.orderDetailList);
-                })
-                .catch(() => {
-                    // TH không có order trong DB
-                    const order = new OrderModel();
-                    const fetchAll = async () => {
-                        const response = await createOrder(order);
-                        setIsNewOder(true);
-                        console.log(response);
-                    };
-                    fetchAll();
-                    console.log("New order");
-                });
+            fetchOrderData(userId);
         }
     }, [userId, isNewOrder]);
 
     const contextValue = {
-        userId: userId,
+        userId,
         order: latestOrder,
-        orderDetails: orderDetails,
-        setUserId: setUserId,
+        orderDetails,
+        setUserId,
     };
 
     return (
@@ -130,35 +128,35 @@ const App: React.FC = () => {
                         path="/:categoryId"
                         element={<HomePage keyword={keyword} />}
                     />
-
                     <Route
                         path="/products/:productId"
                         element={<ProductDetail />}
                     />
-
                     <Route path="/about" element={<About />} />
                     <Route path="/register" element={<Register />} />
                     <Route
                         path="/login"
                         element={
                             <Login isLogin={isLogin} setLogin={setLogin} />
-                            // <LoginForm />
                         }
                     />
-
                     <Route
                         path="/activate/:email/:activateCode"
                         element={<AccountActivate />}
                     />
-
                     <Route path="/cart" element={<CartList />} />
-
+                    <Route
+                        path="/authenticate"
+                        element={
+                            <Authenticate
+                                isLogin={isLogin}
+                                setLogin={setLogin}
+                            />
+                        }
+                    />
                     {/* ADMIN */}
-
                     <Route path="/admin" element={<AdminDashboard />} />
-
                     <Route path="/test" element={<Test />} />
-
                     {/* ERROR */}
                     <Route path="/403-error" element={<PermissionDenied />} />
                 </Routes>

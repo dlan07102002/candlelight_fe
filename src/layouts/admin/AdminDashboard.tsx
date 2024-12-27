@@ -7,8 +7,8 @@ import OrderManagement from "./OrderManagement";
 import CategoryManagement from "./CategoryManagement";
 import Analytics from "./Analytics";
 import Setting from "./Setting";
-import { AdminNavbar } from "./AdminNavbar";
-import { AdminSidebar } from "./AdminSidebar";
+import AdminNavbar from "./AdminNavbar";
+import AdminSidebar from "./AdminSidebar";
 import RequiredAdmin from "./RequiredAdmin";
 
 const AdminDashboard: React.FC = () => {

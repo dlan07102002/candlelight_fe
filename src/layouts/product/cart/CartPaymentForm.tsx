@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { MyContext } from "../../../App";
 import DeliveryDetail from "./order-review/DeliveryDetail";
 import CartItemsDetails from "./order-review/CartItemsDetails";
@@ -34,13 +34,20 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
         setShow(false);
     };
 
-    // Dummy calculations for subtotal, tax, and shipping
-    const subtotal = cartItems.reduce(
-        (acc, item) => acc + item.quantity * item.sellPrice,
-        0
-    );
-    const tax = subtotal * 0.1; // Example tax rate
-    const shipping = 5.0; // Example shipping fee
+    // Tối ưu tính toán subtotal, tax, và shipping bằng useMemo
+    const { subtotal, tax, shipping } = useMemo(() => {
+        const subtotalValue = cartItems.reduce(
+            (acc, item) => acc + item.quantity * item.sellPrice,
+            0
+        );
+        const taxValue = subtotalValue * 0.1; // Thuế giả định
+        const shippingValue = 5.0; // Phí vận chuyển giả định
+        return {
+            subtotal: subtotalValue,
+            tax: taxValue,
+            shipping: shippingValue,
+        };
+    }, [cartItems]);
     const checkStage = () => {
         switch (stage) {
             case 1:

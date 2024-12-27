@@ -1,3 +1,4 @@
+import { memo } from "react";
 function Banner() {
     return (
         <div className="p-2 banner">
@@ -16,4 +17,4 @@ function Banner() {
     );
 }
 
-export default Banner;
+export default memo(Banner);

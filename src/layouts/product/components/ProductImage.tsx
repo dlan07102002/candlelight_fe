@@ -4,7 +4,6 @@ import ImageModel from "../../../models/ImageModel";
 
 const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
     const [images, setImages] = useState<ImageModel[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [active, setActive] = useState<string | undefined>("");
     useEffect(
@@ -12,10 +11,8 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
             getImagesByProductId(productId)
                 .then((response) => {
                     setImages(response);
-                    setIsLoading(false);
                 })
                 .catch((error) => {
-                    setIsLoading(false);
                     setError(error.message);
                 });
         },
@@ -28,13 +25,6 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
         }
     }, [images]); // Chạy lại mỗi khi images thay đổi
 
-    if (isLoading) {
-        return (
-            <div>
-                <h1>Loading</h1>
-            </div>
-        );
-    }
     if (error) {
         return (
             <div>
@@ -48,14 +38,14 @@ const ProductImage: React.FC<{ productId: number }> = ({ productId }) => {
             <div className="product-image mb-4">
                 <img
                     src={active}
-                    alt={images[0].imageId + ""}
+                    alt={images[0]?.imageName + ""}
                     className="img-fluid rounded"
                 />
             </div>
             <div className="additional-images d-flex justify-content-start gap-2">
-                {images.map((img) => (
+                {images.map((img, index) => (
                     <img
-                        key={img.imageId}
+                        key={index}
                         src={img.link}
                         alt={img.imageId + ""}
                         className="img-thumbnail image-thumbnail" // Thêm class mới

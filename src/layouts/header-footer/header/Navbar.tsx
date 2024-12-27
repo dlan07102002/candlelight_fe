@@ -1,19 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, memo } from "react";
 import CategoryModel from "../../../models/CategoryModel";
 import { getAllCategories } from "../../../services/CategoryAPI";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MyContext } from "../../../App";
-interface NavbarInterface {
-    // keyword: string;
+interface INavbar {
     setKeyWord: React.Dispatch<string>;
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Navbar: React.FC<NavbarInterface> = ({
-    setKeyWord,
-    isLogin,
-    setLogin,
-}) => {
+const Navbar: React.FC<INavbar> = ({ setKeyWord, isLogin, setLogin }) => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [inputValue, setInputValue] = useState("");
     const { setUserId } = useContext(MyContext);
@@ -112,33 +107,6 @@ const Navbar: React.FC<NavbarInterface> = ({
                                 Contact
                             </NavLink>
                         </li>
-                        {/* <li className="nav-item dropdown">
-                            <NavLink
-                                className="nav-link dropdown-toggle"
-                                to="#"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Promotions
-                            </NavLink>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <NavLink className="dropdown-item" to="#">
-                                        Discounts
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="dropdown-item" to="#">
-                                        New Arrivals
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink className="dropdown-item" to="#">
-                                        Best Sellers
-                                    </NavLink>
-                                </li>
-                            </ul>
-                        </li> */}
                     </ul>
                 </div>
 
@@ -202,4 +170,4 @@ const Navbar: React.FC<NavbarInterface> = ({
     );
 };
 
-export default Navbar;
+export default memo(Navbar);
