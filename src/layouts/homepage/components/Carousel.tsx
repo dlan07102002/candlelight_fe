@@ -11,7 +11,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Carousel: React.FC = () => {
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [similarProductIds, setSimilarProductIds] = useState([]);
     const [similarProducts, setSimilarProducts] = useState<
         ProductModel[] | null
@@ -21,7 +21,6 @@ const Carousel: React.FC = () => {
     // get data from be
     useEffect(
         () => {
-            console.log(userId);
             const fetchAPI = async () => {
                 let isNew = true;
                 if (localStorage.getItem("isNew") != null) {
@@ -47,7 +46,31 @@ const Carousel: React.FC = () => {
                           .catch((e) => console.log(e));
                 setLoading(false);
             };
-            fetchAPI();
+
+            const retryFetchAPI = async (retries = 3, delay = 1000) => {
+                for (let attempt = 1; attempt <= retries; attempt++) {
+                    try {
+                        console.log(`Attempt ${attempt} of ${retries}`);
+                        await fetchAPI();
+                        break; // Thành công, thoát khỏi vòng lặp
+                    } catch (error: any) {
+                        if (attempt === retries) {
+                            console.error("All retry attempts failed.");
+                            setError(
+                                "Unable to fetch products after multiple attempts"
+                            );
+                        } else {
+                            console.log(
+                                `Retrying in ${delay / 1000} seconds...`
+                            );
+                            await new Promise((resolve) =>
+                                setTimeout(resolve, delay)
+                            );
+                        }
+                    }
+                }
+            };
+            retryFetchAPI();
         },
         [userId] //get data at the first one
     );

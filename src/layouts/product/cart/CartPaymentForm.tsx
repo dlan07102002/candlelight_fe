@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState, memo } from "react";
 import { MyContext } from "../../../App";
 import DeliveryDetail from "./order-review/DeliveryDetail";
 import CartItemsDetails from "./order-review/CartItemsDetails";
@@ -27,7 +27,6 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
 }) => {
     const { userId } = useContext(MyContext); // Lấy thông tin userId từ context
 
-    const [isLoading, setIsLoading] = useState(false);
     const [stage, setStage] = useState(1);
 
     const handleCancel = () => {
@@ -35,17 +34,16 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
     };
 
     // Tối ưu tính toán subtotal, tax, và shipping bằng useMemo
-    const { subtotal, tax, shipping } = useMemo(() => {
-        const subtotalValue = cartItems.reduce(
-            (acc, item) => acc + item.quantity * item.sellPrice,
-            0
-        );
+    const { tax, shipping, total } = useMemo(() => {
+        const subtotalValue = totalAmount;
         const taxValue = subtotalValue * 0.1; // Thuế giả định
         const shippingValue = 5.0; // Phí vận chuyển giả định
+        const totalValue = subtotalValue + taxValue + shippingValue;
         return {
             subtotal: subtotalValue,
             tax: taxValue,
             shipping: shippingValue,
+            total: totalValue,
         };
     }, [cartItems]);
     const checkStage = () => {
@@ -62,21 +60,23 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
 
             default:
                 return (
-                    <div className="total-amount mb-4">
+                    <div className="total-amount mb-4  m-auto">
+                        <div className="payment-info">
+                            {cartItems.length > 0 && (
+                                <p className="" style={{ lineHeight: "2rem" }}>
+                                    <strong>Subtotal:</strong> $
+                                    {totalAmount.toFixed(2)} <br />
+                                    <strong>Tax:</strong> ${tax.toFixed(2)}{" "}
+                                    <br />
+                                    <strong>Shipping:</strong> $
+                                    {shipping.toFixed(2)}
+                                </p>
+                            )}
+                            <hr />
+                        </div>
                         <h4 className="text-center">
-                            <strong>
-                                Total Amount: ${totalAmount.toFixed(2)}
-                            </strong>
+                            <strong>Total Amount: ${total.toFixed(2)}</strong>
                         </h4>
-                        {cartItems.length > 0 && (
-                            <p className="text-center mt-2">
-                                <strong>Subtotal:</strong> $
-                                {subtotal.toFixed(2)} <br />
-                                <strong>Tax:</strong> ${tax.toFixed(2)} <br />
-                                <strong>Shipping:</strong> $
-                                {shipping.toFixed(2)}
-                            </p>
-                        )}
                     </div>
                 );
         }
@@ -86,6 +86,8 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
         console.log(stage);
         setStage((prevState) => ++prevState);
     };
+
+    const handlePay = () => {};
 
     return (
         <div className="overlay d-flex align-items-center justify-content-center">
@@ -131,12 +133,21 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
                     {/* Actions */}
                     <div className="checkout-actions text-center">
                         {userId > 0 ? (
-                            <button
-                                className="btn btn-primary w-50 py-2"
-                                onClick={handleContinue}
-                            >
-                                Continue
-                            </button>
+                            stage == 3 ? (
+                                <button
+                                    className="btn btn-primary w-50 py-2"
+                                    onClick={handlePay}
+                                >
+                                    Submit
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn btn-primary w-50 py-2"
+                                    onClick={handleContinue}
+                                >
+                                    Continue
+                                </button>
+                            )
                         ) : (
                             <button className="btn btn-secondary w-50 py-2">
                                 Login to Proceed
@@ -155,14 +166,14 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
                 </div>
 
                 {/* Loading Spinner */}
-                <div className="loading-spinner text-center">
+                {/* <div className="loading-spinner text-center">
                     {isLoading && (
                         <div className="spinner-border" role="status"></div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     );
 };
 
-export default CartPaymentForm;
+export default memo(CartPaymentForm);

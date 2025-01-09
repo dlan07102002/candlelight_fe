@@ -1,10 +1,5 @@
-import { ReactNode } from "react";
 import { FiLock } from "react-icons/fi";
 
-interface IPermissionDenied {
-    hasPermission: boolean;
-    content: ReactNode;
-}
 const PermissionDenied: React.FC = () => {
     return (
         <div className="d-flex align-items-center justify-content-center min-vh-100 bg-light">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../../services/UserAPI";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import {
@@ -19,8 +19,10 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
+    const location = useLocation();
     if (isLogin) {
-        navigate("/");
+        const redirectPath = location.state?.from || "/";
+        navigate(redirectPath);
         return;
     }
     const togglePasswordVisibility = () => {
@@ -36,8 +38,8 @@ const Login: React.FC<LoginInterface> = ({ isLogin, setLogin }) => {
                 .then(() => {
                     setNotification("");
                     setLogin(true);
-                    // forward to homepage
-                    navigate("/");
+                    const redirectPath = location.state?.from || "/";
+                    navigate(redirectPath);
                 })
                 .catch((err) => {
                     console.log(err);

@@ -137,3 +137,5 @@ export async function updateOrder(
         } catch (error) {}
     }
 }
+
+export async function payOrder(orderId: number, total: number) {}

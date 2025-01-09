@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
     getProductByProductId,
+    getSimilarProductByCF,
     getSimilarProductByContentBased,
 } from "../../services/ProductAPI";
 import ProductModel from "../../models/ProductModel";
@@ -11,14 +12,15 @@ import ProductReview from "./components/ProductReview";
 import { getCategoriesByProductId } from "../../services/CategoryAPI";
 import ProductPaymentForm from "./components/ProductPaymentForm";
 import ratingStarRender from "../utils/ratingStar";
-import { toast } from "react-toastify";
 import ProductItem from "./recommend/ProductItem";
 import { CategoryIcon } from "../../assets/icons";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MyContext } from "../../App";
 
 const ProductDetail: React.FC = () => {
     // Get productId from URL
     const { productId } = useParams();
+    const { userId } = useContext(MyContext);
 
     let productIdNum = 0;
     try {
@@ -33,7 +35,7 @@ const ProductDetail: React.FC = () => {
 
     const [product, setProduct] = useState<ProductModel | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryModel[] | null>([]);
     const [reviewQuantity, setReviewQuantity] = useState(0);
     const [similarProductIds, setSimilarProductIds] = useState([]);
@@ -54,7 +56,8 @@ const ProductDetail: React.FC = () => {
                 ]);
                 productData && setProduct(productData.res);
                 categoriesData && setCategories(categoriesData.res);
-            } catch (error) {
+            } catch (error: any) {
+                setError(error);
                 console.error("Error fetching data:", error);
             } finally {
                 setIsLoading(false);
@@ -66,16 +69,49 @@ const ProductDetail: React.FC = () => {
     // Fetch Similar Product
     useEffect(() => {
         const fetchAPI = async () => {
-            console.log(productIdNum);
-            await getSimilarProductByContentBased(productIdNum)
-                .then((data) => {
-                    if (data && "contentBased" in data) {
-                        const list = data.contentBased;
-                        console.log(list);
-                        setSimilarProductIds(list);
+            try {
+                console.log(productIdNum);
+
+                let list: any = [];
+                if (userId) {
+                    const data = await getSimilarProductByCF(userId);
+                    if (data && "CFBased" in data && data.CFBased.length > 0) {
+                        list = data.CFBased;
                     }
-                })
-                .catch((e) => console.log(e));
+                }
+
+                if (list.length === 0) {
+                    const data = await getSimilarProductByContentBased(
+                        productIdNum
+                    );
+                    if (
+                        data &&
+                        "contentBased" in data &&
+                        data.contentBased.length > 0
+                    ) {
+                        list = data.contentBased;
+                    }
+                }
+
+                // If still not has data, handle error
+                if (list.length > 0) {
+                    console.log(list);
+                    setSimilarProductIds(list);
+                } else {
+                    console.log("No similar products found");
+                    setSimilarProductIds([]);
+                }
+            } catch (e) {
+                console.log("Error fetching similar products:", e);
+            }
+        };
+
+        fetchAPI();
+    }, [productId]); // Chạy lại khi productId thay đổi
+
+    useEffect(() => {
+        const fetchAPI = async () => {
+            console.log(productIdNum);
         };
 
         fetchAPI();
@@ -135,10 +171,6 @@ const ProductDetail: React.FC = () => {
             </div>
         );
     }
-
-    const addToCart = () => {
-        toast.success("Add to cart successfully");
-    };
 
     let discountPercent = 0;
     let listPrice: string = "";

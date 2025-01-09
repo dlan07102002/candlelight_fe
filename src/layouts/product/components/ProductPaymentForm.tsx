@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProductModel from "../../../models/ProductModel";
+import { toast } from "react-toastify";
 
 const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
     product,
@@ -23,6 +24,10 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
                 setQuantity(Number(value)); // Chỉ cập nhật nếu là số
             }
         }
+    };
+
+    const addToCart = () => {
+        toast.success("Add to cart successfully");
     };
 
     const handleChangeClick = (action: string) => {
@@ -53,13 +58,6 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
                     <small>Official Store</small>
                 </div>
             </div>
-
-            {/* Product Rating */}
-            {/* <div className="rating d-flex align-items-center">
-                <span>4.7</span>
-                <img src="" alt="Star Icon" width="16" />
-                <small className="ms-2">(5.5k+ reviews)</small>
-            </div> */}
 
             {/* Quantity Selector */}
             <div className="quantity d-flex align-items-center">
@@ -103,7 +101,10 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
             {/* Action Buttons */}
             <div className="action-buttons d-flex justify-content-between">
                 <button className="btn btn-danger">Buy Now</button>
-                <button className="btn btn-outline-secondary ms-4">
+                <button
+                    className="btn btn-outline-secondary ms-4"
+                    onClick={addToCart}
+                >
                     Add to Cart
                 </button>
             </div>

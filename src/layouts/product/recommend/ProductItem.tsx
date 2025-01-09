@@ -11,7 +11,6 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
     const productId: number = product.productId;
 
     const [images, setImages] = useState<ImageModel[]>([]);
-    // const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // get data from be
@@ -26,21 +25,6 @@ const ProductItem: React.FC<IProductItem> = ({ product }) => {
         // setIsLoading(false);
     }, []);
 
-    // if (isLoading) {
-    //     return (
-    //          <div className="loading-container">
-    //     <AiOutlineLoading3Quarters className="loading-icon" />
-    //     <style>
-    //         {`
-    //                @keyframes spin {
-    //                    0% { transform: rotate(0deg); }
-    //                    100% { transform: rotate(360deg); }
-    //                }
-    //                `}
-    //     </style>
-    // </div>
-    //     );
-    // }
     if (error) {
         return (
             <div>

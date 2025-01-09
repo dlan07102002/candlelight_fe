@@ -39,6 +39,14 @@ const Navbar: React.FC<INavbar> = ({ setKeyWord, isLogin, setLogin }) => {
         setLogin(false);
     };
 
+    const handleCartClick = () => {
+        if (isLogin) {
+            navigate("/cart");
+        } else {
+            navigate("/login", { state: { from: "/cart" } });
+        }
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
@@ -132,12 +140,9 @@ const Navbar: React.FC<INavbar> = ({ setKeyWord, isLogin, setLogin }) => {
                 {/* Shopping Cart Icon */}
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
-                        <NavLink
-                            className="nav-link"
-                            to={isLogin ? "/cart" : "/login"}
-                        >
+                        <button className="nav-link" onClick={handleCartClick}>
                             <i className="fas fa-shopping-cart"></i>
-                        </NavLink>
+                        </button>
                     </li>
                 </ul>
 

@@ -13,20 +13,51 @@ interface IProductList {
 const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
     const [products, setProducts] = useState<ProductModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     // get data from be
     useEffect(() => {
         if (keyword === "" && categoryId == 0) {
-            getAllProducts(currentPage - 1)
-                .then((response) => {
+            const fetchProduct = async () => {
+                try {
+                    const response = await getAllProducts(currentPage - 1);
                     setProducts(response.res);
                     setTotalPages(response.totalPages);
-                })
-                .catch((error) => {
-                    setError(error.message);
-                });
+                    setError(null); // Xóa lỗi nếu thành công
+                } catch (error: any) {
+                    console.error("Error fetching products:", error.message);
+                    setError(error.message); // Lưu lỗi
+                    throw error; // Ném lỗi để thử lại
+                }
+            };
+
+            const retryFetchProduct = async (retries = 3, delay = 1000) => {
+                for (let attempt = 1; attempt <= retries; attempt++) {
+                    try {
+                        console.log(`Attempt ${attempt} of ${retries}`);
+                        await fetchProduct();
+                        break; // Thành công, thoát khỏi vòng lặp
+                    } catch (error: any) {
+                        if (attempt === retries) {
+                            console.error("All retry attempts failed.");
+                            setError(
+                                "Unable to fetch products after multiple attempts"
+                            );
+                        } else {
+                            console.log(
+                                `Retrying in ${delay / 1000} seconds...`
+                            );
+                            await new Promise((resolve) =>
+                                setTimeout(resolve, delay)
+                            );
+                        }
+                    }
+                }
+            };
+
+            // Gọi hàm retryFetchProduct
+            retryFetchProduct();
         } else {
             filterProduct(keyword, categoryId)
                 .then((response) => {
