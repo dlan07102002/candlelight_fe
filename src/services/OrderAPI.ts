@@ -138,4 +138,4 @@ export async function updateOrder(
     }
 }
 
-export async function payOrder(orderId: number, total: number) {}
+// export async function payOrder(orderId: number, total: number) {}

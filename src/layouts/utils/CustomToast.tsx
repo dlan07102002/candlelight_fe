@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const confirmDeleteToast = (id: number): Promise<boolean> => {
+export const confirmDeleteToast = (): Promise<boolean> => {
     return new Promise((resolve) => {
         toast(
             ({ closeToast }) => (
