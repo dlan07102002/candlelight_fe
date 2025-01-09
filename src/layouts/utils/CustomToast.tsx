@@ -1,11 +1,11 @@
 import { toast } from "react-toastify";
 
-export const confirmDeleteToast = (): Promise<boolean> => {
+export const confirmDeleteToast = (id: number): Promise<boolean> => {
     return new Promise((resolve) => {
         toast(
             ({ closeToast }) => (
                 <div>
-                    <p>Are you sure you want to delete?</p>
+                    <p>Are you sure you want to delete #{id}?</p>
                     <button
                         onClick={() => {
                             resolve(true); // accepts
