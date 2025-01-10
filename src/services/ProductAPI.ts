@@ -48,11 +48,12 @@ export async function getTopRateProducts(): Promise<IProductResponse> {
 
 export async function filterProduct(
     keyword?: string,
+    currentPage: number = 0,
     categoryId?: number
 ): Promise<IProductResponse> {
-    let baseEndpoint = "${beHost}/products";
+    let baseEndpoint = `${beHost}/products`;
     let endpoint = baseEndpoint;
-    const params = new URLSearchParams({ size: "4", page: "0" });
+    const params = new URLSearchParams({ size: "8", page: currentPage + "" });
 
     if (keyword && !categoryId) {
         endpoint = `${baseEndpoint}/search/findByProductNameContaining`;
@@ -97,8 +98,7 @@ export async function getSimilarProductByCF(
         const products = await requestBE(endpoint);
         return products;
     } catch (error) {
-        console.log(error);
-        return {};
+        throw error;
     }
 }
 

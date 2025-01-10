@@ -26,7 +26,6 @@ const Carousel: React.FC = () => {
                 if (localStorage.getItem("isNew") != null) {
                     isNew = JSON.parse(localStorage.getItem("isNew")!);
                 }
-                console.log(isNew);
                 isNew
                     ? await getTopRateProducts()
                           .then((response) => {
@@ -39,12 +38,12 @@ const Carousel: React.FC = () => {
                           .then((data) => {
                               if (data && "CFBased" in data) {
                                   const list = data.CFBased;
-                                  console.log(list);
                                   setSimilarProductIds(list);
                               }
                           })
-                          .catch((e) => console.log(e));
-                setLoading(false);
+                          .catch((e) => {
+                              throw e;
+                          });
             };
 
             const retryFetchAPI = async (retries = 3, delay = 1000) => {
@@ -69,6 +68,7 @@ const Carousel: React.FC = () => {
                         }
                     }
                 }
+                setLoading(false);
             };
             retryFetchAPI();
         },
@@ -118,7 +118,9 @@ const Carousel: React.FC = () => {
     if (error) {
         return (
             <div>
-                <h1>Get error: {error}</h1>
+                <h1 style={{ fontSize: "1rem", color: "red" }}>
+                    Get error: {error}
+                </h1>
             </div>
         );
     }

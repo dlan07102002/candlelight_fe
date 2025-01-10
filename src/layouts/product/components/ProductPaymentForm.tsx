@@ -9,9 +9,6 @@ const ProductPaymentForm: React.FC<{ product: ProductModel }> = ({
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
-        // Kiểm tra nếu value chỉ chứa số
-        // setQuantity(value);
-        console.log(value);
         const stockQuantity = product.quantity ? product.quantity : 0;
 
         if (!isNaN(Number(value))) {

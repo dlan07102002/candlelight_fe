@@ -8,13 +8,20 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 interface IProductList {
     keyword?: string;
     categoryId?: number;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
+const ProductList: React.FC<IProductList> = ({
+    keyword,
+    categoryId,
+    currentPage,
+    setCurrentPage,
+}) => {
     const [products, setProducts] = useState<ProductModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    // const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     // get data from be
     useEffect(() => {
@@ -35,19 +42,14 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
             const retryFetchProduct = async (retries = 3, delay = 1000) => {
                 for (let attempt = 1; attempt <= retries; attempt++) {
                     try {
-                        console.log(`Attempt ${attempt} of ${retries}`);
                         await fetchProduct();
                         break; // Thành công, thoát khỏi vòng lặp
                     } catch (error: any) {
                         if (attempt === retries) {
-                            console.error("All retry attempts failed.");
                             setError(
                                 "Unable to fetch products after multiple attempts"
                             );
                         } else {
-                            console.log(
-                                `Retrying in ${delay / 1000} seconds...`
-                            );
                             await new Promise((resolve) =>
                                 setTimeout(resolve, delay)
                             );
@@ -59,7 +61,7 @@ const ProductList: React.FC<IProductList> = ({ keyword, categoryId }) => {
             // Gọi hàm retryFetchProduct
             retryFetchProduct();
         } else {
-            filterProduct(keyword, categoryId)
+            filterProduct(keyword, currentPage - 1, categoryId)
                 .then((response) => {
                     setProducts(response.res);
                     setTotalPages(response.totalPages);

@@ -7,8 +7,14 @@ interface INavbar {
     setKeyWord: React.Dispatch<string>;
     isLogin: boolean;
     setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
-const Navbar: React.FC<INavbar> = ({ setKeyWord, isLogin, setLogin }) => {
+const Navbar: React.FC<INavbar> = ({
+    setKeyWord,
+    isLogin,
+    setLogin,
+    setCurrentPage,
+}) => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [inputValue, setInputValue] = useState("");
     const { setUserId } = useContext(MyContext);
@@ -28,6 +34,7 @@ const Navbar: React.FC<INavbar> = ({ setKeyWord, isLogin, setLogin }) => {
         // Xử lý logic submit ở đây
     };
     const handleSearch = () => {
+        setCurrentPage(1);
         setKeyWord(inputValue);
         navigate("/");
         setInputValue("");

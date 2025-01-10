@@ -48,6 +48,8 @@ const App: React.FC = () => {
     );
     const [isNewOrder, setIsNewOder] = useState(false);
     const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+
     const location = useLocation();
 
     const checkUserToken = (token: string | null) => {
@@ -120,13 +122,29 @@ const App: React.FC = () => {
                         setKeyWord={setKeyWord}
                         isLogin={isLogin}
                         setLogin={setLogin}
+                        setCurrentPage={setCurrentPage}
                     />
                 )}
                 <Routes>
-                    <Route path="/" element={<HomePage keyword={keyword} />} />
+                    <Route
+                        path="/"
+                        element={
+                            <HomePage
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                keyword={keyword}
+                            />
+                        }
+                    />
                     <Route
                         path="/:categoryId"
-                        element={<HomePage keyword={keyword} />}
+                        element={
+                            <HomePage
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                keyword={keyword}
+                            />
+                        }
                     />
                     <Route
                         path="/products/:productId"

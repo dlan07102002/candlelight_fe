@@ -13,7 +13,6 @@ const OrderManagement: React.FC = () => {
         const fetchOrders = async () => {
             try {
                 const response = await getOrdersWithPaging(currentPage - 1);
-                console.log(response.res);
                 setOrders(response.res);
 
                 setTotalPages(response.totalPages);

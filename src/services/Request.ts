@@ -9,7 +9,6 @@ const requestBE = async (path: string) => {
         return await response.json();
     } catch (error) {
         console.error(`Error fetching data from ${path}:`, error);
-        console.log(path);
         throw error;
     }
 };

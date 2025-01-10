@@ -6,8 +6,14 @@ import { useParams } from "react-router-dom";
 
 interface IHomePage {
     keyword: string;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
-const HomePage: React.FC<IHomePage> = ({ keyword }) => {
+const HomePage: React.FC<IHomePage> = ({
+    keyword,
+    currentPage,
+    setCurrentPage,
+}) => {
     const { categoryId } = useParams();
     let categoryIdNum = 0;
     try {
@@ -25,7 +31,12 @@ const HomePage: React.FC<IHomePage> = ({ keyword }) => {
         <div>
             <Banner />
             <Carousel />
-            <ProductList keyword={keyword} categoryId={categoryIdNum} />
+            <ProductList
+                keyword={keyword}
+                categoryId={categoryIdNum}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+            />
         </div>
     );
 };

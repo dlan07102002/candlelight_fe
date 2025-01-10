@@ -35,8 +35,7 @@ const CartItem: React.FC<{
     }, [quantity, item.sellPrice]);
 
     const removeItem = async (odId: number) => {
-        const response = await deleteOd(odId);
-        console.log(response);
+        await deleteOd(odId);
     };
 
     const handleRemove = (odId: number) => {

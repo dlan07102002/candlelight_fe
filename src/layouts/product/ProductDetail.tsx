@@ -70,8 +70,6 @@ const ProductDetail: React.FC = () => {
     useEffect(() => {
         const fetchAPI = async () => {
             try {
-                console.log(productIdNum);
-
                 let list: any = [];
                 if (userId) {
                     const data = await getSimilarProductByCF(userId);

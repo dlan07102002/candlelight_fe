@@ -23,6 +23,7 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [keyword, setKeyWord] = useState("");
+    const [inputValue, setInputValue] = useState("");
     const navigate = useNavigate();
     const [productEdit, setProductEdit] = useState<any>(null);
     const [isNew, setIsNew] = useState(false);
@@ -35,7 +36,7 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
                 if (keyword === "") {
                     response = await getAllProducts(currentPage - 1);
                 } else {
-                    response = await filterProduct(keyword);
+                    response = await filterProduct(keyword, currentPage - 1);
                 }
 
                 setTotalPages(response.totalPages);
@@ -65,7 +66,6 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
                         };
                     })
                 );
-                console.log(products);
 
                 setProducts(products);
             })
@@ -110,17 +110,48 @@ const ProductManagement: React.FC<IProductManagement> = ({}) => {
         }
     };
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); // Ngăn không cho form submit
+        if (inputValue !== "") {
+            handleSearch();
+        }
+    };
+
+    const handleSearch = () => {
+        setCurrentPage(1);
+        setKeyWord(inputValue);
+        setInputValue("");
+    };
+
     return (
         <div className="admin-content-container shadow-sm">
             <div className="p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h2 className="h5 fw-bold">Product Management</h2>
+                    {/* Search Form */}
+                    <form className="d-flex" onSubmit={handleSubmit}>
+                        <input
+                            className="form-control me-2"
+                            type="search"
+                            placeholder="Search"
+                            aria-label="Search"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                        />
+                        <button
+                            className="btn btn-outline-secondary"
+                            type="button"
+                            onClick={handleSearch}
+                        >
+                            <i className="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
                     <button
                         onClick={() => {
                             setIsNew(true);
                             setShowProductForm(true);
                         }}
-                        className="btn btn-success"
+                        className="btn btn-success ms-2"
                     >
                         Add Product
                     </button>
