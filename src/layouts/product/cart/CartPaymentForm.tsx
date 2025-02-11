@@ -3,8 +3,10 @@ import { MyContext } from "../../../App";
 import DeliveryDetail from "./order-review/DeliveryDetail";
 import CartItemsDetails from "./order-review/CartItemsDetails";
 import UserModel from "../../../models/UserModel";
-
+import OrderModel from "../../../models/OrderModel";
+import { payOrder } from "../../../services/OrderAPI";
 interface ICartPaymentForm {
+    order: any;
     cartItems: ICartItem[];
     totalAmount: number;
     isShow: boolean;
@@ -20,6 +22,7 @@ interface ICartItem {
 }
 
 const CartPaymentForm: React.FC<ICartPaymentForm> = ({
+    order,
     cartItems,
     totalAmount,
     setShow,
@@ -87,7 +90,21 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
         setStage((prevState) => ++prevState);
     };
 
-    const handlePay = () => {};
+    const handlePay = async () => {
+        const orderRequest: OrderModel = new OrderModel(
+            user.userId!,
+            user.username!,
+            order.current.orderId,
+            "ABC, Vietnam",
+            user.deliveryAddress,
+            tax,
+            shipping,
+            total,
+            "DELIVERED"
+        );
+        const response = await payOrder(orderRequest);
+        console.log(response);
+    };
 
     return (
         <div className="overlay d-flex align-items-center justify-content-center">
@@ -164,13 +181,6 @@ const CartPaymentForm: React.FC<ICartPaymentForm> = ({
                         </button>
                     </div>
                 </div>
-
-                {/* Loading Spinner */}
-                {/* <div className="loading-spinner text-center">
-                    {isLoading && (
-                        <div className="spinner-border" role="status"></div>
-                    )}
-                </div> */}
             </div>
         </div>
     );

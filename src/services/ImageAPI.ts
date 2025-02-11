@@ -19,7 +19,6 @@ async function getImage(endpoint: string): Promise<ImageModel[]> {
 export async function getImagesByProductId(
     productId: number
 ): Promise<ImageModel[]> {
-    // endpoint: localhost:8080/images
     const endpoint: string = `${beHost}/products/${productId}/images`;
 
     return getImage(endpoint);
@@ -28,7 +27,6 @@ export async function getImagesByProductId(
 export async function getImageByProductId(
     productId: number
 ): Promise<ImageModel[]> {
-    // endpoint: localhost:8080/images
     const endpoint: string = `${beHost}/products/${productId}/images?size=1`;
 
     return getImage(endpoint);

@@ -16,6 +16,8 @@ const Authenticate: React.FC<IAuthenticate> = ({ isLogin, setLogin }) => {
             const authCodeRegex = /code=([^&]+)/;
             const match = window.location.href.match(authCodeRegex);
 
+            const beHost = import.meta.env.VITE_BE_HOST;
+
             if (match) {
                 const authCode = match[1];
                 const authServerRegex = /type=([^&]+)/;
@@ -27,7 +29,7 @@ const Authenticate: React.FC<IAuthenticate> = ({ isLogin, setLogin }) => {
                 try {
                     // Request BE to exchange Token
                     const response = await fetch(
-                        `http://localhost:8080/account/outbound/authentication?code=${authCode}&type=${authServer}`,
+                        `${beHost}/account/outbound/authentication?code=${authCode}&type=${authServer}`,
                         { method: "POST" }
                     );
 

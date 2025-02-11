@@ -6,22 +6,19 @@ const AccountActivate: React.FC = () => {
     const { activateCode } = useParams();
     const [isActivate, setActivate] = useState(false);
     const [notification, setNotification] = useState("");
+    const beHost = import.meta.env.VITE_BE_HOST;
 
     useEffect(() => {
         // window.location.search => get URL query, include "?"
 
         if (email && activateCode) {
-            console.log(email);
-            console.log(activateCode);
-
             activate();
         }
     }, []);
+
     const activate = async () => {
-        console.log("Email: ", email);
-        console.log("Activation Code: ", activateCode);
         try {
-            const endpoint: string = `http://localhost:8080/account/activate?email=${email}&activateCode=${activateCode}`;
+            const endpoint: string = `${beHost}/account/activate?email=${email}&activateCode=${activateCode}`;
             const response = await fetch(endpoint, { method: "GET" });
             if (response.ok) {
                 setActivate(true);

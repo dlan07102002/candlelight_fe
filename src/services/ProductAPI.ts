@@ -34,14 +34,12 @@ async function getProducts(endpoint: string): Promise<IProductResponse> {
 }
 
 export async function getAllProducts(page: number): Promise<IProductResponse> {
-    // endpoint: localhost:8080/products
     const endpoint: string = `${beHost}/products?size=8&page=${page}`;
 
     return getProducts(endpoint);
 }
 
 export async function getTopRateProducts(): Promise<IProductResponse> {
-    // endpoint: localhost:8080/products
     const endpoint: string = `${beHost}/products?sort=rateAverage,desc&page=0&size=3`;
     return getProducts(endpoint);
 }

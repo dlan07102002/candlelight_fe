@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { getProductByOrderDetailId } from "../../../services/OrderDetailAPI";
 import CartItem from "./CartItem";
 import { updateQuantity as updateOdQuantity } from "../../../services/OrderDetailAPI";
@@ -15,6 +15,7 @@ const CartList: React.FC = () => {
     const [totalAmount, setTotalAmount] = useState(0);
     const [isShow, setShow] = useState(false);
     const [user, setUser] = useState<UserModel>();
+    const order: any = useRef(null);
 
     const [orderDetails, setOrderDetails] = useState<OrderDetailModel[]>([]);
     const { userId } = useContext(MyContext);
@@ -22,6 +23,8 @@ const CartList: React.FC = () => {
         if (userId > 0) {
             getLatestOrderAndOrderDetailByUserId(userId)
                 .then((response) => {
+                    console.log("order response: ", response.order);
+                    order.current = response.order;
                     setOrderDetails(response.orderDetailList);
                 })
                 .catch((err) => {
@@ -165,6 +168,7 @@ const CartList: React.FC = () => {
             </div>
             {isShow && (
                 <CartPaymentForm
+                    order={order}
                     cartItems={cartItems}
                     totalAmount={totalAmount}
                     isShow={isShow}

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import RequiredAdmin from "./RequiredAdmin";
 import { toast } from "react-toastify";
+const beHost = import.meta.env.VITE_BE_HOST;
+
 interface IProductForm {
     isNew: boolean;
     setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,9 +43,7 @@ const ProductForm: React.FC<IProductForm> = ({
 
         token &&
             (await fetch(
-                `http://localhost:8080/products${
-                    isNew ? "" : "/" + product.productId
-                }`,
+                `${beHost}/products${isNew ? "" : "/" + product.productId}`,
                 {
                     method: isNew ? "POST" : "PATCH",
                     headers: {
@@ -99,7 +99,7 @@ const ProductForm: React.FC<IProductForm> = ({
                     if (image) {
                         const imageBase64 = await getBase64(image);
 
-                        fetch("http://localhost:8080/admin/products/images", {
+                        fetch("${beHost}/admin/products/images", {
                             method: "POST",
                             headers: {
                                 "Content-type": "application/json",

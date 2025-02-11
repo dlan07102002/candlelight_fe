@@ -91,10 +91,11 @@ const App: React.FC = () => {
     const fetchOrderData = async (userId: number) => {
         try {
             const response = await getLatestOrderAndOrderDetailByUserId(userId);
-            setLatestOrder(response.order);
-            setOrderDetails(response.orderDetailList);
+            // setLatestOrder(response.order);
+            // setOrderDetails(response.orderDetailList);
+            console.log(response);
         } catch (error) {
-            console.log("No orders found. Creating a new order...");
+            console.log("No orders found. Creating a new order...", error);
             const order = new OrderModel();
             await createOrder(order);
             setIsNewOder(true);

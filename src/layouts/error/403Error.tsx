@@ -24,7 +24,9 @@ const PermissionDenied: React.FC = () => {
                         an error.
                     </p>
                     <button
-                        onClick={() => window.history.back()}
+                        onClick={() => {
+                            window.location.href = "/"; // Chuyển hướng về trang chủ nếu không có trang trước đó
+                        }}
                         className="btn btn-danger mt-4 px-4"
                     >
                         Go Back

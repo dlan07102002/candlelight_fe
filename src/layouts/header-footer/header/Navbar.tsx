@@ -58,7 +58,7 @@ const Navbar: React.FC<INavbar> = ({
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <a className="navbar-brand" href="/">
-                    <img src="/src/assets/images/logo.svg" alt="Candle light" />
+                    <img src="/assets/images/logo.svg" alt="Candle light" />
                 </a>
                 <button
                     className="navbar-toggler"

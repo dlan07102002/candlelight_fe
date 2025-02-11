@@ -60,16 +60,16 @@ export async function getLatestOrderAndOrderDetailByUserId(
     order: OrderModel;
     orderDetailList: OrderDetail[];
 }> {
-    // ${beHost}/orders/search/findTopByUser_UserIdOrderByOrderIdDesc%7B?userId,page,size,sort*}
     const endpoint = `${beHost}/orders/search/findTopByUser_UserIdOrderByOrderIdDesc?userId=${userId}`;
     const response = await requestBE(endpoint);
-    const order = response._embedded.orders[0];
-    const odHref = order._links.orderDetailList.href;
+
+    console.log(response);
+    const odHref = response._links.orderDetailList.href;
     const orderDetailResponse = await requestBE(odHref);
     const orderDetailList = orderDetailResponse._embedded
         .orderDetails as OrderDetail[];
 
-    return { order: order, orderDetailList: orderDetailList };
+    return { order: response, orderDetailList: orderDetailList };
 }
 
 export async function createOrder(order: OrderModel): Promise<number> {
@@ -138,4 +138,31 @@ export async function updateOrder(
     }
 }
 
-// export async function payOrder(orderId: number, total: number) {}
+// VNPAY
+export async function payOrder(order: OrderModel) {
+    const endpoint = `${beHost}/api/order/pay/vnpay`;
+    const token = localStorage.getItem("token");
+
+    if (token) {
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(order.toObject()),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            } else {
+                console.error(
+                    `Add order id: ${order.orderId} failed with status ${response.status}`
+                );
+            }
+        } catch (error) {
+            console.log("Payment failed", error);
+        }
+    }
+}

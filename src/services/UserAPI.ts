@@ -114,13 +114,10 @@ export async function deleteUserById(
     }
 }
 export async function getUsersInPage(page: number): Promise<IUserResponse> {
-    // endpoint: localhost:8080/products
     const endpoint: string = `${beHost}/users?size=8&page=${page}`;
 
     return getUsers(endpoint);
 }
-
-// ${beHost}/users/search/existsByUsername%7B?username}
 
 export async function isUsernameExist(
     username: string

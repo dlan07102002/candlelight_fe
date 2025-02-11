@@ -12,22 +12,28 @@ class OrderModel {
     private _paymentStatus?: string;
 
     constructor(
+        userId?: number,
+        username?: string,
         orderId?: number,
         orderAddress?: string,
         deliveryAddress?: string,
         paymentCost?: number,
         deliveryCost?: number,
-        totalPrice?: number
+        totalPrice?: number,
+        deliveryStatus?: string,
+        paymentStatus?: string
     ) {
-        this._orderId = orderId;
-        this._createdAt = new Date(Date.now());
-        this._orderAddress = orderAddress;
-        this._deliveryAddress = deliveryAddress;
-        this._paymentCost = paymentCost;
-        this._deliveryCost = deliveryCost;
-        this._totalPrice = totalPrice;
-        this._deliveryStatus = "Pending";
-        this._paymentStatus = "Pending";
+        this.userId = userId;
+        this.username = username;
+        this.orderId = orderId;
+        this.createdAt = new Date(Date.now());
+        this.orderAddress = orderAddress;
+        this.deliveryAddress = deliveryAddress;
+        this.paymentCost = paymentCost;
+        this.deliveryCost = deliveryCost;
+        this.totalPrice = totalPrice;
+        this.deliveryStatus = deliveryStatus ? deliveryStatus : "PENDING";
+        this.paymentStatus = paymentStatus ? paymentStatus : "PENDING";
     }
 
     // Getters
@@ -88,6 +94,10 @@ class OrderModel {
         this._userId = value;
     }
 
+    public set username(value: string | undefined) {
+        this._username = value;
+    }
+
     public set orderAddress(value: string | undefined) {
         this._orderAddress = value;
     }
@@ -114,6 +124,23 @@ class OrderModel {
 
     public set paymentStatus(value: string | undefined) {
         this._paymentStatus = value;
+    }
+
+    // Method để lấy dữ liệu dạng object (chỉ lấy getter, bỏ private properties)
+    public toObject() {
+        return {
+            orderId: this.orderId,
+            username: this.username,
+            createdAt: this.createdAt,
+            userId: this.userId,
+            orderAddress: this.orderAddress,
+            deliveryAddress: this.deliveryAddress,
+            paymentCost: this.paymentCost,
+            deliveryCost: this.deliveryCost,
+            totalPrice: this.totalPrice,
+            deliveryStatus: this.deliveryStatus,
+            paymentStatus: this.paymentStatus,
+        };
     }
 }
 

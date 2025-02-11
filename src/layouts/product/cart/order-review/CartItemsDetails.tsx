@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface ICartItem {
     orderDetailId: number;
     productName: string;
@@ -13,8 +11,6 @@ interface ICartItemsDetails {
 }
 
 const CartItemsDetails: React.FC<ICartItemsDetails> = ({ cartItems }) => {
-    const [specialInstructions, setSpecialInstructions] = useState("");
-
     return (
         <div className="order-details mb-3 " style={{ height: "30%" }}>
             <h4 className="mb-3 text-center">Order Summary</h4>
@@ -43,18 +39,6 @@ const CartItemsDetails: React.FC<ICartItemsDetails> = ({ cartItems }) => {
                     ))
                 )}
             </ul>
-
-            {/* Special Instructions */}
-            <div className="order-details mb-3">
-                <h4 className="text-center mb-3">Special Instructions</h4>
-                <textarea
-                    className="form-control"
-                    rows={3}
-                    placeholder="Any specific requests or instructions for your order"
-                    value={specialInstructions}
-                    onChange={(e) => setSpecialInstructions(e.target.value)}
-                ></textarea>
-            </div>
         </div>
     );
 };
